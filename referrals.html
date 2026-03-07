@@ -6,13 +6,13 @@
   <title>Referrals | LomaShares</title>
   <link rel="stylesheet" href="assets/css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="/assets/js/supabase.js" defer></script>
-<script src="/assets/js/auth.js" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
 </head>
 <body
   data-page="user"
-  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+  data-supabase-url="YOUR_SUPABASE_URL"
+  data-supabase-anon="YOUR_SUPABASE_ANON_KEY"
 >
   <div class="app-shell">
     <aside class="sidebar">
@@ -36,7 +36,7 @@
       <header class="topbar">
         <div>
           <h1>Referrals</h1>
-          <p>Track your referral code and bonus earnings</p>
+          <p>Track your referral code and rewards</p>
         </div>
       </header>
 
@@ -47,12 +47,14 @@
           <span class="stat-title">Referral Code</span>
           <strong id="refCode">-</strong>
         </div>
+
         <div class="stat-card">
           <span class="stat-title">Referral Bonus</span>
           <strong id="refBonus">₦0.00</strong>
         </div>
+
         <div class="stat-card">
-          <span class="stat-title">Total Referral Rewards</span>
+          <span class="stat-title">Total Rewards</span>
           <strong id="refCount">0</strong>
         </div>
       </section>
@@ -69,7 +71,7 @@
 
       <div class="panel">
         <div class="panel-head">
-          <h2>Referral Reward History</h2>
+          <h2>Referral Rewards</h2>
         </div>
         <div id="rewardList" class="list-wrap">
           <p class="empty-state">Loading referral rewards...</p>
@@ -91,6 +93,7 @@
 
       function showMessage(text, type = "error") {
         const box = document.getElementById("msg");
+        if (!box) return;
         box.textContent = text;
         box.className = "msg " + type;
         box.style.display = "block";
@@ -102,11 +105,18 @@
           if (!session) return;
 
           const userId = session.user.id;
-          const profile = await window.LomaAuth.getProfile(userId);
 
-          document.getElementById("refCode").textContent = profile.referral_code || "-";
+          const { data: profile, error: profileError } = await sb
+            .from("profiles")
+            .select("id, referral_code")
+            .eq("id", userId)
+            .single();
+
+          if (profileError) throw profileError;
+
+          document.getElementById("refCode").textContent = profile?.referral_code || "-";
           document.getElementById("refLink").value =
-            `${window.location.origin}/register.html?ref=${encodeURIComponent(profile.referral_code || "")}`;
+            `${window.location.origin}/register.html?ref=${encodeURIComponent(profile?.referral_code || "")}`;
 
           const { data: wallet, error: walletError } = await sb
             .from("wallets")
@@ -116,20 +126,21 @@
 
           if (walletError) throw walletError;
 
-          document.getElementById("refBonus").textContent = money(wallet.total_referral_bonus || 0);
+          document.getElementById("refBonus").textContent = money(wallet?.total_referral_bonus || 0);
 
           const { data: rewards, error: rewardError } = await sb
             .from("referral_rewards")
-            .select("*")
+            .select("id, referred_user_id, bonus_percent, bonus_amount, created_at")
             .eq("referrer_user_id", userId)
             .order("created_at", { ascending: false });
 
           if (rewardError) throw rewardError;
 
-          document.getElementById("refCount").textContent = rewards.length || 0;
+          document.getElementById("refCount").textContent = rewards?.length || 0;
 
           const wrap = document.getElementById("rewardList");
-          if (!rewards.length) {
+
+          if (!rewards || !rewards.length) {
             wrap.innerHTML = '<p class="empty-state">No referral rewards yet.</p>';
             return;
           }
@@ -139,4 +150,38 @@
               <div>
                 <strong>Referral Reward</strong>
                 <p>Bonus Rate: ${Number(r.bonus_percent || 0).toFixed(2)}%</p>
-                <p>Referred User: ${r.referred_user_id}</p>
+                <p>Member ID: ${r.referred_user_id}</p>
+                <p>${new Date(r.created_at).toLocaleString()}</p>
+              </div>
+              <div class="list-item-right">
+                <strong>${money(r.bonus_amount)}</strong>
+              </div>
+            </div>
+          `).join("");
+        } catch (err) {
+          console.error("Referral page error:", err);
+          showMessage(err.message || "Failed to load referral page.");
+          const wrap = document.getElementById("rewardList");
+          if (wrap) {
+            wrap.innerHTML = '<p class="empty-state">Failed to load referral rewards.</p>';
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("copyRefLink")?.addEventListener("click", async function () {
+          try {
+            const input = document.getElementById("refLink");
+            await navigator.clipboard.writeText(input.value);
+            showMessage("Referral link copied.", "success");
+          } catch (err) {
+            showMessage("Failed to copy referral link.");
+          }
+        });
+
+        loadReferralPage();
+      });
+    })();
+  </script>
+</body>
+</html>
