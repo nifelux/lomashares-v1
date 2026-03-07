@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Withdrawals | LomaShares Admin</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="main-content">
+    <h1>Withdrawals</h1>
+    <div id="msg" class="msg"></div>
+    <div id="withdrawalsList"></div>
+  </div>
 
+  <script>
+    function showMsg(text, type = "error") {
+      const box = document.getElementById("msg");
+      box.textContent = text;
+      box.className = "msg " + type;
+      box.style.display = "block";
+    }
+
+    async function approveWithdrawal(id) {
+      try {
+        const { profile } = await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb.rpc("approve_withdrawal", {
+          p_admin_user_id: profile.id,
+          p_withdrawal_id: id,
+          p_paystack_transfer_code: null
+        });
+
+        if (error) throw error;
+        if (!data.ok) throw new Error(data.error || "Approval failed");
+
+        showMsg("Withdrawal approved.", "success");
+        loadWithdrawals();
+      } catch (err) {
+        showMsg(err.message || "Approval failed.");
+      }
+    }
+
+    async function rejectWithdrawal(id) {
+      const reason = prompt("Reason for rejection:");
+      if (reason === null) return;
+
+      try {
+        const { profile } = await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb.rpc("reject_withdrawal", {
+          p_admin_user_id: profile.id,
+          p_withdrawal_id: id,
+          p_reason: reason
+        });
+
+        if (error) throw error;
+        if (!data.ok) throw new Error(data.error || "Rejection failed");
+
+        showMsg("Withdrawal rejected and refunded.", "success");
+        loadWithdrawals();
+      } catch (err) {
+        showMsg(err.message || "Rejection failed.");
+      }
+    }
+
+    async function loadWithdrawals() {
+      try {
+        await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb
+          .from("withdrawals")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        document.getElementById("withdrawalsList").innerHTML = data.map(w => `
+          <div class="list-item">
+            <div>
+              <strong>${w.account_name || "Withdrawal"}</strong>
+              <p>Bank: ${w.bank_name || "-"}</p>
+              <p>Account No: ${w.account_number || "-"}</p>
+              <p>User: ${w.user_id}</p>
+            </div>
+            <div class="list-item-right">
+              <p>₦${Number(w.amount).toLocaleString()}</p>
+              <p>${w.status}</p>
+              <p>${new Date(w.created_at).toLocaleString()}</p>
+              ${w.status === "pending" ? `
+                <button onclick="approveWithdrawal('${w.id}')">Approve</button>
+                <button onclick="rejectWithdrawal('${w.id}')">Reject</button>
+              ` : ""}
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        showMsg(err.message || "Failed to load withdrawals.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadWithdrawals);
+  </script>
+</body>
+</html>
