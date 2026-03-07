@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | LomaShares</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares Admin</div>
+      <nav class="nav-menu">
+        <a class="nav-link active" href="admin-dashboard.html">Dashboard</a>
+        <a class="nav-link" href="users.html">Users</a>
+        <a class="nav-link" href="plans.html">Plans</a>
+        <a class="nav-link" href="deposits.html">Deposits</a>
+        <a class="nav-link" href="withdrawals.html">Withdrawals</a>
+        <a class="nav-link" href="gift-codes.html">Gift Codes</a>
+        <a class="nav-link" href="admin-logs.html">Admin Logs</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
 
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Welcome, <span data-auth="full_name">Admin</span></p>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <section class="cards-grid">
+        <div class="stat-card">
+          <span class="stat-title">Total Users</span>
+          <strong id="totalUsers">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Active Investments</span>
+          <strong id="activeInvestments">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Pending Withdrawals</span>
+          <strong id="pendingWithdrawals">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Pending Deposits</span>
+          <strong id="pendingDeposits">0</strong>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function showMessage(message, type = "error") {
+      const box = document.getElementById("msg");
+      box.textContent = message;
+      box.className = "msg " + type;
+      box.style.display = "block";
+    }
+
+    async function loadStats() {
+      try {
+        await window.LomaAuth.requireRole("admin");
+
+        const [{ count: usersCount, error: e1 }, { count: invCount, error: e2 }, { count: wdCount, error: e3 }, { count: depCount, error: e4 }] = await Promise.all([
+          sb.from("profiles").select("*", { count: "exact", head: true }),
+          sb.from("investments").select("*", { count: "exact", head: true }).eq("status", "active"),
+          sb.from("withdrawals").select("*", { count: "exact", head: true }).eq("status", "pending"),
+          sb.from("deposits").select("*", { count: "exact", head: true }).eq("status", "pending")
+        ]);
+
+        if (e1 || e2 || e3 || e4) throw (e1 || e2 || e3 || e4);
+
+        document.getElementById("totalUsers").textContent = usersCount || 0;
+        document.getElementById("activeInvestments").textContent = invCount || 0;
+        document.getElementById("pendingWithdrawals").textContent = wdCount || 0;
+        document.getElementById("pendingDeposits").textContent = depCount || 0;
+      } catch (err) {
+        console.error(err);
+        showMessage(err.message || "Failed to load admin stats.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadStats);
+  </script>
+</body>
+  </html>I
