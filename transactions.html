@@ -1,232 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transactions | LomaShares</title>
 
-<title>Transactions | LomaShares</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 
-<link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="assets/js/supabase.js" defer></script>
-<script src="assets/js/auth.js" defer></script>
+  <style>
+    .mobile-header,
+    .mobile-drawer,
+    .mobile-bottom-nav{
+      display:none;
+    }
 
+    .transactions-hero{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.22), transparent 28%),
+        linear-gradient(180deg, rgba(17,29,49,.96) 0%, rgba(10,18,32,.98) 100%);
+      border-radius:26px;
+      box-shadow:var(--glow);
+      padding:22px;
+    }
+
+    .hero-card h2{
+      margin:0 0 8px;
+      color:var(--white);
+      font-size:27px;
+      line-height:1.08;
+    }
+
+    .hero-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .tx-summary-note{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .transaction-item{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:14px;
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.05);
+      background:linear-gradient(180deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.015) 100%);
+    }
+
+    .transaction-item strong{
+      color:var(--white);
+      display:block;
+      margin-bottom:6px;
+      font-size:16px;
+    }
+
+    .transaction-item p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      word-break:break-word;
+    }
+
+    .transaction-side{
+      display:grid;
+      gap:8px;
+      justify-items:end;
+      text-align:right;
+      align-content:start;
+    }
+
+    .transaction-amount{
+      font-size:18px;
+      font-weight:900;
+      color:var(--white);
+      line-height:1.1;
+    }
+
+    .transaction-credit{
+      color:#87ebb0;
+    }
+
+    .transaction-debit{
+      color:#ff9fb0;
+    }
+
+    @media (max-width:920px){
+      .mobile-header{
+        position:sticky;
+        top:0;
+        z-index:80;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        min-height:68px;
+        padding:14px;
+        background:rgba(7,13,24,.88);
+        backdrop-filter:blur(18px);
+        border-bottom:1px solid rgba(255,255,255,.05);
+        box-shadow:0 10px 24px rgba(0,0,0,.18);
+      }
+
+      .mobile-header .brand{
+        padding:0;
+        min-height:auto;
+        font-size:22px;
+      }
+
+      .menu-btn{
+        width:46px;
+        height:46px;
+        min-height:46px;
+        padding:0;
+        border-radius:14px;
+        box-shadow:none;
+        background:rgba(255,255,255,.06);
+        border:1px solid rgba(255,255,255,.06);
+      }
+
+      .mobile-drawer{
+        position:fixed;
+        inset:0 auto 0 0;
+        width:84%;
+        max-width:320px;
+        z-index:120;
+        display:block;
+        padding:18px 14px 24px;
+        background:linear-gradient(180deg, rgba(7,13,24,.98) 0%, rgba(10,18,32,.98) 100%);
+        border-right:1px solid rgba(255,255,255,.06);
+        box-shadow:var(--shadow-xl);
+        transform:translateX(-110%);
+        transition:transform .22s ease;
+        overflow-y:auto;
+      }
+
+      .mobile-drawer.open{
+        transform:translateX(0);
+      }
+
+      .mobile-drawer-backdrop{
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.45);
+        z-index:110;
+        display:none;
+      }
+
+      .mobile-drawer-backdrop.show{
+        display:block;
+      }
+
+      .mobile-drawer .brand{
+        padding:0 8px 14px;
+      }
+
+      .mobile-drawer .nav-menu{
+        display:flex;
+        flex-direction:column;
+      }
+
+      .mobile-drawer .logout-btn{
+        margin-top:14px;
+      }
+
+      .mobile-bottom-nav{
+        position:fixed;
+        left:12px;
+        right:12px;
+        bottom:12px;
+        z-index:90;
+        display:grid;
+        grid-template-columns:repeat(5, 1fr);
+        gap:8px;
+        padding:10px;
+        border-radius:22px;
+        border:1px solid rgba(255,255,255,.06);
+        background:rgba(10,18,32,.9);
+        backdrop-filter:blur(18px);
+        box-shadow:var(--shadow-lg);
+      }
+
+      .mobile-bottom-nav a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:44px;
+        padding:8px 6px;
+        border-radius:14px;
+        color:var(--muted);
+        font-size:12px;
+        font-weight:800;
+        text-align:center;
+      }
+
+      .mobile-bottom-nav a.active{
+        color:var(--white);
+        background:rgba(47,123,255,.16);
+      }
+
+      .sidebar{
+        display:none;
+      }
+
+      .main-content{
+        padding-top:14px;
+        padding-bottom:96px;
+      }
+
+      .transactions-hero{
+        grid-template-columns:1fr;
+      }
+
+      .transaction-item{
+        grid-template-columns:1fr;
+      }
+
+      .transaction-side{
+        justify-items:start;
+        text-align:left;
+      }
+    }
+  </style>
 </head>
-
 <body
-data-page="user"
-data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+  data-page="user"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
-
-<div class="app-shell">
-
-<aside class="sidebar">
-
-<div class="brand">LomaShares</div>
-
-<nav class="nav-menu">
-
-<a class="nav-link" href="dashboard.html">Dashboard</a>
-<a class="nav-link" href="deposit.html">Deposit</a>
-<a class="nav-link" href="invest.html">Invest</a>
-<a class="nav-link" href="investments.html">My Investments</a>
-<a class="nav-link" href="withdraw.html">Withdraw</a>
-<a class="nav-link active" href="transactions.html">Transactions</a>
-<a class="nav-link" href="referrals.html">Referrals</a>
-<a class="nav-link" href="team.html">Team</a>
-<a class="nav-link" href="gift.html">Gift Code</a>
-<a class="nav-link" href="profile.html">Profile</a>
-
-</nav>
-
-<button class="logout-btn" data-action="logout">Logout</button>
-
-</aside>
-
-
-<main class="main-content">
-
-<header class="topbar">
-<div>
-<h1>Transactions</h1>
-<p>Your wallet transaction history</p>
-</div>
-</header>
-
-<div id="msg" class="msg"></div>
-
-
-<section class="cards-grid">
-
-<div class="stat-card">
-<span class="stat-title">Credits</span>
-<strong id="creditTotal">₦0.00</strong>
-</div>
-
-<div class="stat-card">
-<span class="stat-title">Debits</span>
-<strong id="debitTotal">₦0.00</strong>
-</div>
-
-<div class="stat-card">
-<span class="stat-title">Total Transactions</span>
-<strong id="txCount">0</strong>
-</div>
-
-</section>
-
-
-<div class="panel">
-
-<div class="panel-head">
-<h2>Transaction History</h2>
-</div>
-
-<div id="txList" class="list-wrap">
-<p class="empty-state">Loading transactions...</p>
-</div>
-
-</div>
-
-</main>
-
-</div>
-
-
-
-<script>
-
-(function(){
-
-"use strict";
-
-
-function money(v){
-
-return "₦"+Number(v||0).toLocaleString(undefined,{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-})
-
-}
-
-
-function showMessage(text,type="error"){
-
-const box=document.getElementById("msg")
-
-box.textContent=text
-box.className="msg "+type
-box.style.display="block"
-
-}
-
-
-async function loadTransactions(){
-
-try{
-
-const session=await window.LomaAuth.requireAuth()
-
-if(!session)return
-
-const userId=session.user.id
-
-
-const {data,error}=await window.sb
-.from("wallet_transactions")
-.select("*")
-.eq("user_id",userId)
-.order("created_at",{ascending:false})
-
-
-if(error)throw error
-
-
-const wrap=document.getElementById("txList")
-
-
-if(!data||!data.length){
-
-wrap.innerHTML='<p class="empty-state">No transactions found.</p>'
-
-document.getElementById("creditTotal").textContent=money(0)
-document.getElementById("debitTotal").textContent=money(0)
-document.getElementById("txCount").textContent="0"
-
-return
-
-}
-
-
-let credit=0
-let debit=0
-
-
-data.forEach(t=>{
-
-if(t.direction==="credit") credit+=Number(t.amount||0)
-else debit+=Number(t.amount||0)
-
-})
-
-
-document.getElementById("creditTotal").textContent=money(credit)
-document.getElementById("debitTotal").textContent=money(debit)
-document.getElementById("txCount").textContent=data.length
-
-
-wrap.innerHTML=data.map(t=>`
-
-<div class="list-item">
-
-<div>
-
-<strong>${t.type||"Transaction"}</strong>
-
-<p>${t.description||"-"}</p>
-
-<p>Reference: ${t.reference||"-"}</p>
-
-<p>${new Date(t.created_at).toLocaleString()}</p>
-
-</div>
-
-
-<div class="list-item-right">
-
-<strong>
-${t.direction==="credit"?"+":"-"}${money(t.amount)}
-</strong>
-
-<span class="status-pill ${t.direction==="credit"?"credit":"debit"}">
-${t.status||"completed"}
-</span>
-
-</div>
-
-</div>
-
-`).join("")
-
-
-}catch(err){
-
-console.error(err)
-showMessage(err.message||"Failed to load transactions.")
-
-}
-
-}
-
-
-document.addEventListener("DOMContentLoaded",loadTransactions)
-
-})();
-
-</script>
-
+  <div class="mobile-header">
+    <button class="menu-btn" id="menuToggle" type="button">☰</button>
+    <div class="brand">LomaShares</div>
+    <div style="width:46px;"></div>
+  </div>
+
+  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="brand">LomaShares</div>
+    <nav class="nav-menu">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="deposit.html">Deposit</a>
+      <a class="nav-link" href="invest.html">Invest</a>
+      <a class="nav-link" href="investments.html">My Investments</a>
+      <a class="nav-link" href="withdraw.html">Withdraw</a>
+      <a class="nav-link active" href="transactions.html">Transactions</a>
+      <a class="nav-link" href="referrals.html">Referrals</a>
+      <a class="nav-link" href="team.html">Team</a>
+      <a class="nav-link" href="gift.html">Gift Code</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" data-action="logout">Logout</button>
+  </aside>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link" href="investments.html">My Investments</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link active" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link" href="profile.html">Profile</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Transactions</h1>
+          <p>Your wallet transaction history only</p>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <section class="transactions-hero">
+        <div class="hero-card">
+          <h2>Track every wallet movement.</h2>
+          <p>
+            Monitor all credits and debits from deposits, profits, withdrawals, referrals, and other wallet activities in one premium ledger view.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <h2 style="font-size:22px;">History Summary</h2>
+          <p>
+            Your totals below update from the same transaction records shown in your history list.
+          </p>
+          <p class="tx-summary-note">Use this page to confirm your recent financial activity at a glance.</p>
+        </div>
+      </section>
+
+      <section class="cards-grid">
+        <div class="stat-card">
+          <span class="stat-title">Credits</span>
+          <strong id="creditTotal">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Debits</span>
+          <strong id="debitTotal">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Total Transactions</span>
+          <strong id="txCount">0</strong>
+        </div>
+      </section>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Transaction History</h2>
+        </div>
+        <div id="txList" class="list-wrap">
+          <p class="empty-state">Loading transactions...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html">Home</a>
+    <a href="deposit.html">Deposit</a>
+    <a href="invest.html">Invest</a>
+    <a class="active" href="transactions.html">History</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function money(v) {
+        return "₦" + Number(v || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function showMessage(text, type = "error") {
+        const box = document.getElementById("msg");
+        box.textContent = text;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
+
+      async function loadTransactions() {
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const userId = session.user.id;
+
+          const { data, error } = await window.sb
+            .from("wallet_transactions")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          const wrap = document.getElementById("txList");
+
+          if (!data || !data.length) {
+            wrap.innerHTML = '<p class="empty-state">No transactions found.</p>';
+            document.getElementById("creditTotal").textContent = money(0);
+            document.getElementById("debitTotal").textContent = money(0);
+            document.getElementById("txCount").textContent = "0";
+            return;
+          }
+
+          let credit = 0;
+          let debit = 0;
+
+          data.forEach((t) => {
+            if (t.direction === "credit") credit += Number(t.amount || 0);
+            else debit += Number(t.amount || 0);
+          });
+
+          document.getElementById("creditTotal").textContent = money(credit);
+          document.getElementById("debitTotal").textContent = money(debit);
+          document.getElementById("txCount").textContent = data.length;
+
+          wrap.innerHTML = data.map((t) => `
+            <div class="transaction-item">
+              <div>
+                <strong>${t.type || "Transaction"}</strong>
+                <p>${t.description || "-"}</p>
+                <p>Reference: ${t.reference || "-"}</p>
+                <p>${new Date(t.created_at).toLocaleString()}</p>
+              </div>
+
+              <div class="transaction-side">
+                <div class="transaction-amount ${t.direction === "credit" ? "transaction-credit" : "transaction-debit"}">
+                  ${t.direction === "credit" ? "+" : "-"}${money(t.amount)}
+                </div>
+                <span class="status-pill ${t.direction === "credit" ? "credit" : "debit"}">
+                  ${t.status || "completed"}
+                </span>
+              </div>
+            </div>
+          `).join("");
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load transactions.");
+        }
+      }
+
+      function initMobileDrawer() {
+        const toggle = document.getElementById("menuToggle");
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        if (!toggle || !drawer || !backdrop) return;
+
+        function closeDrawer() {
+          drawer.classList.remove("open");
+          backdrop.classList.remove("show");
+        }
+
+        toggle.addEventListener("click", function () {
+          drawer.classList.toggle("open");
+          backdrop.classList.toggle("show");
+        });
+
+        backdrop.addEventListener("click", closeDrawer);
+        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initMobileDrawer();
+        loadTransactions();
+      });
+    })();
+  </script>
 </body>
 </html>
