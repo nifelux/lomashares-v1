@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  function startAuth() {
+  function bootAuth() {
     if (!window.sb) {
       console.error("Supabase client not initialized. Load supabase.js first.");
       return;
@@ -11,10 +11,6 @@
 
     function $(id) {
       return document.getElementById(id);
-    }
-
-    function getMeta(name) {
-      return document.querySelector(`meta[name="${name}"]`)?.getAttribute("content") || "";
     }
 
     function getPageMode() {
@@ -373,9 +369,9 @@
     init();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", startAuth);
+  if (window.sb) {
+    bootAuth();
   } else {
-    startAuth();
+    document.addEventListener("DOMContentLoaded", bootAuth);
   }
 })();
