@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>LomaShares Login</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+
+</head>
+
+<body
+data-page="guest"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+
+<div class="auth-container">
+
+<h1>LomaShares</h1>
+<p>Login to your account</p>
+
+<div id="msg" class="msg"></div>
+
+<form id="loginForm">
+
+<input
+id="email"
+type="email"
+placeholder="Email address"
+required
+/>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+required
+/>
+
+<button type="submit">
+Login
+</button>
+
+</form>
+
+<div class="auth-links">
+
+<p>
+Don't have an account?
+<a href="register.html">Register</a>
+</p>
+
+</div>
+
+</div>
+
+</body>
+  </html>
