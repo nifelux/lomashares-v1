@@ -39,12 +39,20 @@ export default async function handler(req, res) {
       bank_code,
       account_name,
       account_number
-    } = body;
+    } = body || {};
+
+    if (!user_id || !amount || !bank_name || !bank_code || !account_name || !account_number) {
+      return res.status(400).json({
+        ok: false,
+        error: "Missing required fields"
+      });
+    }
 
     const { data, error } = await supabase.rpc("request_withdrawal", {
       p_user_id: user_id,
-      p_amount: amount,
+      p_amount: Number(amount),
       p_bank_name: bank_name,
+      p_bank_code: bank_code,
       p_account_name: account_name,
       p_account_number: account_number
     });
@@ -60,28 +68,13 @@ export default async function handler(req, res) {
       return res.status(400).json(data);
     }
 
-    const { error: updateError } = await supabase
-      .from("withdrawals")
-      .update({
-        bank_code: bank_code || null
-      })
-      .eq("id", data.withdrawal_id);
-
-    if (updateError) {
-      return res.status(400).json({
-        ok: false,
-        error: updateError.message
-      });
-    }
-
     return res.status(200).json(data);
-
   } catch (err) {
-    console.error(err);
+    console.error("Withdraw API error:", err);
 
     return res.status(500).json({
       ok: false,
-      error: err.message
+      error: err.message || "Server error"
     });
   }
-      }
+  }
