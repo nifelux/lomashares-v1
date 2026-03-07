@@ -320,3 +320,47 @@ color:#a10000;
 background:#d7ffd7;
 color:#006b00;
   }
+
+.plans-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+.plan-card{
+background:#fff;
+padding:20px;
+border-radius:12px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.plan-price{
+font-size:28px;
+margin:10px 0;
+color:#1b6ef3;
+}
+
+.plan-details{
+list-style:none;
+padding:0;
+margin:15px 0;
+}
+
+.plan-details li{
+margin:6px 0;
+font-size:14px;
+}
+
+.plan-card button{
+background:#1b6ef3;
+color:#fff;
+border:none;
+padding:10px 16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.plan-card button:hover{
+background:#155ad1;
+  }
