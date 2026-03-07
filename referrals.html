@@ -183,5 +183,15 @@
       });
     })();
   </script>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.LomaAuth) {
+    console.error("LomaAuth not loaded");
+    return;
+  }
+
+  loadReferralPage();
+});
+  </script>
 </body>
 </html>
