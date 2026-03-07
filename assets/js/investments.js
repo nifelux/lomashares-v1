@@ -1,48 +1,64 @@
 (function () {
+  "use strict";
 
-"use strict";
+  function showMsg(text, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) {
+      alert(text);
+      return;
+    }
+    box.textContent = text;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
 
-async function buyPlan(planId) {
+  async function buyPlan(planId) {
+    try {
+      if (!window.LomaAuth) {
+        throw new Error("LomaAuth not loaded");
+      }
 
-const session = await LomaAuth.requireAuth();
-const userId = session.user.id;
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
 
-const confirmBuy = confirm("Proceed with this investment?");
+      const userId = session.user.id;
 
-if (!confirmBuy) return;
+      const confirmBuy = confirm("Proceed with this investment?");
+      if (!confirmBuy) return;
 
-const res = await fetch("/api/investment", {
+      const res = await fetch("/api/investment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          plan_id: planId
+        })
+      });
 
-method: "POST",
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Server returned ${res.status} and not valid JSON`);
+      }
 
-headers: {
-"Content-Type": "application/json"
-},
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || "Investment failed");
+      }
 
-body: JSON.stringify({
+      showMsg("Investment successful", "success");
 
-user_id: userId,
-plan_id: planId
+      setTimeout(() => {
+        window.location.href = "investments.html";
+      }, 1000);
+    } catch (err) {
+      console.error("Investment error:", err);
+      showMsg(err.message || "Investment failed");
+    }
+  }
 
-})
-
-});
-
-const data = await res.json();
-
-if (!data.ok) {
-
-alert(data.error);
-return;
-
-}
-
-alert("Investment successful");
-
-window.location.href = "investments.html";
-
-}
-
-window.buyPlan = buyPlan;
-
+  window.buyPlan = buyPlan;
 })();
