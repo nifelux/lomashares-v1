@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deposit | LomaShares</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/deposits.js" defer></script>
+</head>
+<body
+  data-page="user"
+  data-supabase-url="YOUR_SUPABASE_URL"
+  data-supabase-anon="YOUR_SUPABASE_ANON_KEY"
+>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link active" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link" href="investments.html">My Investments</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link" href="profile.html">Profile</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
 
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Deposit</h1>
+          <p>Fund your wallet securely with Paystack</p>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="panel" style="max-width:520px;">
+        <div class="panel-head">
+          <h2>Make Deposit</h2>
+        </div>
+
+        <div class="simple-form">
+          <input id="amount" type="number" min="100" step="0.01" placeholder="Enter amount" />
+          <button id="depositBtn" type="button">Proceed to Paystack</button>
+        </div>
+
+        <p class="empty-state">Minimum deposit: ₦100.00</p>
+      </div>
+    </main>
+  </div>
+</body>
+    </html>
