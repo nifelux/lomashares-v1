@@ -4,17 +4,91 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Deposit | LomaShares</title>
+
   <link rel="stylesheet" href="assets/css/styles.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="assets/js/supabase.js" defer></script>
-<script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
   <script src="assets/js/deposits.js" defer></script>
+
+  <style>
+    .mobile-header,.mobile-drawer,.mobile-bottom-nav{display:none;}
+    .deposit-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;}
+    .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .amount-chip{
+      min-height:58px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--white);
+      font-weight:800;
+      box-shadow:none;
+    }
+    .amount-chip.active{
+      background:rgba(47,123,255,.16);
+      border-color:rgba(110,164,255,.24);
+    }
+
+    @media (max-width:920px){
+      .mobile-header{
+        position:sticky; top:0; z-index:80; display:flex; align-items:center; justify-content:space-between;
+        gap:12px; min-height:68px; padding:14px; background:rgba(7,13,24,.88); backdrop-filter:blur(18px);
+        border-bottom:1px solid rgba(255,255,255,.05); box-shadow:0 10px 24px rgba(0,0,0,.18);
+      }
+      .mobile-header .brand{padding:0; min-height:auto; font-size:22px;}
+      .menu-btn{width:46px;height:46px;min-height:46px;padding:0;border-radius:14px;box-shadow:none;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);}
+      .mobile-drawer{position:fixed;inset:0 auto 0 0;width:84%;max-width:320px;z-index:120;display:block;padding:18px 14px 24px;background:linear-gradient(180deg, rgba(7,13,24,.98) 0%, rgba(10,18,32,.98) 100%);border-right:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow-xl);transform:translateX(-110%);transition:transform .22s ease;overflow-y:auto;}
+      .mobile-drawer.open{transform:translateX(0);}
+      .mobile-drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:110;display:none;}
+      .mobile-drawer-backdrop.show{display:block;}
+      .mobile-drawer .brand{padding:0 8px 14px;}
+      .mobile-drawer .nav-menu{display:flex;flex-direction:column;}
+      .mobile-drawer .logout-btn{margin-top:14px;}
+      .mobile-bottom-nav{position:fixed;left:12px;right:12px;bottom:12px;z-index:90;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;border-radius:22px;border:1px solid rgba(255,255,255,.06);background:rgba(10,18,32,.9);backdrop-filter:blur(18px);box-shadow:var(--shadow-lg);}
+      .mobile-bottom-nav a{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 6px;border-radius:14px;color:var(--muted);font-size:12px;font-weight:800;text-align:center;}
+      .mobile-bottom-nav a.active{color:var(--white);background:rgba(47,123,255,.16);}
+      .sidebar{display:none;}
+      .main-content{padding-top:14px;padding-bottom:96px;}
+      .deposit-layout{grid-template-columns:1fr;}
+    }
+
+    @media (max-width:620px){
+      .amount-grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
 </head>
+
 <body
   data-page="user"
   data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
   data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
+  <div class="mobile-header">
+    <button class="menu-btn" id="menuToggle" type="button">☰</button>
+    <div class="brand">LomaShares</div>
+    <div style="width:46px;"></div>
+  </div>
+
+  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="brand">LomaShares</div>
+    <nav class="nav-menu">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link active" href="deposit.html">Deposit</a>
+      <a class="nav-link" href="invest.html">Invest</a>
+      <a class="nav-link" href="investments.html">My Investments</a>
+      <a class="nav-link" href="withdraw.html">Withdraw</a>
+      <a class="nav-link" href="transactions.html">Transactions</a>
+      <a class="nav-link" href="referrals.html">Referrals</a>
+      <a class="nav-link" href="team.html">Team</a>
+      <a class="nav-link" href="gift.html">Gift Code</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" data-action="logout">Logout</button>
+  </aside>
+
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand">LomaShares</div>
@@ -43,69 +117,125 @@
 
       <div id="msg" class="msg"></div>
 
-      <div class="panel" style="max-width:520px;">
-        <div class="panel-head">
-          <h2>Make Deposit</h2>
+      <section class="deposit-layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Select Amount</h2>
+          </div>
+
+          <div class="amount-grid" style="margin-bottom:14px;">
+            <button type="button" class="amount-chip" data-amount="3000">₦3,000</button>
+            <button type="button" class="amount-chip" data-amount="5000">₦5,000</button>
+            <button type="button" class="amount-chip" data-amount="10000">₦10,000</button>
+            <button type="button" class="amount-chip" data-amount="20000">₦20,000</button>
+            <button type="button" class="amount-chip" data-amount="30000">₦30,000</button>
+            <button type="button" class="amount-chip" data-amount="50000">₦50,000</button>
+          </div>
+
+          <div class="simple-form">
+            <input id="amount" type="number" min="100" step="0.01" placeholder="Enter amount" />
+            <button type="button" id="depositBtn">Proceed to Paystack</button>
+          </div>
+
+          <p class="empty-state">Minimum deposit: ₦100.00</p>
         </div>
 
-        <div class="simple-form">
-          <input id="amount" type="number" min="100" step="0.01" placeholder="Enter amount" />
-          <button id="depositBtn" type="button">Proceed to Paystack</button>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Deposit Notice</h2>
+          </div>
+          <p class="empty-state">
+            Payments are verified automatically after successful Paystack confirmation.
+            Use the exact amount you want to fund into your wallet.
+          </p>
         </div>
-
-        <p class="empty-state">Minimum deposit: ₦100.00</p>
-      </div>
+      </section>
     </main>
   </div>
+
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="deposit.html">Deposit</a>
+    <a href="invest.html">Invest</a>
+    <a href="withdraw.html">Withdraw</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+
   <script>
-(function () {
-  "use strict";
+    (function () {
+      "use strict";
 
-  function showMsg(text, type = "error") {
-    const box = document.getElementById("msg");
-    if (!box) {
-      alert(text);
-      return;
-    }
-    box.textContent = text;
-    box.className = "msg " + type;
-    box.style.display = "block";
-  }
-
-  async function verifyReturnedDeposit() {
-    const params = new URLSearchParams(window.location.search);
-    const reference = params.get("reference");
-
-    if (!reference) return;
-
-    try {
-      const res = await fetch(`/api/verify-deposit?reference=${encodeURIComponent(reference)}`, {
-        method: "GET"
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data?.ok) {
-        throw new Error(data?.error || "Deposit verification failed");
+      function showMessage(message, type = "error") {
+        const box = document.getElementById("msg");
+        if (!box) return;
+        box.textContent = message;
+        box.className = "msg " + type;
+        box.style.display = "block";
       }
 
-      showMsg("Deposit verified and wallet credited successfully.", "success");
+      function initAmountChips() {
+        const chips = document.querySelectorAll(".amount-chip");
+        const amountInput = document.getElementById("amount");
 
-      // Clean the URL after verification
-      window.history.replaceState({}, document.title, window.location.pathname);
+        chips.forEach((chip) => {
+          chip.addEventListener("click", function () {
+            chips.forEach((c) => c.classList.remove("active"));
+            chip.classList.add("active");
+            amountInput.value = chip.dataset.amount || "";
+          });
+        });
+      }
 
-      // Optional redirect after a short delay
-      setTimeout(() => {
-        window.location.href = "/dashboard.html";
-      }, 1200);
-    } catch (err) {
-      console.error("Deposit verify error:", err);
-      showMsg(err.message || "Failed to verify deposit");
-    }
-  }
+      async function verifyReturnedDeposit() {
+        const params = new URLSearchParams(window.location.search);
+        const reference = params.get("reference");
+        if (!reference) return;
 
-  document.addEventListener("DOMContentLoaded", verifyReturnedDeposit);
-})();
+        try {
+          const res = await fetch(`/api/verify-deposit?reference=${encodeURIComponent(reference)}`, {
+            method: "GET"
+          });
+
+          const data = await res.json();
+
+          if (!res.ok || !data?.ok) {
+            throw new Error(data?.error || "Deposit verification failed");
+          }
+
+          showMessage("Deposit verified and wallet credited successfully.", "success");
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } catch (err) {
+          console.error("Deposit verify error:", err);
+          showMessage(err.message || "Failed to verify deposit");
+        }
+      }
+
+      function initMobileDrawer() {
+        const toggle = document.getElementById("menuToggle");
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        if (!toggle || !drawer || !backdrop) return;
+
+        function closeDrawer() {
+          drawer.classList.remove("open");
+          backdrop.classList.remove("show");
+        }
+
+        toggle.addEventListener("click", function () {
+          drawer.classList.toggle("open");
+          backdrop.classList.toggle("show");
+        });
+
+        backdrop.addEventListener("click", closeDrawer);
+        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initMobileDrawer();
+        initAmountChips();
+        verifyReturnedDeposit();
+      });
+    })();
   </script>
 </body>
-    </html>
+        </html>
