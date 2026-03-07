@@ -24,7 +24,6 @@
       if (!session) return;
 
       const userId = session.user.id;
-
       const amount = Number(document.getElementById("amount")?.value || 0);
       const bank = (document.getElementById("bank")?.value || "").trim();
       const accountName = (document.getElementById("account_name")?.value || "").trim();
@@ -38,18 +37,10 @@
         throw new Error("Fill all withdrawal fields");
       }
 
-      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.textContent;
-        submitBtn.textContent = "Submitting...";
-      }
-
       const res = await fetch("/api/withdraw", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           user_id: userId,
@@ -60,11 +51,13 @@
         })
       });
 
+      const text = await res.text();
       let data = null;
+
       try {
-        data = await res.json();
+        data = JSON.parse(text);
       } catch {
-        throw new Error(`Server returned ${res.status} and not valid JSON`);
+        throw new Error(`Server returned ${res.status}: ${text.slice(0, 160)}`);
       }
 
       if (!res.ok || !data?.ok) {
@@ -79,12 +72,6 @@
     } catch (err) {
       console.error("Withdrawal error:", err);
       showMsg(err.message || "Withdrawal failed");
-    } finally {
-      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitBtn.dataset.originalText || "Submit Withdrawal";
-      }
     }
   }
 
