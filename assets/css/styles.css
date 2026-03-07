@@ -364,3 +364,38 @@ cursor:pointer;
 .plan-card button:hover{
 background:#155ad1;
   }
+
+.simple-form {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  margin-bottom: 24px;
+}
+
+.simple-form input,
+.simple-form textarea,
+.simple-form button {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.simple-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.simple-form button,
+.list-item-right button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.list-item-right button:last-child {
+  background: #dc2626;
+    }
