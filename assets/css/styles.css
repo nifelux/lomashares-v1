@@ -399,3 +399,13 @@ background:#155ad1;
 .list-item-right button:last-child {
   background: #dc2626;
     }
+.simple-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.simple-form button:hover {
+  background: #1d4ed8;
+                           }
