@@ -130,12 +130,9 @@
 
       async function loadDashboard() {
         try {
-          const authData = await window.LomaAuth.requireAuth();
-          if (!authData) return;
-
-          const user = authData.user || authData.session?.user || null;
-          const userId = user?.id || authData?.session?.user?.id;
-
+          const session = await window.LomaAuth.requireAuth();
+if (!session) return;
+const userId = session.user.id;
           if (!userId) {
             throw new Error("User session not found.");
           }
