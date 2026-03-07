@@ -4,16 +4,280 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile | LomaShares</title>
+
   <link rel="stylesheet" href="assets/css/styles.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="/assets/js/supabase.js" defer></script>
-<script src="/assets/js/auth.js" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+
+  <style>
+    .mobile-header,
+    .mobile-drawer,
+    .mobile-bottom-nav{
+      display:none;
+    }
+
+    .profile-layout{
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:16px;
+      align-items:start;
+    }
+
+    .profile-hero{
+      margin-bottom:18px;
+    }
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.22), transparent 28%),
+        linear-gradient(180deg, rgba(17,29,49,.96) 0%, rgba(10,18,32,.98) 100%);
+      border-radius:26px;
+      box-shadow:var(--glow);
+      padding:22px;
+    }
+
+    .hero-card h2{
+      margin:0 0 8px;
+      color:var(--white);
+      font-size:27px;
+      line-height:1.08;
+    }
+
+    .hero-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .field-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .field-full{
+      grid-column:1 / -1;
+    }
+
+    .field-label{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.16px;
+      text-transform:uppercase;
+    }
+
+    .profile-side{
+      display:grid;
+      gap:14px;
+    }
+
+    .profile-mini{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.05);
+      background:linear-gradient(180deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.015) 100%);
+    }
+
+    .profile-mini span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.16px;
+      margin-bottom:8px;
+    }
+
+    .profile-mini strong{
+      display:block;
+      color:var(--white);
+      font-size:18px;
+      line-height:1.2;
+      word-break:break-word;
+    }
+
+    .profile-note{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    @media (max-width:920px){
+      .mobile-header{
+        position:sticky;
+        top:0;
+        z-index:80;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        min-height:68px;
+        padding:14px;
+        background:rgba(7,13,24,.88);
+        backdrop-filter:blur(18px);
+        border-bottom:1px solid rgba(255,255,255,.05);
+        box-shadow:0 10px 24px rgba(0,0,0,.18);
+      }
+
+      .mobile-header .brand{
+        padding:0;
+        min-height:auto;
+        font-size:22px;
+      }
+
+      .menu-btn{
+        width:46px;
+        height:46px;
+        min-height:46px;
+        padding:0;
+        border-radius:14px;
+        box-shadow:none;
+        background:rgba(255,255,255,.06);
+        border:1px solid rgba(255,255,255,.06);
+      }
+
+      .mobile-drawer{
+        position:fixed;
+        inset:0 auto 0 0;
+        width:84%;
+        max-width:320px;
+        z-index:120;
+        display:block;
+        padding:18px 14px 24px;
+        background:linear-gradient(180deg, rgba(7,13,24,.98) 0%, rgba(10,18,32,.98) 100%);
+        border-right:1px solid rgba(255,255,255,.06);
+        box-shadow:var(--shadow-xl);
+        transform:translateX(-110%);
+        transition:transform .22s ease;
+        overflow-y:auto;
+      }
+
+      .mobile-drawer.open{
+        transform:translateX(0);
+      }
+
+      .mobile-drawer-backdrop{
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.45);
+        z-index:110;
+        display:none;
+      }
+
+      .mobile-drawer-backdrop.show{
+        display:block;
+      }
+
+      .mobile-drawer .brand{
+        padding:0 8px 14px;
+      }
+
+      .mobile-drawer .nav-menu{
+        display:flex;
+        flex-direction:column;
+      }
+
+      .mobile-drawer .logout-btn{
+        margin-top:14px;
+      }
+
+      .mobile-bottom-nav{
+        position:fixed;
+        left:12px;
+        right:12px;
+        bottom:12px;
+        z-index:90;
+        display:grid;
+        grid-template-columns:repeat(5, 1fr);
+        gap:8px;
+        padding:10px;
+        border-radius:22px;
+        border:1px solid rgba(255,255,255,.06);
+        background:rgba(10,18,32,.9);
+        backdrop-filter:blur(18px);
+        box-shadow:var(--shadow-lg);
+      }
+
+      .mobile-bottom-nav a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:44px;
+        padding:8px 6px;
+        border-radius:14px;
+        color:var(--muted);
+        font-size:12px;
+        font-weight:800;
+        text-align:center;
+      }
+
+      .mobile-bottom-nav a.active{
+        color:var(--white);
+        background:rgba(47,123,255,.16);
+      }
+
+      .sidebar{
+        display:none;
+      }
+
+      .main-content{
+        padding-top:14px;
+        padding-bottom:96px;
+      }
+
+      .profile-layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:620px){
+      .field-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
+
 <body
   data-page="user"
   data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
   data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
+  <div class="mobile-header">
+    <button class="menu-btn" id="menuToggle" type="button">☰</button>
+    <div class="brand">LomaShares</div>
+    <div style="width:46px;"></div>
+  </div>
+
+  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="brand">LomaShares</div>
+    <nav class="nav-menu">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="deposit.html">Deposit</a>
+      <a class="nav-link" href="invest.html">Invest</a>
+      <a class="nav-link" href="investments.html">My Investments</a>
+      <a class="nav-link" href="withdraw.html">Withdraw</a>
+      <a class="nav-link" href="transactions.html">Transactions</a>
+      <a class="nav-link" href="referrals.html">Referrals</a>
+      <a class="nav-link" href="team.html">Team</a>
+      <a class="nav-link" href="gift.html">Gift Code</a>
+      <a class="nav-link active" href="profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" data-action="logout">Logout</button>
+  </aside>
+
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand">LomaShares</div>
@@ -42,25 +306,100 @@
 
       <div id="msg" class="msg"></div>
 
-      <div class="panel" style="max-width:650px;">
-        <div class="panel-head">
-          <h2>My Profile</h2>
+      <section class="profile-hero">
+        <div class="hero-card">
+          <h2>Your account, your identity.</h2>
+          <p>
+            Keep your profile details updated so your investment, referral, and withdrawal experience stays smooth and secure.
+          </p>
+        </div>
+      </section>
+
+      <section class="profile-layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>My Profile</h2>
+          </div>
+
+          <form id="profileForm" class="simple-form">
+            <div class="field-grid">
+              <div class="field-full">
+                <label class="field-label" for="full_name">Full Name</label>
+                <input id="full_name" type="text" placeholder="Full Name" />
+              </div>
+
+              <div class="field-full">
+                <label class="field-label" for="email">Email</label>
+                <input id="email" type="email" placeholder="Email" disabled />
+              </div>
+
+              <div>
+                <label class="field-label" for="phone">Phone Number</label>
+                <input id="phone" type="text" placeholder="Phone Number" />
+              </div>
+
+              <div>
+                <label class="field-label" for="username">Username</label>
+                <input id="username" type="text" placeholder="Username" />
+              </div>
+
+              <div>
+                <label class="field-label" for="state">State</label>
+                <input id="state" type="text" placeholder="State" />
+              </div>
+
+              <div>
+                <label class="field-label" for="lga">LGA</label>
+                <input id="lga" type="text" placeholder="LGA" />
+              </div>
+
+              <div>
+                <label class="field-label" for="referral_code">Referral Code</label>
+                <input id="referral_code" type="text" placeholder="Referral Code" disabled />
+              </div>
+
+              <div>
+                <label class="field-label" for="role">Role</label>
+                <input id="role" type="text" placeholder="Role" disabled />
+              </div>
+            </div>
+
+            <button type="submit">Save Profile</button>
+          </form>
         </div>
 
-        <form id="profileForm" class="simple-form">
-          <input id="full_name" type="text" placeholder="Full Name" />
-          <input id="email" type="email" placeholder="Email" disabled />
-          <input id="phone" type="text" placeholder="Phone Number" />
-          <input id="state" type="text" placeholder="State" />
-          <input id="lga" type="text" placeholder="LGA" />
-          <input id="username" type="text" placeholder="Username" />
-          <input id="referral_code" type="text" placeholder="Referral Code" disabled />
-          <input id="role" type="text" placeholder="Role" disabled />
-          <button type="submit">Save Profile</button>
-        </form>
-      </div>
+        <div class="profile-side">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Account Overview</h2>
+            </div>
+
+            <div class="profile-mini">
+              <span>Referral Code</span>
+              <strong id="refPreview">-</strong>
+            </div>
+
+            <div class="profile-mini">
+              <span>Account Role</span>
+              <strong id="rolePreview">user</strong>
+            </div>
+
+            <p class="profile-note">
+              Email, referral code, and role are controlled system fields and cannot be edited here.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
+
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html">Home</a>
+    <a href="deposit.html">Deposit</a>
+    <a href="invest.html">Invest</a>
+    <a href="withdraw.html">Withdraw</a>
+    <a class="active" href="profile.html">Profile</a>
+  </nav>
 
   <script>
     (function () {
@@ -89,6 +428,9 @@
           document.getElementById("username").value = profile.username || "";
           document.getElementById("referral_code").value = profile.referral_code || "";
           document.getElementById("role").value = profile.role || "user";
+
+          document.getElementById("refPreview").textContent = profile.referral_code || "-";
+          document.getElementById("rolePreview").textContent = profile.role || "user";
         } catch (err) {
           console.error(err);
           showMessage(err.message || "Failed to load profile.");
@@ -112,7 +454,7 @@
             username: document.getElementById("username").value.trim() || null
           };
 
-          const { error } = await sb
+          const { error } = await window.sb
             .from("profiles")
             .update(payload)
             .eq("id", userId);
@@ -126,8 +468,31 @@
         }
       });
 
-      document.addEventListener("DOMContentLoaded", loadProfile);
+      function initMobileDrawer() {
+        const toggle = document.getElementById("menuToggle");
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        if (!toggle || !drawer || !backdrop) return;
+
+        function closeDrawer() {
+          drawer.classList.remove("open");
+          backdrop.classList.remove("show");
+        }
+
+        toggle.addEventListener("click", function () {
+          drawer.classList.toggle("open");
+          backdrop.classList.toggle("show");
+        });
+
+        backdrop.addEventListener("click", closeDrawer);
+        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initMobileDrawer();
+        loadProfile();
+      });
     })();
   </script>
 </body>
-            </html>
+        </html>
