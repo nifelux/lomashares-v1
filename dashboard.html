@@ -410,8 +410,7 @@
     <a href="withdraw.html">Withdraw</a>
     <a href="profile.html">Profile</a>
   </nav>
-
-  <script>
+<script>
     (function () {
       "use strict";
 
@@ -434,9 +433,8 @@
       async function loadDashboard() {
         try {
           const session = await window.LomaAuth.requireAuth();
-          if (!session) return;
-          const userId = session.user.id;
-
+if (!session) return;
+const userId = session.user.id;
           if (!userId) {
             throw new Error("User session not found.");
           }
@@ -548,6 +546,13 @@
           `;
         }).join("");
       }
+
+      document.addEventListener("DOMContentLoaded", loadDashboard);
+    })();
+      </script>
+  <script>
+
+  
 
       function initMobileDrawer() {
         const toggle = document.getElementById("menuToggle");
