@@ -1,120 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transactions | LomaShares</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="/assets/js/supabase.js" defer></script>
-<script src="/assets/js/auth.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Transactions | LomaShares</title>
+
+<link rel="stylesheet" href="assets/css/styles.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase.js" defer></script>
+<script src="assets/js/auth.js" defer></script>
+
 </head>
+
 <body
-  data-page="user"
-  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">LomaShares</div>
-      <nav class="nav-menu">
-        <a class="nav-link" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="deposit.html">Deposit</a>
-        <a class="nav-link" href="invest.html">Invest</a>
-        <a class="nav-link" href="investments.html">My Investments</a>
-        <a class="nav-link" href="withdraw.html">Withdraw</a>
-        <a class="nav-link active" href="transactions.html">Transactions</a>
-        <a class="nav-link" href="referrals.html">Referrals</a>
-        <a class="nav-link" href="team.html">Team</a>
-        <a class="nav-link" href="gift.html">Gift Code</a>
-        <a class="nav-link" href="profile.html">Profile</a>
-      </nav>
-      <button class="logout-btn" data-action="logout">Logout</button>
-    </aside>
 
-    <main class="main-content">
-      <header class="topbar">
-        <div>
-          <h1>Transactions</h1>
-          <p>Your wallet transaction history only</p>
-        </div>
-      </header>
+<div class="app-shell">
 
-      <div id="msg" class="msg"></div>
+<aside class="sidebar">
 
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Transaction History</h2>
-        </div>
-        <div id="txList" class="list-wrap">
-          <p class="empty-state">Loading transactions...</p>
-        </div>
-      </div>
-    </main>
-  </div>
+<div class="brand">LomaShares</div>
 
-  <script>
-    (function () {
-      "use strict";
+<nav class="nav-menu">
 
-      function money(v) {
-        return "₦" + Number(v || 0).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
+<a class="nav-link" href="dashboard.html">Dashboard</a>
+<a class="nav-link" href="deposit.html">Deposit</a>
+<a class="nav-link" href="invest.html">Invest</a>
+<a class="nav-link" href="investments.html">My Investments</a>
+<a class="nav-link" href="withdraw.html">Withdraw</a>
+<a class="nav-link active" href="transactions.html">Transactions</a>
+<a class="nav-link" href="referrals.html">Referrals</a>
+<a class="nav-link" href="team.html">Team</a>
+<a class="nav-link" href="gift.html">Gift Code</a>
+<a class="nav-link" href="profile.html">Profile</a>
 
-      function showMessage(text, type = "error") {
-        const box = document.getElementById("msg");
-        box.textContent = text;
-        box.className = "msg " + type;
-        box.style.display = "block";
-      }
+</nav>
 
-      async function loadTransactions() {
-        try {
-          const session = await window.LomaAuth.requireAuth();
-          if (!session) return;
+<button class="logout-btn" data-action="logout">Logout</button>
 
-          const userId = session.user.id;
+</aside>
 
-          const { data, error } = await sb
-            .from("wallet_transactions")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending: false });
 
-          if (error) throw error;
+<main class="main-content">
 
-          const wrap = document.getElementById("txList");
+<header class="topbar">
+<div>
+<h1>Transactions</h1>
+<p>Your wallet transaction history</p>
+</div>
+</header>
 
-          if (!data || !data.length) {
-            wrap.innerHTML = '<p class="empty-state">No transactions found.</p>';
-            return;
-          }
+<div id="msg" class="msg"></div>
 
-          wrap.innerHTML = data.map((t) => `
-            <div class="list-item">
-              <div>
-                <strong>${t.type || "Transaction"}</strong>
-                <p>${t.description || "-"}</p>
-                <p>Reference: ${t.reference || "-"}</p>
-                <p>${new Date(t.created_at).toLocaleString()}</p>
-              </div>
-              <div class="list-item-right">
-                <strong>${t.direction === "credit" ? "+" : "-"}${money(t.amount)}</strong>
-                <span class="status-pill ${t.direction === "credit" ? "credit" : "debit"}">${t.status || "completed"}</span>
-              </div>
-            </div>
-          `).join("");
-        } catch (err) {
-          console.error(err);
-          showMessage(err.message || "Failed to load transactions.");
-        }
-      }
 
-      document.addEventListener("DOMContentLoaded", loadTransactions);
-    })();
-  </script>
+<section class="cards-grid">
+
+<div class="stat-card">
+<span class="stat-title">Credits</span>
+<strong id="creditTotal">₦0.00</strong>
+</div>
+
+<div class="stat-card">
+<span class="stat-title">Debits</span>
+<strong id="debitTotal">₦0.00</strong>
+</div>
+
+<div class="stat-card">
+<span class="stat-title">Total Transactions</span>
+<strong id="txCount">0</strong>
+</div>
+
+</section>
+
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Transaction History</h2>
+</div>
+
+<div id="txList" class="list-wrap">
+<p class="empty-state">Loading transactions...</p>
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+
+<script>
+
+(function(){
+
+"use strict";
+
+
+function money(v){
+
+return "₦"+Number(v||0).toLocaleString(undefined,{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+})
+
+}
+
+
+function showMessage(text,type="error"){
+
+const box=document.getElementById("msg")
+
+box.textContent=text
+box.className="msg "+type
+box.style.display="block"
+
+}
+
+
+async function loadTransactions(){
+
+try{
+
+const session=await window.LomaAuth.requireAuth()
+
+if(!session)return
+
+const userId=session.user.id
+
+
+const {data,error}=await window.sb
+.from("wallet_transactions")
+.select("*")
+.eq("user_id",userId)
+.order("created_at",{ascending:false})
+
+
+if(error)throw error
+
+
+const wrap=document.getElementById("txList")
+
+
+if(!data||!data.length){
+
+wrap.innerHTML='<p class="empty-state">No transactions found.</p>'
+
+document.getElementById("creditTotal").textContent=money(0)
+document.getElementById("debitTotal").textContent=money(0)
+document.getElementById("txCount").textContent="0"
+
+return
+
+}
+
+
+let credit=0
+let debit=0
+
+
+data.forEach(t=>{
+
+if(t.direction==="credit") credit+=Number(t.amount||0)
+else debit+=Number(t.amount||0)
+
+})
+
+
+document.getElementById("creditTotal").textContent=money(credit)
+document.getElementById("debitTotal").textContent=money(debit)
+document.getElementById("txCount").textContent=data.length
+
+
+wrap.innerHTML=data.map(t=>`
+
+<div class="list-item">
+
+<div>
+
+<strong>${t.type||"Transaction"}</strong>
+
+<p>${t.description||"-"}</p>
+
+<p>Reference: ${t.reference||"-"}</p>
+
+<p>${new Date(t.created_at).toLocaleString()}</p>
+
+</div>
+
+
+<div class="list-item-right">
+
+<strong>
+${t.direction==="credit"?"+":"-"}${money(t.amount)}
+</strong>
+
+<span class="status-pill ${t.direction==="credit"?"credit":"debit"}">
+${t.status||"completed"}
+</span>
+
+</div>
+
+</div>
+
+`).join("")
+
+
+}catch(err){
+
+console.error(err)
+showMessage(err.message||"Failed to load transactions.")
+
+}
+
+}
+
+
+document.addEventListener("DOMContentLoaded",loadTransactions)
+
+})();
+
+</script>
+
 </body>
-        </html>
+</html>
