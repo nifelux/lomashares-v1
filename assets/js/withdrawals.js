@@ -1,54 +1,94 @@
 (function () {
+  "use strict";
 
-"use strict";
+  function showMsg(text, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) {
+      alert(text);
+      return;
+    }
+    box.textContent = text;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
 
-async function withdraw(e) {
+  async function withdraw(e) {
+    e.preventDefault();
 
-e.preventDefault();
+    try {
+      if (!window.LomaAuth) {
+        throw new Error("LomaAuth not loaded");
+      }
 
-const session = await LomaAuth.requireAuth();
-const userId = session.user.id;
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
 
-const amount = Number(document.getElementById("amount").value);
-const bank = document.getElementById("bank").value;
-const accountName = document.getElementById("account_name").value;
-const accountNumber = document.getElementById("account_number").value;
+      const userId = session.user.id;
 
-const res = await fetch("/api/withdraw", {
+      const amount = Number(document.getElementById("amount")?.value || 0);
+      const bank = (document.getElementById("bank")?.value || "").trim();
+      const accountName = (document.getElementById("account_name")?.value || "").trim();
+      const accountNumber = (document.getElementById("account_number")?.value || "").trim();
 
-method: "POST",
+      if (!amount || amount <= 0) {
+        throw new Error("Enter a valid withdrawal amount");
+      }
 
-headers: {
-"Content-Type": "application/json"
-},
+      if (!bank || !accountName || !accountNumber) {
+        throw new Error("Fill all withdrawal fields");
+      }
 
-body: JSON.stringify({
+      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.textContent = "Submitting...";
+      }
 
-user_id: userId,
-amount: amount,
-bank_name: bank,
-account_name: accountName,
-account_number: accountNumber
+      const res = await fetch("/api/withdraw", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          amount,
+          bank_name: bank,
+          account_name: accountName,
+          account_number: accountNumber
+        })
+      });
 
-})
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Server returned ${res.status} and not valid JSON`);
+      }
 
-});
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || "Withdrawal request failed");
+      }
 
-const data = await res.json();
+      showMsg("Withdrawal submitted successfully", "success");
 
-if (!data.ok) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    } catch (err) {
+      console.error("Withdrawal error:", err);
+      showMsg(err.message || "Withdrawal failed");
+    } finally {
+      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.originalText || "Submit Withdrawal";
+      }
+    }
+  }
 
-alert(data.error);
-return;
-
-}
-
-alert("Withdrawal submitted successfully");
-
-location.reload();
-
-}
-
-document.getElementById("withdrawForm")?.addEventListener("submit", withdraw);
-
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("withdrawForm")?.addEventListener("submit", withdraw);
+  });
 })();
