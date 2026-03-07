@@ -57,7 +57,55 @@
       </div>
     </main>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
+  <script>
+(function () {
+  "use strict";
+
+  function showMsg(text, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) {
+      alert(text);
+      return;
+    }
+    box.textContent = text;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
+
+  async function verifyReturnedDeposit() {
+    const params = new URLSearchParams(window.location.search);
+    const reference = params.get("reference");
+
+    if (!reference) return;
+
+    try {
+      const res = await fetch(`/api/verify-deposit?reference=${encodeURIComponent(reference)}`, {
+        method: "GET"
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || "Deposit verification failed");
+      }
+
+      showMsg("Deposit verified and wallet credited successfully.", "success");
+
+      // Clean the URL after verification
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // Optional redirect after a short delay
+      setTimeout(() => {
+        window.location.href = "/dashboard.html";
+      }, 1200);
+    } catch (err) {
+      console.error("Deposit verify error:", err);
+      showMsg(err.message || "Failed to verify deposit");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", verifyReturnedDeposit);
+})();
+  </script>
 </body>
     </html>
