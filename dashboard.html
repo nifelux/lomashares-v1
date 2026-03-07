@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LomaShares Dashboard</title>
+
   <link rel="stylesheet" href="assets/css/styles.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -11,17 +12,9 @@
   <script src="assets/js/auth.js" defer></script>
 
   <style>
-    .mobile-header{
-      display:none;
-    }
-
-    .mobile-drawer{
-      display:none;
-    }
-
-    .mobile-bottom-nav{
-      display:none;
-    }
+    .mobile-header{display:none;}
+    .mobile-drawer{display:none;}
+    .mobile-bottom-nav{display:none;}
 
     .dashboard-hero{
       display:grid;
@@ -110,18 +103,6 @@
       line-height:1.1;
       margin-bottom:12px;
       word-break:break-word;
-    }
-
-    .section-title{
-      margin:0 0 14px;
-      color:var(--white);
-      font-size:18px;
-      line-height:1.2;
-    }
-
-    .quick-actions .action-card span{
-      display:block;
-      text-align:center;
     }
 
     @media (max-width: 920px){
@@ -392,10 +373,10 @@
       </section>
 
       <section class="quick-actions">
-        <a href="deposit.html" class="action-card"><span>Deposit</span></a>
-        <a href="invest.html" class="action-card"><span>Invest Now</span></a>
-        <a href="withdraw.html" class="action-card"><span>Withdraw</span></a>
-        <a href="transactions.html" class="action-card"><span>Transactions</span></a>
+        <a href="deposit.html" class="action-card">Deposit</a>
+        <a href="invest.html" class="action-card">Invest Now</a>
+        <a href="withdraw.html" class="action-card">Withdraw</a>
+        <a href="transactions.html" class="action-card">Transactions</a>
       </section>
 
       <section class="content-grid">
@@ -454,13 +435,13 @@
         try {
           const session = await window.LomaAuth.requireAuth();
           if (!session) return;
-
           const userId = session.user.id;
+
           if (!userId) {
             throw new Error("User session not found.");
           }
 
-          await window.LomaAuth.getProfile(userId);
+          const profile = await window.LomaAuth.getProfile(userId);
 
           const { data: wallet, error: walletError } = await window.sb
             .from("wallets")
@@ -496,6 +477,7 @@
           if (investError) throw investError;
 
           document.getElementById("activeInvestmentsCount").textContent = activeInvestments.length;
+
           renderActiveInvestments(activeInvestments || []);
 
           const { data: recentTransactions, error: txError } = await window.sb
