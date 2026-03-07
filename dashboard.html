@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LomaShares Dashboard</title>
 
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
+</head>
+
+<body
+  data-page="user"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+
+      <nav class="nav-menu">
+        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link" href="investments.html">My Investments</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link" href="profile.html">Profile</a>
+      </nav>
+
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome back, <span data-auth="full_name">User</span></p>
+        </div>
+        <div class="topbar-meta">
+          <div class="mini-badge">Referral Code: <span data-auth="referral_code">-</span></div>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <section class="cards-grid">
+        <div class="stat-card">
+          <span class="stat-title">Wallet Balance</span>
+          <strong id="walletBalance">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Total Deposits</span>
+          <strong id="totalDeposit">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Total Profit</span>
+          <strong id="totalProfit">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Referral Bonus</span>
+          <strong id="totalReferralBonus">₦0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-title">Active Investments</span>
+          <strong id="activeInvestmentsCount">0</strong>
+        </div>
+      </section>
+
+      <section class="quick-actions">
+        <a href="deposit.html" class="action-card">Deposit</a>
+        <a href="invest.html" class="action-card">Invest Now</a>
+        <a href="withdraw.html" class="action-card">Withdraw</a>
+        <a href="transactions.html" class="action-card">Transactions</a>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Active Investments</h2>
+            <a href="investments.html">View all</a>
+          </div>
+          <div id="activeInvestmentsList" class="list-wrap">
+            <p class="empty-state">Loading investments...</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Recent Transactions</h2>
+            <a href="transactions.html">View all</a>
+          </div>
+          <div id="recentTransactionsList" class="list-wrap">
+            <p class="empty-state">Loading transactions...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function formatMoney(value) {
+        const amount = Number(value || 0);
+        return "₦" + amount.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function showMessage(message, type = "error") {
+        const box = document.getElementById("msg");
+        if (!box) return;
+        box.textContent = message;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
+
+      async function loadDashboard() {
+        try {
+          const authData = await window.LomaAuth.requireAuth();
+          if (!authData) return;
+
+          const user = authData.user || authData.session?.user || null;
+          const userId = user?.id || authData?.session?.user?.id;
+
+          if (!userId) {
+            throw new Error("User session not found.");
+          }
+
+          const profile = await window.LomaAuth.getProfile(userId);
+
+          const { data: wallet, error: walletError } = await window.sb
+            .from("wallets")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+          if (walletError) throw walletError;
+
+          document.getElementById("walletBalance").textContent = formatMoney(wallet.balance);
+          document.getElementById("totalDeposit").textContent = formatMoney(wallet.total_deposit);
+          document.getElementById("totalProfit").textContent = formatMoney(wallet.total_profit);
+          document.getElementById("totalReferralBonus").textContent = formatMoney(wallet.total_referral_bonus);
+
+          const { data: activeInvestments, error: investError } = await window.sb
+            .from("investments")
+            .select(`
+              id,
+              amount,
+              daily_profit,
+              days_paid,
+              duration_days,
+              status,
+              start_date,
+              end_date,
+              investment_plans(name)
+            `)
+            .eq("user_id", userId)
+            .eq("status", "active")
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+          if (investError) throw investError;
+
+          document.getElementById("activeInvestmentsCount").textContent = activeInvestments.length;
+
+          renderActiveInvestments(activeInvestments || []);
+
+          const { data: recentTransactions, error: txError } = await window.sb
+            .from("wallet_transactions")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: false })
+            .limit(6);
+
+          if (txError) throw txError;
+
+          renderRecentTransactions(recentTransactions || []);
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load dashboard.");
+        }
+      }
+
+      function renderActiveInvestments(items) {
+        const wrap = document.getElementById("activeInvestmentsList");
+        if (!wrap) return;
+
+        if (!items.length) {
+          wrap.innerHTML = '<p class="empty-state">No active investments found.</p>';
+          return;
+        }
+
+        wrap.innerHTML = items.map((item) => {
+          const planName = item.investment_plans?.name || "Investment Plan";
+          return `
+            <div class="list-item">
+              <div>
+                <strong>${planName}</strong>
+                <p>Daily Profit: ${formatMoney(item.daily_profit)}</p>
+                <p>Progress: ${item.days_paid}/${item.duration_days} days</p>
+              </div>
+              <div class="list-item-right">
+                <strong>${formatMoney(item.amount)}</strong>
+                <span class="status-pill active">${item.status}</span>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderRecentTransactions(items) {
+        const wrap = document.getElementById("recentTransactionsList");
+        if (!wrap) return;
+
+        if (!items.length) {
+          wrap.innerHTML = '<p class="empty-state">No transactions found.</p>';
+          return;
+        }
+
+        wrap.innerHTML = items.map((item) => {
+          return `
+            <div class="list-item">
+              <div>
+                <strong>${item.type || "Transaction"}</strong>
+                <p>${item.description || "-"}</p>
+                <p>${new Date(item.created_at).toLocaleString()}</p>
+              </div>
+              <div class="list-item-right">
+                <strong>${item.direction === "credit" ? "+" : "-"}${formatMoney(item.amount)}</strong>
+                <span class="status-pill ${item.direction === "credit" ? "credit" : "debit"}">${item.status || "completed"}</span>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      document.addEventListener("DOMContentLoaded", loadDashboard);
+    })();
+  </script>
+</body>
+  </html>
