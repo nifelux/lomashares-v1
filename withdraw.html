@@ -6,14 +6,14 @@
   <title>Withdraw | LomaShares</title>
   <link rel="stylesheet" href="assets/css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="assets/js/supabase.js" defer></script>
-<script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
   <script src="assets/js/withdrawals.js" defer></script>
 </head>
 <body
   data-page="user"
-  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+  data-supabase-url="YOUR_SUPABASE_URL"
+  data-supabase-anon="YOUR_SUPABASE_ANON_KEY"
 >
   <div class="app-shell">
     <aside class="sidebar">
@@ -50,9 +50,14 @@
 
         <form id="withdrawForm" class="simple-form">
           <input id="amount" type="number" min="500" step="0.01" placeholder="Amount" required />
-          <input id="bank" type="text" placeholder="Bank Name" required />
+
+          <select id="bank" required>
+            <option value="">Loading banks...</option>
+          </select>
+
           <input id="account_name" type="text" placeholder="Account Name" required />
           <input id="account_number" type="text" placeholder="Account Number" required />
+
           <button type="submit">Submit Withdrawal</button>
         </form>
 
@@ -60,6 +65,5 @@
       </div>
     </main>
   </div>
-    
 </body>
-          </html>
+</html>
