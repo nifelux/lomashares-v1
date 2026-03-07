@@ -124,17 +124,17 @@
     let referredBy = null;
 
     if (referralCode) {
-      const { data: refProfile, error: refError } = await sb
-        .from("profiles")
-        .select("id, referral_code")
-        .eq("referral_code", referralCode)
-        .single();
+  const { data: refRows, error: refError } = await sb.rpc("get_referrer_by_code", {
+    p_code: referralCode
+  });
 
-      if (refError || !refProfile) {
-        throw new Error("Invalid referral code.");
-      }
+  const refProfile = Array.isArray(refRows) ? refRows[0] : null;
 
-      referredBy = refProfile.id;
+  if (refError || !refProfile) {
+    throw new Error("Invalid referral code.");
+  }
+
+  referredBy = refProfile.id;
     }
 
     const { data, error } = await sb.auth.signUp({
