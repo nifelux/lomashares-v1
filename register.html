@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LomaShares Register</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+
+</head>
+
+<body
+data-page="guest"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+
+<div class="auth-container">
+
+<h1>Create Account</h1>
+<p>Join LomaShares today</p>
+
+<div id="msg" class="msg"></div>
+
+<form id="registerForm">
+
+<input
+id="full_name"
+type="text"
+placeholder="Full name"
+required
+/>
+
+<input
+id="email"
+type="email"
+placeholder="Email address"
+required
+/>
+
+<input
+id="phone"
+type="text"
+placeholder="Phone number"
+required
+/>
+
+<input
+id="state"
+type="text"
+placeholder="State"
+required
+/>
+
+<input
+id="lga"
+type="text"
+placeholder="Local Government Area"
+required
+/>
+
+<input
+id="referral_code"
+type="text"
+placeholder="Referral code (optional)"
+/>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+required
+/>
+
+<input
+id="confirm_password"
+type="password"
+placeholder="Confirm password"
+required
+/>
+
+<button type="submit">
+Create Account
+</button>
+
+</form>
+
+<div class="auth-links">
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+
+</div>
+
+</body>
+  </html>
