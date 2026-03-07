@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Invest | LomaShares</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+
+</head>
+
+<body
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+
+<div class="app-shell">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+
+<div class="brand">LomaShares</div>
+
+<nav class="nav-menu">
+<a href="dashboard.html">Dashboard</a>
+<a href="deposit.html">Deposit</a>
+<a class="active" href="invest.html">Invest</a>
+<a href="investments.html">My Investments</a>
+<a href="withdraw.html">Withdraw</a>
+<a href="transactions.html">Transactions</a>
+<a href="referrals.html">Referrals</a>
+<a href="team.html">Team</a>
+<a href="gift.html">Gift Code</a>
+<a href="profile.html">Profile</a>
+</nav>
+
+<button class="logout-btn" data-action="logout">Logout</button>
+
+</aside>
+
+<!-- Main -->
+<main class="main-content">
+
+<header class="topbar">
+<h1>Investment Plans</h1>
+<p>Choose a plan to start earning daily profit</p>
+</header>
+
+<div id="msg" class="msg"></div>
+
+<div id="plansContainer" class="plans-grid">
+
+<p>Loading investment plans...</p>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+function showMessage(msg,type="error"){
+
+const box=document.getElementById("msg")
+
+box.innerText=msg
+box.className="msg "+type
+box.style.display="block"
+
+}
+
+
+function formatMoney(v){
+
+return "₦"+Number(v).toLocaleString(undefined,{
+minimumFractionDigits:2
+})
+
+}
+
+
+async function loadPlans(){
+
+try{
+
+const session=await window.LomaAuth.requireAuth()
+
+if(!session)return
+
+const {data,error}=await sb
+.from("investment_plans")
+.select("*")
+.eq("is_active",true)
+.order("sort_order")
+
+if(error)throw error
+
+renderPlans(data)
+
+}catch(err){
+
+console.error(err)
+showMessage("Failed to load investment plans")
+
+}
+
+}
+
+
+
+function renderPlans(plans){
+
+const wrap=document.getElementById("plansContainer")
+
+if(!plans.length){
+
+wrap.innerHTML="<p>No plans available</p>"
+return
+
+}
+
+wrap.innerHTML=plans.map(plan=>`
+
+<div class="plan-card">
+
+<h3>${plan.name}</h3>
+
+<div class="plan-price">
+${formatMoney(plan.price)}
+</div>
+
+<ul class="plan-details">
+
+<li>Daily Profit: <b>${formatMoney(plan.daily_profit)}</b></li>
+
+<li>Duration: <b>${plan.duration_days} days</b></li>
+
+<li>Total Return: <b>${formatMoney(plan.total_return)}</b></li>
+
+</ul>
+
+<button onclick="buyPlan('${plan.id}')">
+Invest Now
+</button>
+
+</div>
+
+`).join("")
+
+}
+
+
+
+async function buyPlan(planId){
+
+try{
+
+const session=await window.LomaAuth.requireAuth()
+
+if(!session)return
+
+const userId=session.user.id
+
+const confirmBuy=confirm("Proceed with this investment?")
+
+if(!confirmBuy)return
+
+const {data,error}=await sb.rpc(
+"create_investment",
+{
+p_user_id:userId,
+p_plan_id:planId
+}
+)
+
+if(error)throw error
+
+if(!data.ok){
+
+showMessage(data.error)
+return
+
+}
+
+showMessage("Investment successful","success")
+
+setTimeout(()=>{
+
+window.location.href="investments.html"
+
+},1000)
+
+}catch(err){
+
+console.error(err)
+showMessage("Investment failed")
+
+}
+
+}
+
+
+
+document.addEventListener("DOMContentLoaded",loadPlans)
+
+</script>
+
+
+</body>
+  </html>
