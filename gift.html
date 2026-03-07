@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<title>Gift Code</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+
+</head>
+
+<body
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+
+<h2>Redeem Gift Code</h2>
+
+<input id="code" placeholder="Enter Code">
+
+<button onclick="redeem()">Redeem</button>
+
+<div id="msg"></div>
+
+<script>
+
+async function redeem(){
+
+const session=await window.LomaAuth.requireAuth()
+
+const userId=session.user.id
+
+const code=document.getElementById("code").value
+
+const {data,error}=await sb.rpc("redeem_gift_code",{
+
+p_user_id:userId,
+p_code:code
+
+})
+
+if(error||!data.ok){
+
+document.getElementById("msg").innerText=data?.error||"Invalid code"
+return
+
+}
+
+document.getElementById("msg").innerText="₦"+data.amount+" credited"
+
+}
+
+</script>
+
+</body>
+</html>
