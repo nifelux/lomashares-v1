@@ -3,7 +3,7 @@
 
   function bootAuth() {
     if (!window.sb) {
-      console.error("Supabase client not initialized. Load supabase.js first.");
+      console.error("Supabase client not initialized.");
       return;
     }
 
@@ -369,9 +369,9 @@
     init();
   }
 
+  document.addEventListener("lomashares:supabase-ready", bootAuth);
+
   if (window.sb) {
     bootAuth();
-  } else {
-    document.addEventListener("DOMContentLoaded", bootAuth);
   }
 })();
