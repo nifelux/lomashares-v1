@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { requireMatchingUser } from "./_auth.js";
 
 function cors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,26 +16,27 @@ function getSupabase() {
 
 export default async function handler(req, res) {
   cors(res);
+
   if (req.method === "OPTIONS") return res.status(200).end();
+
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
   try {
-    const supabase = getSupabase();
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-
-    const {
-      user_id,
-      amount,
-      bank_name,
-      account_name,
-      account_number
-    } = body || {};
+    const { user_id, amount, bank_name, account_name, account_number } = body || {};
 
     if (!user_id || !amount || !bank_name || !account_name || !account_number) {
       return res.status(400).json({ ok: false, error: "Missing required fields" });
     }
+
+    const authCheck = await requireMatchingUser(req, user_id);
+    if (!authCheck.ok) {
+      return res.status(authCheck.status).json({ ok: false, error: authCheck.error });
+    }
+
+    const supabase = getSupabase();
 
     const { data, error } = await supabase.rpc("request_withdrawal", {
       p_user_id: user_id,
