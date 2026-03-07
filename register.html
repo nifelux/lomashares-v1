@@ -101,6 +101,13 @@ Already have an account?
 </div>
 
 </div>
-
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    const input = document.getElementById("referral_code");
+    if (ref && input) input.value = ref;
+  });
+  </script>
 </body>
   </html>
