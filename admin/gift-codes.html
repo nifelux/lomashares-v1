@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gift Codes | LomaShares Admin</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="main-content">
+    <h1>Gift Codes</h1>
+    <div id="msg" class="msg"></div>
 
+    <form id="giftForm" class="simple-form">
+      <input id="code" placeholder="Gift Code" required />
+      <input id="amount" type="number" step="0.01" placeholder="Amount" required />
+      <input id="max_redemptions" type="number" placeholder="Max Redemptions" value="1" required />
+      <input id="expires_at" type="datetime-local" />
+      <button type="submit">Generate Gift Code</button>
+    </form>
+
+    <div id="giftList"></div>
+  </div>
+
+  <script>
+    function showMsg(text, type = "error") {
+      const m = document.getElementById("msg");
+      m.textContent = text;
+      m.className = "msg " + type;
+      m.style.display = "block";
+    }
+
+    async function deactivateGiftCode(id) {
+      try {
+        const { profile } = await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb.rpc("admin_deactivate_gift_code", {
+          p_admin_user_id: profile.id,
+          p_gift_code_id: id
+        });
+
+        if (error) throw error;
+        if (!data.ok) throw new Error(data.error || "Failed");
+
+        showMsg("Gift code deactivated.", "success");
+        loadGiftCodes();
+      } catch (err) {
+        showMsg(err.message || "Failed to deactivate gift code.");
+      }
+    }
+
+    async function loadGiftCodes() {
+      try {
+        await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb
+          .from("gift_codes")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        document.getElementById("giftList").innerHTML = data.map(g => `
+          <div class="list-item">
+            <div>
+              <strong>${g.code}</strong>
+              <p>Amount: ₦${Number(g.amount).toLocaleString()}</p>
+              <p>Redemptions: ${g.redemption_count}/${g.max_redemptions}</p>
+            </div>
+            <div class="list-item-right">
+              <p>${g.status}</p>
+              <p>${g.expires_at ? new Date(g.expires_at).toLocaleString() : "No expiry"}</p>
+              ${g.status === "active" ? `<button onclick="deactivateGiftCode('${g.id}')">Deactivate</button>` : ""}
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        showMsg(err.message || "Failed to load gift codes.");
+      }
+    }
+
+    document.getElementById("giftForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      try {
+        const { profile } = await window.LomaAuth.requireRole("admin");
+
+        const expiresRaw = document.getElementById("expires_at").value;
+        const { data, error } = await sb.rpc("admin_generate_gift_code", {
+          p_admin_user_id: profile.id,
+          p_code: document.getElementById("code").value.trim().toUpperCase(),
+          p_amount: Number(document.getElementById("amount").value),
+          p_max_redemptions: Number(document.getElementById("max_redemptions").value),
+          p_expires_at: expiresRaw ? new Date(expiresRaw).toISOString() : null
+        });
+
+        if (error) throw error;
+        if (!data.ok) throw new Error(data.error || "Failed to generate code");
+
+        showMsg("Gift code generated successfully.", "success");
+        e.target.reset();
+        loadGiftCodes();
+      } catch (err) {
+        showMsg(err.message || "Failed to generate gift code.");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", loadGiftCodes);
+  </script>
+</body>
+  </html>
