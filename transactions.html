@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<title>Transactions</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/auth.js"></script>
+
+</head>
+
+<body
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+
+<h2>Transactions</h2>
+
+<div id="tx"></div>
+
+<script>
+
+async function loadTransactions(){
+
+const session=await window.LomaAuth.requireAuth()
+const userId=session.user.id
+
+const {data,error}=await sb
+.from("wallet_transactions")
+.select("*")
+.eq("user_id",userId)
+.order("created_at",{ascending:false})
+
+if(error)return
+
+const box=document.getElementById("tx")
+
+box.innerHTML=data.map(t=>`
+
+<div class="card">
+
+<p>${t.type}</p>
+
+<p>${t.description}</p>
+
+<p>${t.direction==="credit"?"+":"-"}₦${t.amount}</p>
+
+<p>${new Date(t.created_at).toLocaleString()}</p>
+
+</div>
+
+`).join("")
+
+}
+
+document.addEventListener("DOMContentLoaded",loadTransactions)
+
+</script>
+
+</body>
+</html>
