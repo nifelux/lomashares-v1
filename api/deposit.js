@@ -23,7 +23,9 @@ function getPaystackSecret() {
 
 export default async function handler(req, res) {
   cors(res);
+
   if (req.method === "OPTIONS") return res.status(200).end();
+
   if (req.method !== "POST") {
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
@@ -35,12 +37,23 @@ export default async function handler(req, res) {
     const { user_id, email, amount, callback_url } = body || {};
 
     if (!user_id || !email || !amount) {
-      return res.status(400).json({ ok: false, error: "user_id, email and amount are required" });
+      return res.status(400).json({
+        ok: false,
+        error: "user_id, email and amount are required"
+      });
     }
 
     const numericAmount = Number(amount);
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
       return res.status(400).json({ ok: false, error: "Invalid amount" });
+    }
+
+    const siteUrl = process.env.SITE_URL;
+    if (!callback_url && !siteUrl) {
+      return res.status(500).json({
+        ok: false,
+        error: "Missing SITE_URL environment variable"
+      });
     }
 
     const reference = `DEP-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -55,7 +68,7 @@ export default async function handler(req, res) {
         email,
         amount: Math.round(numericAmount * 100),
         reference,
-        callback_url: callback_url || `${process.env.SITE_URL || ""}/deposit.html?reference=${reference}`,
+        callback_url: callback_url || `${siteUrl}/deposit.html?reference=${reference}`,
         metadata: {
           user_id,
           deposit_reference: reference
@@ -95,6 +108,9 @@ export default async function handler(req, res) {
       reference
     });
   } catch (err) {
-    return res.status(500).json({ ok: false, error: err.message || "Server error" });
+    return res.status(500).json({
+      ok: false,
+      error: err.message || "Server error"
+    });
   }
-    }
+}
