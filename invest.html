@@ -141,80 +141,111 @@
   </nav>
 
   <script>
-    (function () {
-      "use strict";
+(function () {
+  "use strict";
 
-      function money(v) {
-        return "₦" + Number(v || 0).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
+  function showMessage(msg, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) return;
+    box.innerText = msg;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
 
-      async function loadPlans() {
-        const wrap = document.getElementById("plansWrap");
-        try {
-          const session = await window.LomaAuth.requireAuth();
-          if (!session) return;
+  function formatMoney(v) {
+    return "₦" + Number(v || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
 
-          const { data, error } = await window.sb
-            .from("investment_plans")
-            .select("*")
-            .eq("is_active", true)
-            .order("amount", { ascending: true });
+  async function loadPlans() {
+    try {
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
 
-          if (error) throw error;
+      const { data, error } = await window.sb
+        .from("investment_plans")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
 
-          if (!data || !data.length) {
-            wrap.innerHTML = '<p class="empty-state">No investment plans available right now.</p>';
-            return;
-          }
+      if (error) throw error;
 
-          wrap.innerHTML = data.map((plan) => `
-            <div class="plan-card">
-              <h3>${plan.name || "Investment Plan"}</h3>
-              <div class="plan-price">${money(plan.amount)}</div>
+      renderPlans(data || []);
+    } catch (err) {
+      console.error(err);
+      showMessage("Failed to load investment plans");
+    }
+  }
 
-              <div class="plan-meta">
-                <div><span>Total Return</span><b>${money(plan.total_return || (Number(plan.amount || 0) * 2))}</b></div>
-                <div><span>Daily Profit</span><b>${money(plan.daily_profit)}</b></div>
-                <div><span>Duration</span><b>${plan.duration_days} days</b></div>
-              </div>
+  function renderPlans(plans) {
+    const wrap = document.getElementById("plansContainer");
+    if (!wrap) return;
 
-              <button type="button" onclick="buyPlan('${plan.id}')">Invest Now</button>
-            </div>
-          `).join("");
-        } catch (err) {
-          console.error(err);
-          wrap.innerHTML = `<p class="empty-state">${err.message || "Failed to load plans."}</p>`;
-        }
-      }
+    if (!plans.length) {
+      wrap.innerHTML = "<p class='empty-state'>No plans available</p>";
+      return;
+    }
 
-      function initMobileDrawer() {
-        const toggle = document.getElementById("menuToggle");
-        const drawer = document.getElementById("mobileDrawer");
-        const backdrop = document.getElementById("drawerBackdrop");
-        if (!toggle || !drawer || !backdrop) return;
+    wrap.innerHTML = plans.map(plan => `
+      <div class="plan-card">
+        <h3>${plan.name}</h3>
 
-        function closeDrawer() {
-          drawer.classList.remove("open");
-          backdrop.classList.remove("show");
-        }
+        <div class="plan-price">
+          ${formatMoney(plan.price)}
+        </div>
 
-        toggle.addEventListener("click", function () {
-          drawer.classList.toggle("open");
-          backdrop.classList.toggle("show");
-        });
+        <ul class="plan-details">
+          <li>Daily Profit: <b>${formatMoney(plan.daily_profit)}</b></li>
+          <li>Duration: <b>${plan.duration_days} days</b></li>
+          <li>Total Return: <b>${formatMoney(plan.total_return)}</b></li>
+        </ul>
 
-        backdrop.addEventListener("click", closeDrawer);
-        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
-      }
+        <button type="button" onclick="buyPlan('${plan.id}')">
+          Invest Now
+        </button>
+      </div>
+    `).join("");
+  }
 
-      document.addEventListener("DOMContentLoaded", function () {
-        initMobileDrawer();
-        loadPlans();
+  async function buyPlan(planId) {
+    try {
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
+
+      const userId = session.user.id;
+
+      const confirmBuy = confirm("Proceed with this investment?");
+      if (!confirmBuy) return;
+
+      const { data, error } = await window.sb.rpc("create_investment", {
+        p_user_id: userId,
+        p_plan_id: planId
       });
-    })();
-  </script>
+
+      if (error) throw error;
+
+      if (!data?.ok) {
+        showMessage(data?.error || "Investment failed");
+        return;
+      }
+
+      showMessage("Investment successful", "success");
+
+      setTimeout(() => {
+        window.location.href = "investments.html";
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      showMessage("Investment failed");
+    }
+  }
+
+  window.buyPlan = buyPlan;
+
+  document.addEventListener("DOMContentLoaded", loadPlans);
+})();
+                                               </script>
 </body>
 </html>
