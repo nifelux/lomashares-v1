@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Logs | LomaShares Admin</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="main-content">
+    <h1>Admin Logs</h1>
+    <div id="msg" class="msg"></div>
+    <div id="logsList"></div>
+  </div>
 
+  <script>
+    async function loadLogs() {
+      try {
+        await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb
+          .from("admin_logs")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        document.getElementById("logsList").innerHTML = data.map(log => `
+          <div class="list-item">
+            <div>
+              <strong>${log.action}</strong>
+              <p>Target Table: ${log.target_table || "-"}</p>
+              <p>Target ID: ${log.target_id || "-"}</p>
+            </div>
+            <div class="list-item-right">
+              <p>Admin: ${log.admin_user_id}</p>
+              <p>${new Date(log.created_at).toLocaleString()}</p>
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        const m = document.getElementById("msg");
+        m.textContent = err.message || "Failed to load logs.";
+        m.className = "msg error";
+        m.style.display = "block";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadLogs);
+  </script>
+</body>
+</html>
