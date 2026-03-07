@@ -1,1 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users | LomaShares Admin</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="main-content">
+    <h1>Users</h1>
+    <div id="msg" class="msg"></div>
+    <div id="usersList"></div>
+  </div>
 
+  <script>
+    async function loadUsers() {
+      try {
+        await window.LomaAuth.requireRole("admin");
+
+        const { data, error } = await sb
+          .from("profiles")
+          .select("id, full_name, email, phone, role, status, referral_code, created_at")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        const wrap = document.getElementById("usersList");
+        wrap.innerHTML = data.map(user => `
+          <div class="list-item">
+            <div>
+              <strong>${user.full_name || "No name"}</strong>
+              <p>${user.email || ""}</p>
+              <p>${user.phone || ""}</p>
+              <p>Referral Code: ${user.referral_code || "-"}</p>
+            </div>
+            <div class="list-item-right">
+              <strong>${user.role}</strong>
+              <p>${user.status}</p>
+              <p>${new Date(user.created_at).toLocaleString()}</p>
+            </div>
+          </div>
+        `).join("");
+      } catch (err) {
+        document.getElementById("msg").textContent = err.message || "Failed to load users.";
+        document.getElementById("msg").className = "msg error";
+        document.getElementById("msg").style.display = "block";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadUsers);
+  </script>
+</body>
+</html>
