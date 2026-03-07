@@ -1,61 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<title>My Team</title>
-
-<link rel="stylesheet" href="assets/css/styles.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/auth.js"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team | LomaShares</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
 </head>
-
 <body
-data-page="user"
-data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+  data-page="user"
+  data-supabase-url="YOUR_SUPABASE_URL"
+  data-supabase-anon="YOUR_SUPABASE_ANON_KEY"
 >
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link" href="investments.html">My Investments</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link active" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link" href="profile.html">Profile</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
 
-<h2>My Team</h2>
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>My Team</h1>
+          <p>Your direct referral team for Version 1</p>
+        </div>
+      </header>
 
-<div id="team"></div>
+      <div id="msg" class="msg"></div>
 
-<script>
+      <section class="cards-grid">
+        <div class="stat-card">
+          <span class="stat-title">Total Team Members</span>
+          <strong id="teamCount">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Active Team Investors</span>
+          <strong id="activeInvestors">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Total Team Investment</span>
+          <strong id="teamInvestment">₦0.00</strong>
+        </div>
+      </section>
 
-async function loadTeam(){
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Team Members</h2>
+        </div>
+        <div id="teamList" class="list-wrap">
+          <p class="empty-state">Loading team members...</p>
+        </div>
+      </div>
+    </main>
+  </div>
 
-const session=await window.LomaAuth.requireAuth()
-const userId=session.user.id
+  <script>
+    (function () {
+      "use strict";
 
-const {data}=await sb
-.from("profiles")
-.select("full_name,email,created_at")
-.eq("referred_by",userId)
+      function money(v) {
+        return "₦" + Number(v || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
 
-const box=document.getElementById("team")
+      function showMessage(text, type = "error") {
+        const box = document.getElementById("msg");
+        box.textContent = text;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
 
-box.innerHTML=data.map(m=>`
+      async function loadTeam() {
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
 
-<div class="card">
+          const userId = session.user.id;
 
-<p>${m.full_name}</p>
+          const { data: members, error } = await sb
+            .from("profiles")
+            .select("id, full_name, email, created_at")
+            .eq("referred_by", userId)
+            .order("created_at", { ascending: false });
 
-<p>${m.email}</p>
+          if (error) throw error;
 
-<p>${new Date(m.created_at).toLocaleDateString()}</p>
+          document.getElementById("teamCount").textContent = members.length || 0;
 
-</div>
+          if (!members.length) {
+            document.getElementById("teamList").innerHTML =
+              '<p class="empty-state">No team members found yet.</p>';
+            document.getElementById("activeInvestors").textContent = "0";
+            document.getElementById("teamInvestment").textContent = money(0);
+            return;
+          }
 
-`).join("")
+          const memberIds = members.map((m) => m.id);
 
-}
+          const { data: teamInvestments, error: invError } = await sb
+            .from("investments")
+            .select("user_id, amount, status")
+            .in("user_id", memberIds);
 
-document.addEventListener("DOMContentLoaded",loadTeam)
+          if (invError) throw invError;
 
-</script>
+          const totalInvestment = (teamInvestments || []).reduce((sum, item) => sum + Number(item.amount || 0), 0);
+          const activeUserSet = new Set(
+            (teamInvestments || [])
+              .filter((item) => item.status === "active")
+              .map((item) => item.user_id)
+          );
 
+          document.getElementById("teamInvestment").textContent = money(totalInvestment);
+          document.getElementById("activeInvestors").textContent = activeUserSet.size;
+
+          const grouped = {};
+          (teamInvestments || []).forEach((item) => {
+            if (!grouped[item.user_id]) grouped[item.user_id] = { total: 0, active: false };
+            grouped[item.user_id].total += Number(item.amount || 0);
+            if (item.status === "active") grouped[item.user_id].active = true;
+          });
+
+          document.getElementById("teamList").innerHTML = members.map((m) => {
+            const stats = grouped[m.id] || { total: 0, active: false };
+            return `
+              <div class="list-item">
+                <div>
+                  <strong>${m.full_name || "No name"}</strong>
+                  <p>${m.email || ""}</p>
+                  <p>Joined: ${new Date(m.created_at).toLocaleDateString()}</p>
+                </div>
+                <div class="list-item-right">
+                  <p>${money(stats.total)}</p>
+                  <span class="status-pill ${stats.active ? "active" : "debit"}">
+                    ${stats.active ? "active investor" : "inactive"}
+                  </span>
+                </div>
+              </div>
+            `;
+          }).join("");
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load team.");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadTeam);
+    })();
+  </script>
 </body>
-</html>
+  </html>
