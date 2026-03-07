@@ -1,52 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LomaShares</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="/assets/js/supabase.js" defer></script>
-<script src="/assets/js/auth.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LomaShares</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Arial,sans-serif;
+      background:#f4f7fb;
+      color:#08101d;
+    }
+  </style>
 </head>
-
 <body
-data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
+  <p>Loading...</p>
 
-<p style="text-align:center;margin-top:50px;">
-Loading...
-</p>
+  <script>
+    async function bootIndexRedirect() {
+      try {
+        if (!window.sb) {
+          setTimeout(bootIndexRedirect, 300);
+          return;
+        }
 
-<script>
+        const { data, error } = await window.sb.auth.getSession();
 
-const SUPABASE_URL = document.body.getAttribute("data-supabase-url");
-const SUPABASE_ANON = document.body.getAttribute("data-supabase-anon");
+        if (error) {
+          window.location.href = "/login.html";
+          return;
+        }
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        const session = data?.session || null;
 
-async function init() {
+        if (session?.user) {
+          window.location.href = "/dashboard.html";
+        } else {
+          window.location.href = "/login.html";
+        }
+      } catch (err) {
+        console.error("Index redirect error:", err);
+        window.location.href = "/login.html";
+      }
+    }
 
-const { data } = await supabase.auth.getSession();
-
-if (data.session) {
-
-window.location.href = "/dashboard.html";
-
-} else {
-
-window.location.href = "/login.html";
-
-}
-
-}
-
-init();
-
-</script>
-
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootIndexRedirect);
+    } else {
+      bootIndexRedirect();
+    }
+  </script>
 </body>
 </html>
