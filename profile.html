@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile | LomaShares</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
+</head>
+<body
+  data-page="user"
+  data-supabase-url="YOUR_SUPABASE_URL"
+  data-supabase-anon="YOUR_SUPABASE_ANON_KEY"
+>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link" href="investments.html">My Investments</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link active" href="profile.html">Profile</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
 
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Profile</h1>
+          <p>Manage your account details</p>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="panel" style="max-width:650px;">
+        <div class="panel-head">
+          <h2>My Profile</h2>
+        </div>
+
+        <form id="profileForm" class="simple-form">
+          <input id="full_name" type="text" placeholder="Full Name" />
+          <input id="email" type="email" placeholder="Email" disabled />
+          <input id="phone" type="text" placeholder="Phone Number" />
+          <input id="state" type="text" placeholder="State" />
+          <input id="lga" type="text" placeholder="LGA" />
+          <input id="username" type="text" placeholder="Username" />
+          <input id="referral_code" type="text" placeholder="Referral Code" disabled />
+          <input id="role" type="text" placeholder="Role" disabled />
+          <button type="submit">Save Profile</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function showMessage(text, type = "error") {
+        const box = document.getElementById("msg");
+        box.textContent = text;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
+
+      async function loadProfile() {
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const userId = session.user.id;
+          const profile = await window.LomaAuth.getProfile(userId);
+
+          document.getElementById("full_name").value = profile.full_name || "";
+          document.getElementById("email").value = profile.email || session.user.email || "";
+          document.getElementById("phone").value = profile.phone || "";
+          document.getElementById("state").value = profile.state || "";
+          document.getElementById("lga").value = profile.lga || "";
+          document.getElementById("username").value = profile.username || "";
+          document.getElementById("referral_code").value = profile.referral_code || "";
+          document.getElementById("role").value = profile.role || "user";
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load profile.");
+        }
+      }
+
+      document.getElementById("profileForm")?.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const userId = session.user.id;
+
+          const payload = {
+            full_name: document.getElementById("full_name").value.trim() || null,
+            phone: document.getElementById("phone").value.trim() || null,
+            state: document.getElementById("state").value.trim() || null,
+            lga: document.getElementById("lga").value.trim() || null,
+            username: document.getElementById("username").value.trim() || null
+          };
+
+          const { error } = await sb
+            .from("profiles")
+            .update(payload)
+            .eq("id", userId);
+
+          if (error) throw error;
+
+          showMessage("Profile updated successfully.", "success");
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to update profile.");
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", loadProfile);
+    })();
+  </script>
+</body>
+            </html>
