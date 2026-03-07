@@ -47,17 +47,28 @@
 
     try {
       if (!window.LomaAuth) {
-        throw new Error("LomaAuth not loaded");
+        throw new Error("Auth system not ready");
       }
 
-      const session = await window.LomaAuth.requireAuth();
-      if (!session) return;
+      const auth = await window.LomaAuth.requireAuth();
+      if (!auth) {
+        window.location.href = "/login.html";
+        return;
+      }
 
-      const userId = session.user.id;
+      const user = auth.user || auth.session?.user || null;
+      const userId = user?.id;
+
+      if (!userId) {
+        throw new Error("User session invalid. Please login again.");
+      }
+
       const amount = Number(document.getElementById("amount")?.value || 0);
       const bankSelect = document.getElementById("bank");
       const bankCode = bankSelect?.value || "";
-      const bankName = bankSelect?.options[bankSelect.selectedIndex]?.dataset?.name || "";
+      const bankName =
+        bankSelect?.options?.[bankSelect.selectedIndex]?.dataset?.name || "";
+
       const accountName = (document.getElementById("account_name")?.value || "").trim();
       const accountNumber = (document.getElementById("account_number")?.value || "").trim();
 
@@ -67,6 +78,13 @@
 
       if (!bankCode || !bankName || !accountName || !accountNumber) {
         throw new Error("Fill all withdrawal fields");
+      }
+
+      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.textContent = "Submitting...";
       }
 
       const res = await fetch("/api/withdraw", {
@@ -97,14 +115,20 @@
         throw new Error(data?.error || "Withdrawal request failed");
       }
 
-      showMsg("Withdrawal submitted successfully", "success");
+      showMsg("Withdrawal request submitted", "success");
 
       setTimeout(() => {
         window.location.reload();
-      }, 800);
+      }, 1000);
     } catch (err) {
       console.error("Withdrawal error:", err);
       showMsg(err.message || "Withdrawal failed");
+    } finally {
+      const submitBtn = document.querySelector('#withdrawForm button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.originalText || "Submit Withdrawal";
+      }
     }
   }
 
