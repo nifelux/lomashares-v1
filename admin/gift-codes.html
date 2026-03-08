@@ -39,7 +39,7 @@
 
     async function deactivateGiftCode(id) {
       try {
-        const { profile } = await window.LomaAuth.requireRole("admin");
+        const { profile } = await window.LomaAuth.requireRole("super_admin");
 
         const { data, error } = await sb.rpc("admin_deactivate_gift_code", {
           p_admin_user_id: profile.id,
