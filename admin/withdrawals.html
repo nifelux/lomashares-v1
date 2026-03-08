@@ -30,7 +30,7 @@
 
     async function approveWithdrawal(id) {
       try {
-        const { profile } = await window.LomaAuth.requireRole("admin");
+        const { profile } = await window.LomaAuth.requireRole("super_admin");
 
         const { data, error } = await sb.rpc("approve_withdrawal", {
           p_admin_user_id: profile.id,
