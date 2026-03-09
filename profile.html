@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile | LomaShares</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile | LomaShares</title>
 
-  <link rel="stylesheet" href="assets/css/styles.css" />
+<link rel="stylesheet" href="assets/css/styles.css" />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="assets/js/supabase.js" defer></script>
-  <script src="assets/js/auth.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="/assets/js/supabase.js" defer></script>
+<script src="/assets/js/auth.js" defer></script>
 
-  <style>
+<style>
     .mobile-header,
     .mobile-drawer,
     .mobile-bottom-nav{
@@ -246,253 +246,199 @@
       }
     }
   </style>
+
 </head>
 
 <body
-  data-page="user"
-  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
-  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+"
 >
-  <div class="mobile-header">
-    <button class="menu-btn" id="menuToggle" type="button">☰</button>
-    <div class="brand">LomaShares</div>
-    <div style="width:46px;"></div>
-  </div>
 
-  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+<div class="app-shell">
 
-  <aside class="mobile-drawer" id="mobileDrawer">
-    <div class="brand">LomaShares</div>
-    <nav class="nav-menu">
-      <a class="nav-link" href="dashboard.html">Dashboard</a>
-      <a class="nav-link" href="deposit.html">Deposit</a>
-      <a class="nav-link" href="invest.html">Invest</a>
-      <a class="nav-link" href="investments.html">My Investments</a>
-      <a class="nav-link" href="withdraw.html">Withdraw</a>
-      <a class="nav-link" href="transactions.html">Transactions</a>
-      <a class="nav-link" href="referrals.html">Referrals</a>
-      <a class="nav-link" href="team.html">Team</a>
-      <a class="nav-link" href="gift.html">Gift Code</a>
-      <a class="nav-link active" href="profile.html">Profile</a>
-    </nav>
-    <button class="logout-btn" data-action="logout">Logout</button>
-  </aside>
+<aside class="sidebar">
+<div class="brand">LomaShares</div>
 
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">LomaShares</div>
-      <nav class="nav-menu">
-        <a class="nav-link" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="deposit.html">Deposit</a>
-        <a class="nav-link" href="invest.html">Invest</a>
-        <a class="nav-link" href="investments.html">My Investments</a>
-        <a class="nav-link" href="withdraw.html">Withdraw</a>
-        <a class="nav-link" href="transactions.html">Transactions</a>
-        <a class="nav-link" href="referrals.html">Referrals</a>
-        <a class="nav-link" href="team.html">Team</a>
-        <a class="nav-link" href="gift.html">Gift Code</a>
-        <a class="nav-link active" href="profile.html">Profile</a>
-      </nav>
-      <button class="logout-btn" data-action="logout">Logout</button>
-    </aside>
+<nav class="nav-menu">
+<a class="nav-link" href="dashboard.html">Dashboard</a>
+<a class="nav-link" href="deposit.html">Deposit</a>
+<a class="nav-link" href="invest.html">Invest</a>
+<a class="nav-link" href="investments.html">My Investments</a>
+<a class="nav-link" href="withdraw.html">Withdraw</a>
+<a class="nav-link" href="transactions.html">Transactions</a>
+<a class="nav-link" href="referrals.html">Referrals</a>
+<a class="nav-link" href="team.html">Team</a>
+<a class="nav-link" href="gift.html">Gift Code</a>
+<a class="nav-link active" href="profile.html">Profile</a>
+</nav>
 
-    <main class="main-content">
-      <header class="topbar">
-        <div>
-          <h1>Profile</h1>
-          <p>Manage your account details</p>
-        </div>
-      </header>
+<button class="logout-btn" data-action="logout">Logout</button>
+</aside>
 
-      <div id="msg" class="msg"></div>
+<main class="main-content">
 
-      <section class="profile-hero">
-        <div class="hero-card">
-          <h2>Your account, your identity.</h2>
-          <p>
-            Keep your profile details updated so your investment, referral, and withdrawal experience stays smooth and secure.
-          </p>
-        </div>
-      </section>
+<header class="topbar">
+<div>
+<h1>Profile</h1>
+<p>Manage your account details</p>
+</div>
+</header>
 
-      <section class="profile-layout">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>My Profile</h2>
-          </div>
+<div id="msg" class="msg"></div>
 
-          <form id="profileForm" class="simple-form">
-            <div class="field-grid">
-              <div class="field-full">
-                <label class="field-label" for="full_name">Full Name</label>
-                <input id="full_name" type="text" placeholder="Full Name" />
-              </div>
+<!-- Support Quick Links -->
 
-              <div class="field-full">
-                <label class="field-label" for="email">Email</label>
-                <input id="email" type="email" placeholder="Email" disabled />
-              </div>
+<div class="panel">
 
-              <div>
-                <label class="field-label" for="phone">Phone Number</label>
-                <input id="phone" type="text" placeholder="Phone Number" />
-              </div>
+<div class="panel-head">
+<h2>Support & Community</h2>
+</div>
 
-              <div>
-                <label class="field-label" for="username">Username</label>
-                <input id="username" type="text" placeholder="Username" />
-              </div>
+<div class="quick-actions">
 
-              <div>
-                <label class="field-label" for="state">State</label>
-                <input id="state" type="text" placeholder="State" />
-              </div>
+<a href="https://t.me/YOUR_TELEGRAM_GROUP" target="_blank" class="action-card">
+Join Telegram Group
+</a>
 
-              <div>
-                <label class="field-label" for="lga">LGA</label>
-                <input id="lga" type="text" placeholder="LGA" />
-              </div>
+<a href="https://chat.whatsapp.com/YOUR_WHATSAPP_GROUP" target="_blank" class="action-card">
+Join WhatsApp Group
+</a>
 
-              <div>
-                <label class="field-label" for="referral_code">Referral Code</label>
-                <input id="referral_code" type="text" placeholder="Referral Code" disabled />
-              </div>
+<a href="https://wa.me/234XXXXXXXXXX" target="_blank" class="action-card">
+Customer Service
+</a>
 
-              <div>
-                <label class="field-label" for="role">Role</label>
-                <input id="role" type="text" placeholder="Role" disabled />
-              </div>
-            </div>
+</div>
 
-            <button type="submit">Save Profile</button>
-          </form>
-        </div>
+</div>
 
-        <div class="profile-side">
-          <div class="panel">
-            <div class="panel-head">
-              <h2>Account Overview</h2>
-            </div>
+<!-- Profile Form -->
 
-            <div class="profile-mini">
-              <span>Referral Code</span>
-              <strong id="refPreview">-</strong>
-            </div>
+<div class="panel" style="max-width:650px;">
 
-            <div class="profile-mini">
-              <span>Account Role</span>
-              <strong id="rolePreview">user</strong>
-            </div>
+<div class="panel-head">
+<h2>My Profile</h2>
+</div>
 
-            <p class="profile-note">
-              Email, referral code, and role are controlled system fields and cannot be edited here.
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+<form id="profileForm" class="simple-form">
 
-  <nav class="mobile-bottom-nav">
-    <a href="dashboard.html">Home</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="invest.html">Invest</a>
-    <a href="withdraw.html">Withdraw</a>
-    <a class="active" href="profile.html">Profile</a>
-  </nav>
+<input id="full_name" type="text" placeholder="Full Name" />
 
-  <script>
-    (function () {
-      "use strict";
+<input id="email" type="email" placeholder="Email" disabled />
 
-      function showMessage(text, type = "error") {
-        const box = document.getElementById("msg");
-        box.textContent = text;
-        box.className = "msg " + type;
-        box.style.display = "block";
-      }
+<input id="phone" type="text" placeholder="Phone Number" />
 
-      async function loadProfile() {
-        try {
-          const session = await window.LomaAuth.requireAuth();
-          if (!session) return;
+<input id="state" type="text" placeholder="State" />
 
-          const userId = session.user.id;
-          const profile = await window.LomaAuth.getProfile(userId);
+<input id="lga" type="text" placeholder="LGA" />
 
-          document.getElementById("full_name").value = profile.full_name || "";
-          document.getElementById("email").value = profile.email || session.user.email || "";
-          document.getElementById("phone").value = profile.phone || "";
-          document.getElementById("state").value = profile.state || "";
-          document.getElementById("lga").value = profile.lga || "";
-          document.getElementById("username").value = profile.username || "";
-          document.getElementById("referral_code").value = profile.referral_code || "";
-          document.getElementById("role").value = profile.role || "user";
+<input id="username" type="text" placeholder="Username" />
 
-          document.getElementById("refPreview").textContent = profile.referral_code || "-";
-          document.getElementById("rolePreview").textContent = profile.role || "user";
-        } catch (err) {
-          console.error(err);
-          showMessage(err.message || "Failed to load profile.");
-        }
-      }
+<input id="referral_code" type="text" placeholder="Referral Code" disabled />
 
-      document.getElementById("profileForm")?.addEventListener("submit", async function (e) {
-        e.preventDefault();
+<input id="role" type="text" placeholder="Role" disabled />
 
-        try {
-          const session = await window.LomaAuth.requireAuth();
-          if (!session) return;
+<button type="submit">Save Profile</button>
 
-          const userId = session.user.id;
+</form>
 
-          const payload = {
-            full_name: document.getElementById("full_name").value.trim() || null,
-            phone: document.getElementById("phone").value.trim() || null,
-            state: document.getElementById("state").value.trim() || null,
-            lga: document.getElementById("lga").value.trim() || null,
-            username: document.getElementById("username").value.trim() || null
-          };
+</div>
 
-          const { error } = await window.sb
-            .from("profiles")
-            .update(payload)
-            .eq("id", userId);
+</main>
+</div>
 
-          if (error) throw error;
+<script>
 
-          showMessage("Profile updated successfully.", "success");
-        } catch (err) {
-          console.error(err);
-          showMessage(err.message || "Failed to update profile.");
-        }
-      });
+(function(){
 
-      function initMobileDrawer() {
-        const toggle = document.getElementById("menuToggle");
-        const drawer = document.getElementById("mobileDrawer");
-        const backdrop = document.getElementById("drawerBackdrop");
-        if (!toggle || !drawer || !backdrop) return;
+"use strict";
 
-        function closeDrawer() {
-          drawer.classList.remove("open");
-          backdrop.classList.remove("show");
-        }
+function showMessage(text,type="error"){
 
-        toggle.addEventListener("click", function () {
-          drawer.classList.toggle("open");
-          backdrop.classList.toggle("show");
-        });
+const box=document.getElementById("msg")
 
-        backdrop.addEventListener("click", closeDrawer);
-        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
-      }
+box.textContent=text
+box.className="msg "+type
+box.style.display="block"
 
-      document.addEventListener("DOMContentLoaded", function () {
-        initMobileDrawer();
-        loadProfile();
-      });
-    })();
-  </script>
+}
+
+async function loadProfile(){
+
+try{
+
+const session=await window.LomaAuth.requireAuth()
+
+if(!session)return
+
+const userId=session.user.id
+
+const profile=await window.LomaAuth.getProfile(userId)
+
+document.getElementById("full_name").value=profile.full_name||""
+document.getElementById("email").value=profile.email||session.user.email||""
+document.getElementById("phone").value=profile.phone||""
+document.getElementById("state").value=profile.state||""
+document.getElementById("lga").value=profile.lga||""
+document.getElementById("username").value=profile.username||""
+document.getElementById("referral_code").value=profile.referral_code||""
+document.getElementById("role").value=profile.role||"user"
+
+}catch(err){
+
+console.error(err)
+showMessage(err.message||"Failed to load profile.")
+
+}
+
+}
+
+document.getElementById("profileForm")?.addEventListener("submit",async function(e){
+
+e.preventDefault()
+
+try{
+
+const session=await window.LomaAuth.requireAuth()
+if(!session)return
+
+const userId=session.user.id
+
+const payload={
+
+full_name:document.getElementById("full_name").value.trim()||null,
+phone:document.getElementById("phone").value.trim()||null,
+state:document.getElementById("state").value.trim()||null,
+lga:document.getElementById("lga").value.trim()||null,
+username:document.getElementById("username").value.trim()||null
+
+}
+
+const {error}=await sb
+.from("profiles")
+.update(payload)
+.eq("id",userId)
+
+if(error)throw error
+
+showMessage("Profile updated successfully.","success")
+
+}catch(err){
+
+console.error(err)
+showMessage(err.message||"Failed to update profile.")
+
+}
+
+})
+
+document.addEventListener("DOMContentLoaded",loadProfile)
+
+})()
+
+</script>
+
 </body>
-        </html>
+  </html>
