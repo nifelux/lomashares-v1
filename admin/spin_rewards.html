@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Spin Rewards | Admin</title>
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="../assets/js/supabase.js" defer></script>
+<script src="../assets/js/auth.js" defer></script>
+
+</head>
+
+<body
+data-page="admin"
+data-role="admin"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="YOUR_ANON_KEY"
+>
+
+<div class="main-content">
+
+<h1>Spin Rewards</h1>
+
+<div id="msg" class="msg"></div>
+
+<form id="rewardForm" class="simple-form">
+
+<input id="name" placeholder="Reward Name" required>
+
+<select id="reward_type" required>
+<option value="wallet_bonus">Wallet Bonus</option>
+<option value="gift_code">Gift Code</option>
+<option value="none">Try Again</option>
+</select>
+
+<input id="amount" type="number" step="0.01" placeholder="Amount">
+
+<input id="probability" type="number" placeholder="Probability Weight" required>
+
+<button type="submit">Create Reward</button>
+
+</form>
+
+<div id="rewardsList"></div>
+
+</div>
+
+<script>
+
+function msg(text,type="error"){
+const box=document.getElementById("msg")
+box.textContent=text
+box.className="msg "+type
+box.style.display="block"
+}
+
+function money(v){
+return "₦"+Number(v||0).toLocaleString()
+}
+
+async function loadRewards(){
+
+const {data,error}=await sb
+.from("spin_rewards")
+.select("*")
+.order("created_at",{ascending:true})
+
+if(error) throw error
+
+document.getElementById("rewardsList").innerHTML=data.map(r=>`
+
+<div class="list-item">
+
+<div>
+
+<strong>${r.name}</strong>
+
+<p>Type: ${r.reward_type}</p>
+
+<p>Amount: ${money(r.amount)}</p>
+
+<p>Probability Weight: ${r.probability}</p>
+
+</div>
+
+<div class="list-item-right">
+
+<p>${r.is_active?"Active":"Inactive"}</p>
+
+<button onclick="toggleReward('${r.id}',${r.is_active})">
+${r.is_active?"Deactivate":"Activate"}
+</button>
+
+<button onclick="editReward('${r.id}',${r.amount},${r.probability})">
+Edit
+</button>
+
+</div>
+
+</div>
+
+`).join("")
+
+}
+
+async function toggleReward(id,current){
+
+try{
+
+await window.LomaAuth.requireRole("admin")
+
+const {error}=await sb
+.from("spin_rewards")
+.update({is_active:!current})
+.eq("id",id)
+
+if(error) throw error
+
+msg("Reward updated","success")
+
+loadRewards()
+
+}catch(err){
+
+msg(err.message)
+
+}
+
+}
+
+async function editReward(id,amount,prob){
+
+const newAmount=prompt("New amount",amount)
+
+if(newAmount===null) return
+
+const newProb=prompt("New probability weight",prob)
+
+if(newProb===null) return
+
+try{
+
+await window.LomaAuth.requireRole("admin")
+
+const {error}=await sb
+.from("spin_rewards")
+.update({
+amount:Number(newAmount),
+probability:Number(newProb)
+})
+.eq("id",id)
+
+if(error) throw error
+
+msg("Reward updated","success")
+
+loadRewards()
+
+}catch(err){
+
+msg(err.message)
+
+}
+
+}
+
+document.getElementById("rewardForm").addEventListener("submit",async(e)=>{
+
+e.preventDefault()
+
+try{
+
+await window.LomaAuth.requireRole("admin")
+
+const payload={
+
+name:document.getElementById("name").value.trim(),
+
+reward_type:document.getElementById("reward_type").value,
+
+amount:Number(document.getElementById("amount").value||0),
+
+probability:Number(document.getElementById("probability").value),
+
+is_active:true
+
+}
+
+const {error}=await sb.from("spin_rewards").insert(payload)
+
+if(error) throw error
+
+msg("Reward created","success")
+
+e.target.reset()
+
+loadRewards()
+
+}catch(err){
+
+msg(err.message)
+
+}
+
+})
+
+document.addEventListener("DOMContentLoaded",async()=>{
+
+try{
+
+await window.LomaAuth.requireRole("admin")
+
+loadRewards()
+
+}catch(err){
+
+msg(err.message)
+
+}
+
+})
+
+</script>
+
+</body>
+  </html>
