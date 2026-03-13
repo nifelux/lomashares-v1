@@ -64,66 +64,118 @@
       padding:10px 0 4px;
     }
 
-    .wheel-ring{
-      width:260px;
-      height:260px;
+    .premium-wheel{
+      width:320px;
+      height:320px;
       border-radius:50%;
       position:relative;
-      border:10px solid rgba(255,255,255,.08);
+      overflow:hidden;
+      border:10px solid rgba(212,175,55,.85);
       box-shadow:
-        0 0 0 8px rgba(47,123,255,.08),
-        0 24px 60px rgba(0,0,0,.28);
+        0 0 0 6px rgba(255,255,255,.06),
+        0 0 0 14px rgba(47,123,255,.08),
+        0 26px 60px rgba(0,0,0,.35);
       background:
-        conic-gradient(
-          rgba(47,123,255,.95) 0deg 72deg,
-          rgba(18,31,54,.98) 72deg 144deg,
-          rgba(110,164,255,.95) 144deg 216deg,
-          rgba(15,25,43,.98) 216deg 288deg,
-          rgba(47,123,255,.85) 288deg 360deg
-        );
-      transition:transform 4.2s cubic-bezier(.17,.67,.19,1);
+        radial-gradient(circle at 50% 50%, rgba(10,18,32,.95) 0%, rgba(5,10,18,.99) 60%, rgba(2,6,12,1) 100%);
+      transition:transform 4.5s cubic-bezier(.17,.67,.19,1);
     }
 
-    .wheel-ring::before{
+    #wheelSegments{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+    }
+
+    .wheel-segment{
+      position:absolute;
+      width:50%;
+      height:50%;
+      left:50%;
+      top:50%;
+      transform-origin:0% 0%;
+      overflow:hidden;
+    }
+
+    .wheel-segment::before{
       content:"";
       position:absolute;
-      inset:18px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.08), transparent 30%),
-        linear-gradient(180deg, rgba(10,18,32,.96) 0%, rgba(14,24,40,.98) 100%);
-      border:1px solid rgba(255,255,255,.05);
+      width:200%;
+      height:200%;
+      left:-100%;
+      top:-100%;
+      transform-origin:100% 100%;
+      clip-path:polygon(100% 100%, 0 84%, 0 100%);
+      border-right:2px solid rgba(255,255,255,.12);
     }
 
-    .wheel-center{
+    .wheel-segment.gold::before{
+      background:linear-gradient(135deg, #f3d36b 0%, #c79b1b 55%, #8a6512 100%);
+    }
+
+    .wheel-segment.blue::before{
+      background:linear-gradient(135deg, #6ea4ff 0%, #2f7bff 55%, #153b86 100%);
+    }
+
+    .wheel-segment.dark::before{
+      background:linear-gradient(135deg, #16243d 0%, #091224 55%, #030811 100%);
+    }
+
+    .wheel-segment.white::before{
+      background:linear-gradient(135deg, #ffffff 0%, #d7e4ff 55%, #9eb6e6 100%);
+    }
+
+    .wheel-label{
+      position:absolute;
+      left:67%;
+      top:49%;
+      width:92px;
+      text-align:center;
+      transform-origin:center center;
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      line-height:1.15;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      z-index:2;
+    }
+
+    .wheel-label.dark-text{
+      color:#071120;
+      text-shadow:none;
+    }
+
+    .wheel-center-btn{
       position:absolute;
       inset:50%;
-      width:88px;
-      height:88px;
+      width:98px;
+      height:98px;
       transform:translate(-50%, -50%);
       border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:var(--white);
+      color:#fff;
       font-weight:900;
-      font-size:15px;
+      font-size:18px;
+      letter-spacing:.4px;
       text-align:center;
-      background:linear-gradient(180deg, rgba(47,123,255,.96) 0%, rgba(21,93,252,.96) 100%);
-      border:4px solid rgba(255,255,255,.12);
-      box-shadow:0 14px 24px rgba(21,93,252,.24);
-      z-index:2;
+      background:linear-gradient(180deg, #2f7bff 0%, #155dfc 100%);
+      border:6px solid rgba(255,255,255,.16);
+      box-shadow:
+        0 14px 24px rgba(21,93,252,.28),
+        inset 0 6px 12px rgba(255,255,255,.12);
+      z-index:3;
     }
 
     .wheel-pointer{
       width:0;
       height:0;
-      border-left:16px solid transparent;
-      border-right:16px solid transparent;
-      border-top:28px solid #ffffff;
-      filter:drop-shadow(0 6px 12px rgba(0,0,0,.28));
-      margin-bottom:-6px;
-      z-index:3;
+      border-left:18px solid transparent;
+      border-right:18px solid transparent;
+      border-top:30px solid #f3d36b;
+      filter:drop-shadow(0 6px 12px rgba(0,0,0,.35));
+      margin-bottom:-8px;
+      z-index:5;
     }
 
     .spin-info{
@@ -286,6 +338,24 @@
       .main-content{ padding-top:14px; padding-bottom:96px; }
       .spin-layout{ grid-template-columns:1fr; }
     }
+
+    @media (max-width:620px){
+      .premium-wheel{
+        width:280px;
+        height:280px;
+      }
+
+      .wheel-center-btn{
+        width:88px;
+        height:88px;
+        font-size:16px;
+      }
+
+      .wheel-label{
+        width:78px;
+        font-size:11px;
+      }
+    }
   </style>
 </head>
 
@@ -362,8 +432,9 @@
           <div class="wheel-wrap">
             <div class="wheel-pointer"></div>
 
-            <div class="wheel-ring" id="wheelRing">
-              <div class="wheel-center">SPIN</div>
+            <div class="premium-wheel" id="premiumWheel">
+              <div id="wheelSegments"></div>
+              <div class="wheel-center-btn">SPIN</div>
             </div>
 
             <div class="spin-info">
@@ -456,6 +527,52 @@
         });
       }
 
+      async function loadWheelRewards() {
+        const { data, error } = await window.sb
+          .from("spin_rewards")
+          .select("id, name, reward_type, amount")
+          .eq("is_active", true)
+          .order("created_at", { ascending: true });
+
+        if (error) throw error;
+
+        const wrap = document.getElementById("wheelSegments");
+        if (!wrap) return;
+
+        if (!data || !data.length) {
+          wrap.innerHTML = "";
+          return;
+        }
+
+        const colors = ["gold", "blue", "dark", "white", "blue", "dark", "gold", "white"];
+        const total = data.length;
+        const angleStep = 360 / total;
+
+        wrap.innerHTML = data.map((item, index) => {
+          const angle = index * angleStep;
+          const colorClass = colors[index % colors.length];
+
+          let label = item.name || "Reward";
+
+          if (item.reward_type === "wallet_bonus") {
+            label = `₦${Number(item.amount || 0).toLocaleString()}`;
+          } else if (item.reward_type === "gift_code") {
+            label = "₦75 Gift";
+          } else if (item.reward_type === "none") {
+            label = "Try Again";
+          }
+
+          return `
+            <div class="wheel-segment ${colorClass}" style="transform:rotate(${angle}deg);">
+              <div class="wheel-label ${colorClass === "white" ? "dark-text" : ""}"
+                   style="transform:translate(-50%, -50%) rotate(${90 + angle + (angleStep / 2)}deg);">
+                ${label}
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
       async function loadSpinWallet(userId) {
         const { data, error } = await window.sb.rpc("get_user_spin_wallet", {
           p_user_id: userId
@@ -508,7 +625,7 @@
 
           const userId = session.user.id;
           const spinBtn = document.getElementById("spinBtn");
-          const wheel = document.getElementById("wheelRing");
+          const wheel = document.getElementById("premiumWheel");
 
           spinning = true;
           spinBtn.disabled = true;
@@ -590,6 +707,7 @@
 
           document.getElementById("spinBtn")?.addEventListener("click", spinNow);
 
+          await loadWheelRewards();
           await loadSpinWallet(userId);
           await loadSpinHistory(userId);
         } catch (err) {
