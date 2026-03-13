@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spin & Win | LomaShares</title>
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+
+  <style>
+    .mobile-header,
+    .mobile-drawer,
+    .mobile-bottom-nav{
+      display:none;
+    }
+
+    .spin-layout{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .spin-hero{
+      margin-bottom:18px;
+    }
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.22), transparent 28%),
+        linear-gradient(180deg, rgba(17,29,49,.96) 0%, rgba(10,18,32,.98) 100%);
+      border-radius:26px;
+      box-shadow:var(--glow);
+      padding:22px;
+    }
+
+    .hero-card h2{
+      margin:0 0 8px;
+      color:var(--white);
+      font-size:27px;
+      line-height:1.08;
+    }
+
+    .hero-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .wheel-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      padding:10px 0 4px;
+    }
+
+    .wheel-ring{
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      position:relative;
+      border:10px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 0 0 8px rgba(47,123,255,.08),
+        0 24px 60px rgba(0,0,0,.28);
+      background:
+        conic-gradient(
+          rgba(47,123,255,.95) 0deg 72deg,
+          rgba(18,31,54,.98) 72deg 144deg,
+          rgba(110,164,255,.95) 144deg 216deg,
+          rgba(15,25,43,.98) 216deg 288deg,
+          rgba(47,123,255,.85) 288deg 360deg
+        );
+      transition:transform 4.2s cubic-bezier(.17,.67,.19,1);
+    }
+
+    .wheel-ring::before{
+      content:"";
+      position:absolute;
+      inset:18px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.08), transparent 30%),
+        linear-gradient(180deg, rgba(10,18,32,.96) 0%, rgba(14,24,40,.98) 100%);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .wheel-center{
+      position:absolute;
+      inset:50%;
+      width:88px;
+      height:88px;
+      transform:translate(-50%, -50%);
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--white);
+      font-weight:900;
+      font-size:15px;
+      text-align:center;
+      background:linear-gradient(180deg, rgba(47,123,255,.96) 0%, rgba(21,93,252,.96) 100%);
+      border:4px solid rgba(255,255,255,.12);
+      box-shadow:0 14px 24px rgba(21,93,252,.24);
+      z-index:2;
+    }
+
+    .wheel-pointer{
+      width:0;
+      height:0;
+      border-left:16px solid transparent;
+      border-right:16px solid transparent;
+      border-top:28px solid #ffffff;
+      filter:drop-shadow(0 6px 12px rgba(0,0,0,.28));
+      margin-bottom:-6px;
+      z-index:3;
+    }
+
+    .spin-info{
+      text-align:center;
+    }
+
+    .spin-info strong{
+      display:block;
+      color:var(--white);
+      font-size:34px;
+      line-height:1.05;
+      margin-bottom:4px;
+    }
+
+    .spin-info span{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .spin-btn{
+      min-width:180px;
+    }
+
+    .result-box{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.05);
+      background:linear-gradient(180deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.015) 100%);
+    }
+
+    .result-box h3{
+      margin:0 0 8px;
+      color:var(--white);
+      font-size:18px;
+    }
+
+    .result-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+      word-break:break-word;
+    }
+
+    .spin-history .list-item-right{
+      min-width:150px;
+    }
+
+    @media (max-width:920px){
+      .mobile-header{
+        position:sticky;
+        top:0;
+        z-index:80;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        min-height:68px;
+        padding:14px;
+        background:rgba(7,13,24,.88);
+        backdrop-filter:blur(18px);
+        border-bottom:1px solid rgba(255,255,255,.05);
+        box-shadow:0 10px 24px rgba(0,0,0,.18);
+      }
+
+      .mobile-header .brand{
+        padding:0;
+        min-height:auto;
+        font-size:22px;
+      }
+
+      .menu-btn{
+        width:46px;
+        height:46px;
+        min-height:46px;
+        padding:0;
+        border-radius:14px;
+        box-shadow:none;
+        background:rgba(255,255,255,.06);
+        border:1px solid rgba(255,255,255,.06);
+      }
+
+      .mobile-drawer{
+        position:fixed;
+        inset:0 auto 0 0;
+        width:84%;
+        max-width:320px;
+        z-index:120;
+        display:block;
+        padding:18px 14px 24px;
+        background:linear-gradient(180deg, rgba(7,13,24,.98) 0%, rgba(10,18,32,.98) 100%);
+        border-right:1px solid rgba(255,255,255,.06);
+        box-shadow:var(--shadow-xl);
+        transform:translateX(-110%);
+        transition:transform .22s ease;
+        overflow-y:auto;
+      }
+
+      .mobile-drawer.open{ transform:translateX(0); }
+
+      .mobile-drawer-backdrop{
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.45);
+        z-index:110;
+        display:none;
+      }
+
+      .mobile-drawer-backdrop.show{ display:block; }
+
+      .mobile-drawer .brand{
+        padding:0 8px 14px;
+      }
+
+      .mobile-drawer .nav-menu{
+        display:flex;
+        flex-direction:column;
+      }
+
+      .mobile-drawer .logout-btn{
+        margin-top:14px;
+      }
+
+      .mobile-bottom-nav{
+        position:fixed;
+        left:12px;
+        right:12px;
+        bottom:12px;
+        z-index:90;
+        display:grid;
+        grid-template-columns:repeat(5, 1fr);
+        gap:8px;
+        padding:10px;
+        border-radius:22px;
+        border:1px solid rgba(255,255,255,.06);
+        background:rgba(10,18,32,.9);
+        backdrop-filter:blur(18px);
+        box-shadow:var(--shadow-lg);
+      }
+
+      .mobile-bottom-nav a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:44px;
+        padding:8px 6px;
+        border-radius:14px;
+        color:var(--muted);
+        font-size:12px;
+        font-weight:800;
+        text-align:center;
+      }
+
+      .mobile-bottom-nav a.active{
+        color:var(--white);
+        background:rgba(47,123,255,.16);
+      }
+
+      .sidebar{ display:none; }
+      .main-content{ padding-top:14px; padding-bottom:96px; }
+      .spin-layout{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body
+  data-page="user"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="mobile-header">
+    <button class="menu-btn" id="menuToggle" type="button">☰</button>
+    <div class="brand">LomaShares</div>
+    <div style="width:46px;"></div>
+  </div>
+
+  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div class="brand">LomaShares</div>
+    <nav class="nav-menu">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="deposit.html">Deposit</a>
+      <a class="nav-link" href="invest.html">Invest</a>
+      <a class="nav-link active" href="spin.html">Spin & Win</a>
+      <a class="nav-link" href="withdraw.html">Withdraw</a>
+      <a class="nav-link" href="transactions.html">Transactions</a>
+      <a class="nav-link" href="referrals.html">Referrals</a>
+      <a class="nav-link" href="team.html">Team</a>
+      <a class="nav-link" href="gift.html">Gift Code</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" data-action="logout">Logout</button>
+  </aside>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">LomaShares</div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="deposit.html">Deposit</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+        <a class="nav-link active" href="spin.html">Spin & Win</a>
+        <a class="nav-link" href="withdraw.html">Withdraw</a>
+        <a class="nav-link" href="transactions.html">Transactions</a>
+        <a class="nav-link" href="referrals.html">Referrals</a>
+        <a class="nav-link" href="team.html">Team</a>
+        <a class="nav-link" href="gift.html">Gift Code</a>
+        <a class="nav-link" href="profile.html">Profile</a>
+      </nav>
+      <button class="logout-btn" data-action="logout">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Spin & Win</h1>
+          <p>Use your earned spins to win wallet bonuses or a ₦75 gift code.</p>
+        </div>
+      </header>
+
+      <div id="msg" class="msg"></div>
+
+      <section class="spin-hero">
+        <div class="hero-card">
+          <h2>Every real activity can unlock rewards.</h2>
+          <p>
+            Spins are earned through successful deposits, investments, and referral investment rewards.
+            Use them here for a chance to win instant value.
+          </p>
+        </div>
+      </section>
+
+      <section class="spin-layout">
+        <div class="panel">
+          <div class="wheel-wrap">
+            <div class="wheel-pointer"></div>
+
+            <div class="wheel-ring" id="wheelRing">
+              <div class="wheel-center">SPIN</div>
+            </div>
+
+            <div class="spin-info">
+              <strong id="availableSpins">0</strong>
+              <span>Available Spins</span>
+            </div>
+
+            <button id="spinBtn" class="spin-btn" type="button">Spin Now</button>
+          </div>
+        </div>
+
+        <div class="profile-side">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Result</h2>
+            </div>
+
+            <div class="result-box">
+              <h3 id="resultTitle">No spin yet</h3>
+              <p id="resultText">Your reward result will appear here after spinning.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>How Spins Are Earned</h2>
+            </div>
+            <div class="list-wrap">
+              <div class="list-item">
+                <div>
+                  <strong>Deposit</strong>
+                  <p>Successful deposit gives 1 spin.</p>
+                </div>
+              </div>
+              <div class="list-item">
+                <div>
+                  <strong>Investment</strong>
+                  <p>Successful investment gives 1 spin.</p>
+                </div>
+              </div>
+              <div class="list-item">
+                <div>
+                  <strong>Referral Invest</strong>
+                  <p>When your referral invests and you earn bonus, you get 1 spin.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel spin-history" style="margin-top:16px;">
+        <div class="panel-head">
+          <h2>Recent Spin History</h2>
+        </div>
+        <div id="spinHistory" class="list-wrap">
+          <p class="empty-state">Loading spin history...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html">Home</a>
+    <a href="deposit.html">Deposit</a>
+    <a href="invest.html">Invest</a>
+    <a class="active" href="spin.html">Spin</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+
+  <script>
+    (function () {
+      "use strict";
+
+      let spinning = false;
+      let wheelTurns = 0;
+
+      function showMessage(text, type = "error") {
+        const box = document.getElementById("msg");
+        if (!box) return;
+        box.textContent = text;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
+
+      function money(v) {
+        return "₦" + Number(v || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      async function loadSpinWallet(userId) {
+        const { data, error } = await window.sb.rpc("get_user_spin_wallet", {
+          p_user_id: userId
+        });
+
+        if (error) throw error;
+
+        document.getElementById("availableSpins").textContent =
+          data?.available_spins ?? 0;
+      }
+
+      async function loadSpinHistory(userId) {
+        const { data, error } = await window.sb
+          .from("user_spins")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        const wrap = document.getElementById("spinHistory");
+
+        if (!data || !data.length) {
+          wrap.innerHTML = '<p class="empty-state">No spins yet.</p>';
+          return;
+        }
+
+        wrap.innerHTML = data.map((item) => `
+          <div class="list-item">
+            <div>
+              <strong>${item.reward_name || "Spin Reward"}</strong>
+              <p>Type: ${item.reward_type || "-"}</p>
+              <p>${new Date(item.created_at).toLocaleString()}</p>
+            </div>
+            <div class="list-item-right">
+              <strong>${item.reward_type === "gift_code" ? "₦75 Gift Code" : money(item.amount || 0)}</strong>
+              ${item.gift_code ? `<p>Code: ${item.gift_code}</p>` : ``}
+            </div>
+          </div>
+        `).join("");
+      }
+
+      async function spinNow() {
+        if (spinning) return;
+
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const userId = session.user.id;
+          const spinBtn = document.getElementById("spinBtn");
+          const wheel = document.getElementById("wheelRing");
+
+          spinning = true;
+          spinBtn.disabled = true;
+          spinBtn.textContent = "Spinning...";
+
+          wheelTurns += 1800 + Math.floor(Math.random() * 720);
+          wheel.style.transform = `rotate(${wheelTurns}deg)`;
+
+          const { data, error } = await window.sb.rpc("spin_wheel", {
+            p_user_id: userId
+          });
+
+          if (error) throw error;
+          if (!data?.ok) throw new Error(data?.error || "Spin failed");
+
+          setTimeout(async () => {
+            const title = document.getElementById("resultTitle");
+            const text = document.getElementById("resultText");
+
+            title.textContent = data.reward_name || "Reward";
+
+            if (data.reward_type === "wallet_bonus") {
+              text.textContent = `You won ${money(data.amount)} and it has been added to your main balance.`;
+              showMessage("Spin reward credited successfully.", "success");
+            } else if (data.reward_type === "gift_code") {
+              text.textContent = `You won a ₦75 gift code: ${data.gift_code}`;
+              showMessage("Gift code reward generated.", "success");
+            } else {
+              text.textContent = "No reward this time. Try again when you earn another spin.";
+              showMessage("No reward this spin.", "info");
+            }
+
+            await loadSpinWallet(userId);
+            await loadSpinHistory(userId);
+
+            spinBtn.disabled = false;
+            spinBtn.textContent = "Spin Now";
+            spinning = false;
+          }, 4200);
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to spin.");
+
+          const spinBtn = document.getElementById("spinBtn");
+          spinBtn.disabled = false;
+          spinBtn.textContent = "Spin Now";
+          spinning = false;
+        }
+      }
+
+      function initMobileDrawer() {
+        const toggle = document.getElementById("menuToggle");
+        const drawer = document.getElementById("mobileDrawer");
+        const backdrop = document.getElementById("drawerBackdrop");
+        if (!toggle || !drawer || !backdrop) return;
+
+        function closeDrawer() {
+          drawer.classList.remove("open");
+          backdrop.classList.remove("show");
+        }
+
+        toggle.addEventListener("click", function () {
+          drawer.classList.toggle("open");
+          backdrop.classList.toggle("show");
+        });
+
+        backdrop.addEventListener("click", closeDrawer);
+        drawer.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeDrawer));
+      }
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          initMobileDrawer();
+
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const userId = session.user.id;
+
+          document.getElementById("spinBtn")?.addEventListener("click", spinNow);
+
+          await loadSpinWallet(userId);
+          await loadSpinHistory(userId);
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load spin page.");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
