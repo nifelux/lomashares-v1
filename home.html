@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LomaShares | Smart Digital Investment Platform</title>
+  <meta
+    name="description"
+    content="LomaShares is a digital investment platform where users can deposit, invest, earn daily returns, withdraw, refer others, and access reward features through a modern dashboard."
+  />
+  <meta
+    name="keywords"
+    content="LomaShares, digital investment, online investment platform, referral earning, daily returns, fintech platform"
+  />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0b1220" />
+
+  <meta property="og:title" content="LomaShares | Smart Digital Investment Platform" />
+  <meta
+    property="og:description"
+    content="Deposit, invest, track returns, withdraw, earn referral rewards, and manage everything from one modern LomaShares dashboard."
+  />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#08101d;
+      --bg-soft:#0d1728;
+      --card:#101c31;
+      --card-2:#13223d;
+      --line:rgba(255,255,255,.08);
+      --text:#f4f7ff;
+      --muted:#b6c2d9;
+      --blue:#2f7bff;
+      --blue-2:#6ea4ff;
+      --gold:#d4af37;
+      --success:#7ce2a7;
+      --shadow:0 20px 45px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.14), transparent 20%),
+        linear-gradient(180deg, #07101d 0%, #0b1526 100%);
+      color:var(--text);
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      width:min(1160px, calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+      backdrop-filter:blur(16px);
+      background:rgba(8,16,29,.84);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      min-height:74px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:34px;
+      letter-spacing:.4px;
+      flex-shrink:0;
+    }
+
+    .brand-dot{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:linear-gradient(180deg, var(--blue-2), var(--blue));
+      box-shadow:0 0 24px rgba(47,123,255,.55);
+      flex:0 0 auto;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav a{
+      padding:11px 15px;
+      border-radius:14px;
+      color:var(--muted);
+      font-weight:700;
+      font-size:14px;
+      border:1px solid transparent;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .nav .btn-link{
+      color:#fff;
+      background:linear-gradient(180deg, var(--blue), #155dfc);
+      box-shadow:0 12px 22px rgba(21,93,252,.24);
+    }
+
+    .menu-btn{
+      display:none;
+      width:46px;
+      height:46px;
+      border:none;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-size:20px;
+    }
+
+    .mobile-menu{
+      display:none;
+      padding:0 0 16px;
+    }
+
+    .mobile-menu-inner{
+      display:grid;
+      gap:10px;
+      padding-top:8px;
+    }
+
+    .mobile-menu a{
+      display:block;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .hero{
+      padding:54px 0 26px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:center;
+    }
+
+    .hero-card{
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:32px;
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.18), transparent 26%),
+        linear-gradient(180deg, rgba(16,28,49,.96) 0%, rgba(9,17,31,.98) 100%);
+      box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--gold);
+      font-weight:800;
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      margin:0 0 14px;
+      font-size:clamp(38px, 7vw, 66px);
+      line-height:1.01;
+      letter-spacing:-.04em;
+      max-width:760px;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:740px;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.8;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:50px;
+      padding:0 20px;
+      border-radius:16px;
+      font-weight:800;
+      font-size:14px;
+      border:1px solid transparent;
+    }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(180deg, var(--blue), #155dfc);
+      box-shadow:0 12px 22px rgba(21,93,252,.24);
+    }
+
+    .btn-secondary{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .hero-stat-grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .stat-box{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      border-radius:22px;
+      padding:20px;
+    }
+
+    .stat-box span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .stat-box strong{
+      font-size:24px;
+      line-height:1.2;
+    }
+
+    .section{
+      padding:18px 0 8px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:34px;
+      line-height:1.08;
+    }
+
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.7;
+      max-width:620px;
+    }
+
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+    }
+
+    .feature-card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      background:linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+    }
+
+    .feature-card h3{
+      margin:0 0 10px;
+      font-size:22px;
+    }
+
+    .feature-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+    }
+
+    .process-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+    }
+
+    .process-card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      background:linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+      position:relative;
+    }
+
+    .step-badge{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(47,123,255,.12);
+      border:1px solid rgba(47,123,255,.24);
+      color:var(--blue-2);
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .process-card h3{
+      margin:0 0 10px;
+      font-size:21px;
+    }
+
+    .process-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+    }
+
+    .links-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+    }
+
+    .link-card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,.08), transparent 25%),
+        linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+    }
+
+    .link-card h3{
+      margin:0 0 10px;
+      font-size:21px;
+    }
+
+    .link-card p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+    }
+
+    .link-card a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .cta{
+      padding:26px 0 44px;
+    }
+
+    .cta-card{
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:30px;
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.18), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(212,175,55,.08), transparent 24%),
+        linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .cta-card h2{
+      margin:0 0 10px;
+      font-size:38px;
+    }
+
+    .cta-card p{
+      margin:0 auto;
+      max-width:700px;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:15px;
+    }
+
+    .cta-card .hero-actions{
+      justify-content:center;
+      margin-top:22px;
+    }
+
+    footer{
+      padding:0 0 44px;
+    }
+
+    .footer-card{
+      border-top:1px solid var(--line);
+      padding-top:24px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width:980px){
+      .hero-grid,
+      .feature-grid,
+      .process-grid,
+      .links-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:860px){
+      .topbar-inner{
+        min-height:66px;
+      }
+
+      .brand{
+        font-size:28px;
+      }
+
+      .nav{
+        display:none;
+      }
+
+      .menu-btn{
+        display:block;
+      }
+
+      .mobile-menu.show{
+        display:block;
+      }
+
+      .hero{
+        padding-top:28px;
+      }
+
+      .hero-card{
+        padding:24px 20px;
+        border-radius:24px;
+      }
+
+      .section-head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .footer-card{
+        flex-direction:column;
+      }
+    }
+
+    @media (max-width:620px){
+      .wrap{
+        width:min(100% - 18px, 1160px);
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .section-head h2{
+        font-size:28px;
+      }
+
+      .cta-card{
+        padding:24px 18px;
+        border-radius:24px;
+      }
+
+      .cta-card h2{
+        font-size:30px;
+      }
+
+      .hero-actions{
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a href="index.html" class="brand" aria-label="LomaShares Home">
+        <span class="brand-dot"></span>
+        <span>LomaShares</span>
+      </a>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <a href="#about">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="login.html">Login</a>
+        <a href="register.html" class="btn-link">Register</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" type="button">☰</button>
+    </div>
+
+    <div class="wrap mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-inner">
+        <a href="#about">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-card">
+            <div class="eyebrow">Digital Investment Experience</div>
+            <h1>Invest smarter with a modern platform built for growth.</h1>
+            <p>
+              LomaShares is a portfolio-style digital investment platform that gives users a
+              clean way to deposit funds, activate plans, track investment progress, manage
+              withdrawals, earn referral rewards, and engage with reward-based features from
+              one premium dashboard.
+            </p>
+
+            <div class="hero-actions">
+              <a href="register.html" class="btn btn-primary">Create Account</a>
+              <a href="login.html" class="btn btn-secondary">Login to Dashboard</a>
+            </div>
+          </div>
+
+          <div class="hero-stat-grid">
+            <div class="stat-box">
+              <span>Designed For</span>
+              <strong>Mobile-First User Experience</strong>
+            </div>
+
+            <div class="stat-box">
+              <span>Core Tools</span>
+              <strong>Wallet, Investments, Referrals, Rewards</strong>
+            </div>
+
+            <div class="stat-box">
+              <span>Platform Style</span>
+              <strong>Modern Fintech Investment Interface</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>About LomaShares</h2>
+            <p>
+              LomaShares is built to simplify the user journey across registration, funding,
+              investment participation, withdrawals, referrals, and account management.
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Simple Access</h3>
+            <p>
+              Users can sign up, fund their wallet, and begin interacting with available
+              investment products through a clean dashboard-driven structure.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Structured Plans</h3>
+            <p>
+              Investment products are displayed clearly with pricing, daily return values,
+              duration, and total expected return information.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Activity Tracking</h3>
+            <p>
+              Deposits, investments, transaction history, referral rewards, and profile details
+              are kept visible inside the user account for better control.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>How It Works</h2>
+            <p>
+              LomaShares keeps the process easy to understand so users can move from account creation
+              to investment activity without confusion.
+            </p>
+          </div>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="step-badge">1</div>
+            <h3>Register</h3>
+            <p>Create an account and gain access to your personal dashboard and wallet tools.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-badge">2</div>
+            <h3>Deposit</h3>
+            <p>Fund your wallet through the approved payment process on the platform.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-badge">3</div>
+            <h3>Invest</h3>
+            <p>Select from active investment plans and confirm the purchase using your balance.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-badge">4</div>
+            <h3>Track & Grow</h3>
+            <p>Monitor returns, manage referrals, withdraw when eligible, and use platform rewards.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Explore More</h2>
+            <p>
+              Learn more about the platform rules, common user questions, and privacy structure
+              through the pages below.
+            </p>
+          </div>
+        </div>
+
+        <div class="links-grid">
+          <div class="link-card">
+            <h3>FAQ</h3>
+            <p>
+              Get answers to common questions about deposits, investments, withdrawals,
+              referrals, gift codes, and support.
+            </p>
+            <a href="faq.html">Open FAQ</a>
+          </div>
+
+          <div class="link-card">
+            <h3>Terms</h3>
+            <p>
+              Review the rules that govern account usage, investments, withdrawals,
+              referrals, rewards, and platform conduct.
+            </p>
+            <a href="terms.html">Read Terms</a>
+          </div>
+
+          <div class="link-card">
+            <h3>Privacy</h3>
+            <p>
+              Understand how account data, transaction records, and support information
+              are collected and used on the platform.
+            </p>
+            <a href="privacy.html">Read Privacy Policy</a>
+          </div>
+
+          <div class="link-card">
+            <h3>Join Now</h3>
+            <p>
+              Start your LomaShares journey by creating an account and accessing the
+              full user dashboard experience.
+            </p>
+            <a href="register.html">Register</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-card">
+          <h2>Ready to get started with LomaShares?</h2>
+          <p>
+            Create your account, fund your wallet, activate a plan, and manage everything
+            from one premium digital investment experience.
+          </p>
+
+          <div class="hero-actions">
+            <a href="register.html" class="btn btn-primary">Register Now</a>
+            <a href="login.html" class="btn btn-secondary">Login</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-card">
+        <div>© 2026 LomaShares. All rights reserved.</div>
+        <div>
+          <a href="faq.html">FAQ</a> ·
+          <a href="terms.html">Terms</a> ·
+          <a href="privacy.html">Privacy</a> ·
+          <a href="login.html">Login</a> ·
+          <a href="register.html">Register</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener("click", function () {
+          mobileMenu.classList.toggle("show");
+        });
+
+        mobileMenu.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", function () {
+            mobileMenu.classList.remove("show");
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
