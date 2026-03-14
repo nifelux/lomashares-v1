@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LomaShares Terms and Conditions</title>
+  <meta
+    name="description"
+    content="Read the official LomaShares Terms and Conditions covering account registration, deposits, investments, withdrawals, referrals, rewards, and platform usage rules."
+  />
+  <meta
+    name="keywords"
+    content="LomaShares terms, LomaShares conditions, LomaShares policy, LomaShares investment terms, LomaShares withdrawal rules"
+  />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0b1220" />
+
+  <meta property="og:title" content="LomaShares Terms and Conditions" />
+  <meta
+    property="og:description"
+    content="Review the terms and conditions for using LomaShares, including account usage, investments, withdrawals, referrals, and rewards."
+  />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#08101d;
+      --bg-soft:#0d1728;
+      --card:#101c31;
+      --card-2:#13223d;
+      --line:rgba(255,255,255,.08);
+      --text:#f4f7ff;
+      --muted:#b6c2d9;
+      --blue:#2f7bff;
+      --blue-2:#6ea4ff;
+      --gold:#d4af37;
+      --shadow:0 20px 45px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.14), transparent 20%),
+        linear-gradient(180deg, #07101d 0%, #0b1526 100%);
+      color:var(--text);
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .wrap{
+      width:min(1100px, calc(100% - 28px));
+      margin:0 auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(16px);
+      background:rgba(8,16,29,.82);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      min-height:72px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:34px;
+      letter-spacing:.4px;
+    }
+
+    .brand-dot{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:linear-gradient(180deg, var(--blue-2), var(--blue));
+      box-shadow:0 0 24px rgba(47,123,255,.55);
+      flex:0 0 auto;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      padding:11px 16px;
+      border-radius:14px;
+      color:var(--muted);
+      font-weight:700;
+      font-size:14px;
+      border:1px solid transparent;
+    }
+
+    .nav a:hover{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .hero{
+      padding:42px 0 22px;
+    }
+
+    .hero-card{
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:30px;
+      background:
+        radial-gradient(circle at top right, rgba(47,123,255,.18), transparent 26%),
+        linear-gradient(180deg, rgba(16,28,49,.96) 0%, rgba(9,17,31,.98) 100%);
+      box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--gold);
+      font-weight:800;
+      font-size:13px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(34px, 7vw, 58px);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:800px;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.75;
+    }
+
+    .hero-meta{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .meta-box{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      border-radius:20px;
+      padding:18px;
+    }
+
+    .meta-box span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .meta-box strong{
+      font-size:20px;
+      line-height:1.2;
+    }
+
+    .toc-section{
+      padding:10px 0 8px;
+    }
+
+    .toc-card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+      background:linear-gradient(180deg, rgba(16,28,49,.9), rgba(11,20,35,.94));
+      box-shadow:var(--shadow);
+    }
+
+    .toc-card h2{
+      margin:0 0 14px;
+      font-size:24px;
+    }
+
+    .toc-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+    }
+
+    .toc-grid a{
+      display:block;
+      padding:14px 16px;
+      border-radius:16px;
+      color:var(--muted);
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.05);
+      background:rgba(255,255,255,.03);
+    }
+
+    .toc-grid a:hover{
+      color:var(--text);
+      border-color:rgba(47,123,255,.24);
+      background:rgba(47,123,255,.08);
+    }
+
+    .terms-section{
+      padding:22px 0 46px;
+    }
+
+    .terms-grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .term-card{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      background:linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+      scroll-margin-top:90px;
+    }
+
+    .term-card h2{
+      margin:0 0 12px;
+      font-size:28px;
+      line-height:1.15;
+    }
+
+    .term-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.8;
+    }
+
+    .term-card p + p{
+      margin-top:14px;
+    }
+
+    .term-card ul{
+      margin:14px 0 0 18px;
+      padding:0;
+      color:var(--muted);
+    }
+
+    .term-card li{
+      margin:7px 0;
+      line-height:1.75;
+    }
+
+    .notice{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,.24);
+      background:rgba(212,175,55,.08);
+      color:#f2df9a;
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .contact-card{
+      margin-top:28px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,.1), transparent 24%),
+        linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      box-shadow:var(--shadow);
+      display:grid;
+      gap:14px;
+    }
+
+    .contact-card h3{
+      margin:0;
+      font-size:24px;
+    }
+
+    .contact-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .contact-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      font-weight:800;
+      font-size:14px;
+      border:1px solid transparent;
+    }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(180deg, var(--blue), #155dfc);
+      box-shadow:0 12px 22px rgba(21,93,252,.24);
+    }
+
+    .btn-secondary{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    footer{
+      padding:0 0 44px;
+    }
+
+    .footer-card{
+      border-top:1px solid var(--line);
+      padding-top:24px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    @media (max-width:860px){
+      .topbar-inner{
+        min-height:64px;
+      }
+
+      .brand{
+        font-size:28px;
+      }
+
+      .hero-card{
+        padding:24px 20px;
+        border-radius:24px;
+      }
+
+      .hero-meta,
+      .toc-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:620px){
+      .wrap{
+        width:min(100% - 18px, 1100px);
+      }
+
+      .nav{
+        display:none;
+      }
+
+      .hero{
+        padding-top:26px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .term-card{
+        padding:18px 16px;
+      }
+
+      .term-card h2{
+        font-size:23px;
+      }
+
+      .contact-actions{
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a href="index.html" class="brand" aria-label="LomaShares Home">
+        <span class="brand-dot"></span>
+        <span>LomaShares</span>
+      </a>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="eyebrow">Legal & User Agreement</div>
+          <h1>Terms and Conditions</h1>
+          <p>
+            These Terms and Conditions govern your access to and use of LomaShares.
+            By registering, depositing, investing, referring users, redeeming rewards,
+            or using any part of the platform, you agree to these rules.
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-box">
+              <span>Applies To</span>
+              <strong>All LomaShares Users</strong>
+            </div>
+            <div class="meta-box">
+              <span>Effective Date</span>
+              <strong>March 2026</strong>
+            </div>
+            <div class="meta-box">
+              <span>Coverage</span>
+              <strong>Accounts, Funds, Rewards, Platform Use</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="toc-section">
+      <div class="wrap">
+        <div class="toc-card">
+          <h2>Contents</h2>
+          <div class="toc-grid">
+            <a href="#acceptance">1. Acceptance of Terms</a>
+            <a href="#eligibility">2. Eligibility</a>
+            <a href="#accounts">3. Account Registration</a>
+            <a href="#deposits">4. Deposits</a>
+            <a href="#investments">5. Investments</a>
+            <a href="#profits">6. Profit Processing</a>
+            <a href="#withdrawals">7. Withdrawals</a>
+            <a href="#referrals">8. Referrals</a>
+            <a href="#giftcodes">9. Gift Codes & Rewards</a>
+            <a href="#conduct">10. Prohibited Activities</a>
+            <a href="#suspension">11. Account Restriction</a>
+            <a href="#changes">12. Platform Changes</a>
+            <a href="#liability">13. Limitation of Liability</a>
+            <a href="#contact">14. Contact</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="terms-section">
+      <div class="wrap">
+        <div class="terms-grid">
+          <article class="term-card" id="acceptance">
+            <h2>1. Acceptance of Terms</h2>
+            <p>
+              By accessing or using LomaShares, you confirm that you have read, understood,
+              and agreed to be bound by these Terms and Conditions. If you do not agree,
+              you should not use the platform.
+            </p>
+          </article>
+
+          <article class="term-card" id="eligibility">
+            <h2>2. Eligibility</h2>
+            <p>
+              To use LomaShares, you must provide accurate registration details and use the
+              platform in compliance with all applicable rules and laws in your location.
+            </p>
+            <p>
+              Users are responsible for ensuring that their participation is permitted under
+              their own local requirements.
+            </p>
+          </article>
+
+          <article class="term-card" id="accounts">
+            <h2>3. Account Registration</h2>
+            <p>
+              Users must provide correct and complete information during registration.
+              Each account is intended for a single user only.
+            </p>
+            <ul>
+              <li>You are responsible for keeping your login credentials secure.</li>
+              <li>You must not impersonate another person or create misleading account details.</li>
+              <li>Multiple abusive or fraudulent accounts may be restricted or removed.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="deposits">
+            <h2>4. Deposits</h2>
+            <p>
+              Deposits are made through the approved payment flow available on LomaShares.
+              A deposit is treated as successful only after the platform confirms the payment.
+            </p>
+            <ul>
+              <li>Pending deposits are not treated as spendable wallet funds.</li>
+              <li>Incorrect payment details or incomplete transactions may delay confirmation.</li>
+              <li>LomaShares reserves the right to review unusual funding activity.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="investments">
+            <h2>5. Investments</h2>
+            <p>
+              Users may choose from available investment plans shown on the Invest page.
+              Each plan may include a defined price, duration, daily profit structure,
+              return value, and per-user participation limit.
+            </p>
+            <ul>
+              <li>An investment is created only after the wallet has sufficient balance.</li>
+              <li>Existing investments continue under the values stored at the time of purchase.</li>
+              <li>Changes to a plan later may apply only to future purchases, not already active ones.</li>
+            </ul>
+            <div class="notice">
+              LomaShares may activate, deactivate, or update future product offerings at any time.
+            </div>
+          </article>
+
+          <article class="term-card" id="profits">
+            <h2>6. Profit Processing</h2>
+            <p>
+              Daily profit is processed automatically according to the internal system schedule
+              for eligible active investments. Profit credit depends on investment status,
+              duration, and configured payout logic.
+            </p>
+            <ul>
+              <li>Only valid active investments are considered for daily profit.</li>
+              <li>Completed or ineligible investments will not continue receiving profit.</li>
+              <li>Temporary technical delays in scheduled processing may occur and may be corrected later.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="withdrawals">
+            <h2>7. Withdrawals</h2>
+            <p>
+              Withdrawal requests are submitted through the platform and are subject to the
+              platform rules in force at the time of request.
+            </p>
+            <ul>
+              <li>A user must have invested in at least one product before requesting withdrawal.</li>
+              <li>Withdrawal requests may be reviewed before completion.</li>
+              <li>Users are responsible for entering the correct bank and account details.</li>
+              <li>Incorrect withdrawal details may cause delays or failed payouts.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="referrals">
+            <h2>8. Referrals</h2>
+            <p>
+              LomaShares may provide each user with a referral code and referral link.
+              Referral rewards may be credited only when the referred user completes a qualifying action,
+              such as a valid investment, according to platform settings.
+            </p>
+            <ul>
+              <li>Self-referrals, fake referrals, and manipulative referral practices are prohibited.</li>
+              <li>Referral rewards may be withheld if abuse or suspicious activity is detected.</li>
+              <li>The referral structure may be adjusted by the platform when necessary.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="giftcodes">
+            <h2>9. Gift Codes and Reward Features</h2>
+            <p>
+              Gift codes, promotional rewards, and reward-based features such as Spin & Win,
+              where available, are subject to platform configuration and campaign rules.
+            </p>
+            <ul>
+              <li>Gift codes may carry a fixed value and can be redeemed only under valid conditions.</li>
+              <li>Promotional features may be enabled, disabled, or adjusted at any time.</li>
+              <li>Abuse of any reward system may result in account restriction.</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="conduct">
+            <h2>10. Prohibited Activities</h2>
+            <p>
+              Users must not use LomaShares in any abusive, deceptive, or unauthorized way.
+            </p>
+            <ul>
+              <li>Creating fake or duplicate accounts for unfair advantage</li>
+              <li>Manipulating deposits, withdrawals, rewards, or referral systems</li>
+              <li>Attempting to exploit bugs, automation, or unauthorized access</li>
+              <li>Providing false identity or payment information</li>
+            </ul>
+          </article>
+
+          <article class="term-card" id="suspension">
+            <h2>11. Account Restriction or Termination</h2>
+            <p>
+              LomaShares may suspend, restrict, review, or terminate an account where it believes
+              there is fraud, abuse, security risk, policy violation, or platform risk.
+            </p>
+            <p>
+              This may include temporary holding of activity while a review is ongoing.
+            </p>
+          </article>
+
+          <article class="term-card" id="changes">
+            <h2>12. Changes to the Platform or Terms</h2>
+            <p>
+              LomaShares may modify features, plan settings, reward structures, or these Terms
+              and Conditions from time to time. Continued use of the platform after updates
+              means you accept the updated terms.
+            </p>
+          </article>
+
+          <article class="term-card" id="liability">
+            <h2>13. Limitation of Liability</h2>
+            <p>
+              LomaShares provides the platform and its services subject to availability,
+              operational constraints, maintenance needs, and evolving platform structure.
+            </p>
+            <p>
+              To the extent permitted by applicable rules, LomaShares shall not be responsible
+              for indirect losses, user-side mistakes, unauthorized access caused by poor credential handling,
+              or delays caused by third-party payment or technical systems.
+            </p>
+          </article>
+
+          <article class="term-card" id="contact">
+            <h2>14. Contact and Support</h2>
+            <p>
+              If you need clarification regarding these Terms and Conditions, you should use the
+              official support channels provided by LomaShares.
+            </p>
+          </article>
+        </div>
+
+        <div class="contact-card">
+          <h3>Need clarification before using the platform?</h3>
+          <p>
+            Reach out through the official LomaShares support channels for help with account,
+            deposit, investment, withdrawal, or policy-related questions.
+          </p>
+
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="https://wa.me/234XXXXXXXXXX" target="_blank" rel="noopener noreferrer">Customer Service</a>
+            <a class="btn btn-secondary" href="https://t.me/YOUR_TELEGRAM_GROUP" target="_blank" rel="noopener noreferrer">Telegram Group</a>
+            <a class="btn btn-secondary" href="https://chat.whatsapp.com/YOUR_WHATSAPP_GROUP" target="_blank" rel="noopener noreferrer">WhatsApp Group</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-card">
+        © 2026 LomaShares. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
