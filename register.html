@@ -6,12 +6,446 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>LomaShares Register</title>
+<meta name="description" content="Create your LomaShares account and start managing deposits, investments, referrals, rewards, and withdrawals from one premium dashboard." />
+<meta name="robots" content="index,follow" />
+<meta name="theme-color" content="#0b1220" />
 
-<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="/assets/js/supabase.js" defer></script>
 <script src="/assets/js/auth.js" defer></script>
+
+<style>
+  :root{
+    --line:rgba(255,255,255,.08);
+    --text:#f4f7ff;
+    --muted:#b6c2d9;
+    --blue:#2f7bff;
+    --blue-2:#6ea4ff;
+    --gold:#d4af37;
+    --shadow:0 20px 45px rgba(0,0,0,.28);
+  }
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(47,123,255,.22), transparent 26%),
+    radial-gradient(circle at 100% 10%, rgba(110,164,255,.12), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(21,93,252,.12), transparent 24%),
+    linear-gradient(180deg, #040913 0%, #09101b 38%, #0a1220 100%);
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.018), rgba(255,255,255,0)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.012) 0,
+      rgba(255,255,255,.012) 1px,
+      transparent 1px,
+      transparent 120px
+    );
+  opacity:.35;
+  z-index:0;
+}
+
+body > *{
+  position:relative;
+  z-index:1;
+      }
+
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    backdrop-filter:blur(16px);
+    background:rgba(8,16,29,.84);
+    border-bottom:1px solid var(--line);
+  }
+
+  .topbar-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-height:74px;
+    width:min(1160px, calc(100% - 28px));
+    margin:0 auto;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:900;
+    font-size:34px;
+    letter-spacing:.4px;
+    text-decoration:none;
+    color:#fff;
+    flex-shrink:0;
+  }
+
+  .brand-dot{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:linear-gradient(180deg,var(--blue-2),var(--blue));
+    box-shadow:0 0 24px rgba(47,123,255,.55);
+    flex:0 0 auto;
+  }
+
+  .nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .nav a{
+    padding:11px 15px;
+    border-radius:14px;
+    color:var(--muted);
+    font-weight:700;
+    font-size:14px;
+    text-decoration:none;
+    border:1px solid transparent;
+  }
+
+  .nav a:hover{
+    color:#fff;
+    border-color:var(--line);
+    background:rgba(255,255,255,.03);
+  }
+
+  .nav .btn-link{
+    color:#fff;
+    background:linear-gradient(180deg,var(--blue),#155dfc);
+    box-shadow:0 12px 22px rgba(21,93,252,.24);
+  }
+
+  .menu-btn{
+    display:none;
+    width:46px;
+    height:46px;
+    border:none;
+    border-radius:14px;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    font-size:20px;
+  }
+
+  .mobile-menu{
+    display:none;
+    width:min(1160px, calc(100% - 28px));
+    margin:0 auto;
+    padding:0 0 16px;
+  }
+
+  .mobile-menu-inner{
+    display:grid;
+    gap:10px;
+    padding-top:8px;
+  }
+
+  .mobile-menu a{
+    display:block;
+    padding:14px 16px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.03);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+  }
+
+  .register-shell{
+    width:min(1160px, calc(100% - 28px));
+    margin:0 auto;
+    padding:42px 0 40px;
+    display:grid;
+    grid-template-columns:.95fr 1.05fr;
+    gap:18px;
+    align-items:stretch;
+  }
+
+  .register-showcase{
+    border:1px solid var(--line);
+    border-radius:30px;
+    padding:32px;
+    background:
+      radial-gradient(circle at top right, rgba(47,123,255,.18), transparent 26%),
+      radial-gradient(circle at bottom left, rgba(212,175,55,.08), transparent 24%),
+      linear-gradient(180deg, rgba(16,28,49,.96) 0%, rgba(9,17,31,.98) 100%);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:760px;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--gold);
+    font-weight:800;
+    font-size:13px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+
+  .register-showcase h1{
+    margin:0 0 14px;
+    font-size:clamp(36px, 5vw, 58px);
+    line-height:1.02;
+    letter-spacing:-.04em;
+    color:#fff;
+    max-width:620px;
+  }
+
+  .register-showcase p{
+    margin:0;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.8;
+    max-width:640px;
+  }
+
+  .showcase-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    margin-top:28px;
+  }
+
+  .showcase-box{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.03);
+    border-radius:22px;
+    padding:18px;
+  }
+
+  .showcase-box span{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+
+  .showcase-box strong{
+    display:block;
+    color:#fff;
+    font-size:20px;
+    line-height:1.25;
+  }
+
+  .register-card{
+    border:1px solid var(--line);
+    border-radius:30px;
+    padding:30px 26px;
+    background:
+      radial-gradient(circle at top right, rgba(47,123,255,.12), transparent 26%),
+      linear-gradient(180deg, rgba(16,28,49,.96) 0%, rgba(9,17,31,.98) 100%);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-height:760px;
+  }
+
+  .register-card h2{
+    margin:0 0 8px;
+    color:#fff;
+    font-size:34px;
+    line-height:1.06;
+  }
+
+  .register-card > p{
+    margin:0 0 22px;
+    color:var(--muted);
+    line-height:1.7;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+
+  .field-full{
+    grid-column:1 / -1;
+  }
+
+  .form-group{
+    margin-bottom:0;
+  }
+
+  .form-label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+
+  .register-card form{
+    display:block;
+  }
+
+  .register-card input{
+    width:100%;
+    min-height:56px;
+    padding:0 16px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.04);
+    color:#fff;
+    outline:none;
+    font-size:15px;
+  }
+
+  .register-card input::placeholder{
+    color:#97a8c8;
+  }
+
+  .register-card input:focus{
+    border-color:rgba(47,123,255,.4);
+    box-shadow:0 0 0 4px rgba(47,123,255,.12);
+  }
+
+  .register-card button{
+    width:100%;
+    min-height:56px;
+    border:none;
+    border-radius:16px;
+    font-size:15px;
+    font-weight:800;
+    color:#fff;
+    cursor:pointer;
+    background:linear-gradient(180deg,var(--blue),#155dfc);
+    box-shadow:0 12px 22px rgba(21,93,252,.24);
+    margin-top:18px;
+  }
+
+  .register-card button:hover{
+    transform:translateY(-1px);
+  }
+
+  .auth-links{
+    margin-top:18px;
+    text-align:center;
+  }
+
+  .auth-links p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.7;
+  }
+
+  .auth-links a{
+    color:#fff;
+    font-weight:800;
+    text-decoration:none;
+  }
+
+  .quick-links{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .quick-link-card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:14px;
+    background:rgba(255,255,255,.03);
+  }
+
+  .quick-link-card strong{
+    display:block;
+    color:#fff;
+    font-size:15px;
+    margin-bottom:6px;
+  }
+
+  .quick-link-card span{
+    display:block;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+  }
+
+  .msg{
+    margin-bottom:16px;
+  }
+
+  @media (max-width:980px){
+    .register-shell{
+      grid-template-columns:1fr;
+    }
+
+    .register-showcase,
+    .register-card{
+      min-height:auto;
+    }
+  }
+
+  @media (max-width:860px){
+    .nav{display:none}
+    .menu-btn{display:block}
+    .mobile-menu.show{display:block}
+    .topbar-inner{
+      min-height:66px;
+    }
+    .brand{
+      font-size:28px;
+    }
+  }
+
+  @media (max-width:620px){
+    .register-shell{
+      width:min(100% - 18px, 1160px);
+      padding-top:24px;
+    }
+
+    .register-showcase,
+    .register-card{
+      padding:24px 18px;
+      border-radius:24px;
+    }
+
+    .register-card h2{
+      font-size:28px;
+    }
+
+    .register-showcase p,
+    .register-card > p{
+      font-size:15px;
+    }
+
+    .field-grid,
+    .quick-links{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
 
 </head>
 
@@ -21,93 +455,202 @@ data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
 data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
 
-<div class="auth-container">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand" aria-label="LomaShares Home">
+      <span class="brand-dot"></span>
+      <span>LomaShares</span>
+    </a>
 
-<h1>Create Account</h1>
-<p>Join LomaShares today</p>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="login.html">Login</a>
+      <a href="register.html" class="btn-link">Register</a>
+    </nav>
 
-<div id="msg" class="msg"></div>
+    <button class="menu-btn" id="menuBtn" type="button">☰</button>
+  </div>
 
-<form id="registerForm">
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-inner">
+      <a href="index.html#about">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+  </div>
+</header>
 
-<input
-id="full_name"
-type="text"
-placeholder="Full name"
-required
-/>
+<main class="register-shell">
+  <section class="register-showcase">
+    <div>
+      <div class="eyebrow">Create Your Account</div>
+      <h1>Start your journey with a smarter investment dashboard.</h1>
+      <p>
+        Join LomaShares to access deposits, investments, referrals, wallet tracking,
+        withdrawals, rewards, and a premium mobile-first account experience built for growth.
+      </p>
 
-<input
-id="email"
-type="email"
-placeholder="Email address"
-required
-/>
+      <div class="showcase-grid">
+        <div class="showcase-box">
+          <span>Fast Setup</span>
+          <strong>Create your account and get started from one clean onboarding flow.</strong>
+        </div>
+        <div class="showcase-box">
+          <span>Premium Experience</span>
+          <strong>Enjoy a modern interface designed for clarity, speed, and mobile access.</strong>
+        </div>
+        <div class="showcase-box">
+          <span>Growth Features</span>
+          <strong>Track investments, manage referrals, and unlock account-based rewards.</strong>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<input
-id="phone"
-type="text"
-placeholder="Phone number"
-required
-/>
+  <section class="register-card">
+    <h2>Create Account</h2>
+    <p>Join LomaShares today and set up your account details below.</p>
 
-<input
-id="state"
-type="text"
-placeholder="State"
-required
-/>
+    <div id="msg" class="msg"></div>
 
-<input
-id="lga"
-type="text"
-placeholder="Local Government Area"
-required
-/>
+    <form id="registerForm">
+      <div class="field-grid">
+        <div class="form-group field-full">
+          <label class="form-label" for="full_name">Full Name</label>
+          <input
+            id="full_name"
+            type="text"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
 
-<input
-id="referral_code"
-type="text"
-placeholder="Referral code (optional)"
-/>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email address"
+            required
+          />
+        </div>
 
-<input
-id="password"
-type="password"
-placeholder="Password"
-required
-/>
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="text"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
 
-<input
-id="confirm_password"
-type="password"
-placeholder="Confirm password"
-required
-/>
+        <div class="form-group">
+          <label class="form-label" for="state">State</label>
+          <input
+            id="state"
+            type="text"
+            placeholder="Enter your state"
+            required
+          />
+        </div>
 
-<button type="submit">
-Create Account
-</button>
+        <div class="form-group">
+          <label class="form-label" for="lga">Local Government Area</label>
+          <input
+            id="lga"
+            type="text"
+            placeholder="Enter your LGA"
+            required
+          />
+        </div>
 
-</form>
+        <div class="form-group field-full">
+          <label class="form-label" for="referral_code">Referral Code</label>
+          <input
+            id="referral_code"
+            type="text"
+            placeholder="Referral code (optional)"
+          />
+        </div>
 
-<div class="auth-links">
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Create your password"
+            required
+          />
+        </div>
 
-<p>
-Already have an account?
-<a href="login.html">Login</a>
-</p>
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password</label>
+          <input
+            id="confirm_password"
+            type="password"
+            placeholder="Confirm your password"
+            required
+          />
+        </div>
+      </div>
 
-</div>
+      <button type="submit">Create Account</button>
+    </form>
 
-</div>
+    <div class="auth-links">
+      <p>
+        Already have an account?
+        <a href="login.html">Login</a>
+      </p>
+    </div>
+
+    <div class="quick-links">
+      <div class="quick-link-card">
+        <strong>Already a Member?</strong>
+        <span>Go to the login page and continue managing your dashboard.</span>
+      </div>
+      <div class="quick-link-card">
+        <strong>Using a Referral?</strong>
+        <span>Your referral code can be added automatically from a referral link.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    const input = document.getElementById("referral_code");
-    if (ref && input) input.value = ref;
-  });
-  </script>
+  (function () {
+    "use strict";
+
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", function () {
+        mobileMenu.classList.toggle("show");
+      });
+
+      mobileMenu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", function () {
+          mobileMenu.classList.remove("show");
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
+      const input = document.getElementById("referral_code");
+      if (ref && input) input.value = ref;
+    });
+  })();
+</script>
+
 </body>
-  </html>
+</html>
