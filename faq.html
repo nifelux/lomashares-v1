@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -254,6 +255,11 @@
       background:linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
       box-shadow:var(--shadow);
       overflow:hidden;
+      transition:border-color .2s ease, transform .2s ease;
+    }
+
+    .faq-item:hover{
+      border-color:rgba(47,123,255,.18);
     }
 
     .faq-question{
@@ -288,29 +294,46 @@
       flex:0 0 auto;
       font-size:18px;
       font-weight:900;
-      transition:transform .2s ease;
+      transition:transform .22s ease, background .2s ease;
     }
 
     .faq-item.open .faq-icon{
       transform:rotate(45deg);
+      background:rgba(212,175,55,.12);
+      color:var(--gold);
+      border-color:rgba(212,175,55,.24);
     }
 
     .faq-answer{
-      max-height:0;
-      overflow:hidden;
-      transition:max-height .28s ease;
+      display:grid;
+      grid-template-rows:0fr;
+      transition:grid-template-rows .28s ease;
+    }
+
+    .faq-item.open .faq-answer{
+      grid-template-rows:1fr;
     }
 
     .faq-answer-inner{
-      padding:0 22px 20px;
+      min-height:0;
+      overflow:hidden;
       color:var(--muted);
       font-size:15px;
       line-height:1.8;
       border-top:1px solid rgba(255,255,255,.05);
+      padding:0 22px;
+    }
+
+    .faq-item.open .faq-answer-inner{
+      padding:14px 22px 20px;
     }
 
     .faq-answer-inner p{
-      margin:14px 0 0;
+      margin:0;
+    }
+
+    .faq-answer-inner p + p{
+      margin-top:14px;
     }
 
     .faq-answer-inner ul{
@@ -320,6 +343,10 @@
 
     .faq-answer-inner li{
       margin:6px 0;
+    }
+
+    .hidden-faq{
+      display:none !important;
     }
 
     .contact-card{
@@ -374,6 +401,17 @@
       color:var(--text);
       border-color:var(--line);
       background:rgba(255,255,255,.03);
+    }
+
+    .no-result{
+      display:none;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px;
+      background:linear-gradient(180deg, rgba(16,28,49,.96), rgba(10,18,32,.98));
+      color:var(--muted);
+      box-shadow:var(--shadow);
+      margin-top:12px;
     }
 
     footer{
@@ -439,8 +477,12 @@
       }
 
       .faq-answer-inner{
-        padding:0 16px 18px;
+        padding:0 16px;
         font-size:14px;
+      }
+
+      .faq-item.open .faq-answer-inner{
+        padding:14px 16px 18px;
       }
 
       .contact-actions{
@@ -495,7 +537,7 @@
         "name":"When is daily profit credited?",
         "acceptedAnswer":{
           "@type":"Answer",
-          "text":"Daily profit is processed automatically based on the active investment cycle and system schedule. Only eligible active investments receive profit for that day."
+          "text":"Daily profit is processed automatically according to the internal system schedule for eligible active investments. Only eligible active investments receive profit for that day."
         }
       },
       {
@@ -744,4 +786,91 @@
           <article class="faq-item">
             <button class="faq-question" type="button">
               <span>Why is my deposit, withdrawal, or profit update delayed?</span>
-    
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <p>
+                  Some actions depend on payment confirmation, admin approval, or the platform processing cycle.
+                  If there is an unusual delay, contact support through the official channels.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="no-result" id="noResult">
+          No matching FAQ found. Try another keyword or contact support for help.
+        </div>
+
+        <div class="contact-card">
+          <h3>Need more help?</h3>
+          <p>
+            If your question is not listed here, reach out through the official support channels
+            so the LomaShares team can assist you directly.
+          </p>
+
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="https://wa.me/234XXXXXXXXXX" target="_blank" rel="noopener noreferrer">Customer Service</a>
+            <a class="btn btn-secondary" href="https://t.me/YOUR_TELEGRAM_GROUP" target="_blank" rel="noopener noreferrer">Telegram Group</a>
+            <a class="btn btn-secondary" href="https://chat.whatsapp.com/YOUR_WHATSAPP_GROUP" target="_blank" rel="noopener noreferrer">WhatsApp Group</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-card">
+        © 2026 LomaShares. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const faqItems = Array.from(document.querySelectorAll(".faq-item"));
+      const searchInput = document.getElementById("faqSearch");
+      const noResult = document.getElementById("noResult");
+
+      function closeAllExcept(currentItem) {
+        faqItems.forEach((item) => {
+          if (item !== currentItem) {
+            item.classList.remove("open");
+          }
+        });
+      }
+
+      faqItems.forEach((item) => {
+        const btn = item.querySelector(".faq-question");
+
+        btn.addEventListener("click", function () {
+          const isOpen = item.classList.contains("open");
+          if (!isOpen) {
+            closeAllExcept(item);
+          }
+          item.classList.toggle("open");
+        });
+      });
+
+      searchInput.addEventListener("input", function () {
+        const q = this.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        faqItems.forEach((item) => {
+          const text = item.innerText.toLowerCase();
+          const matched = text.includes(q);
+          item.classList.toggle("hidden-faq", !matched);
+
+          if (matched) visibleCount++;
+        });
+
+        noResult.style.display = visibleCount === 0 ? "block" : "none";
+      });
+    })();
+  </script>
+</body>
+</html>
