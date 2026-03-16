@@ -83,7 +83,7 @@
       border-left:22px solid transparent;
       border-right:22px solid transparent;
       border-top:42px solid #cf2f27;
-      z-index:30;
+      z-index:40;
       filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));
     }
 
@@ -104,7 +104,7 @@
       height:340px;
       position:relative;
       border-radius:50%;
-      transition:transform 5s cubic-bezier(.14,.72,.12,1);
+      transition:transform 5.2s cubic-bezier(.14,.72,.12,1);
       background:#0a1220;
     }
 
@@ -154,6 +154,17 @@
         radial-gradient(circle at 18% 16%, #ffd66f 0 3.8%, transparent 4.4%),
         radial-gradient(circle at 33% 6%, #ffd66f 0 3.8%, transparent 4.4%);
       filter:drop-shadow(0 0 8px rgba(255,214,111,.6));
+      animation: bulbBlink 1s linear infinite;
+    }
+
+    .premium-wheel.spinning .wheel-lights{
+      animation-duration: .22s;
+    }
+
+    @keyframes bulbBlink{
+      0%{opacity:1; filter:drop-shadow(0 0 8px rgba(255,214,111,.6))}
+      50%{opacity:.72; filter:drop-shadow(0 0 15px rgba(255,214,111,.95))}
+      100%{opacity:1; filter:drop-shadow(0 0 8px rgba(255,214,111,.6))}
     }
 
     .wheel-inner{
@@ -218,15 +229,15 @@
 
     .wheel-label{
       position:absolute;
-      left:67%;
-      top:46%;
-      width:100px;
+      left:64%;
+      top:44%;
+      width:110px;
       text-align:center;
       transform-origin:center center;
       color:#fff;
       font-size:12px;
       font-weight:900;
-      line-height:1.14;
+      line-height:1.12;
       text-shadow:0 2px 8px rgba(0,0,0,.6);
       letter-spacing:.01em;
       z-index:4;
@@ -235,6 +246,11 @@
     .wheel-label.dark-text{
       color:#1e1500;
       text-shadow:none;
+    }
+
+    .wheel-label span{
+      display:block;
+      transform:skewY(-6deg);
     }
 
     .wheel-glass{
@@ -283,6 +299,61 @@
         inset 0 -10px 16px rgba(0,0,0,.22),
         0 16px 24px rgba(31,93,247,.32);
       z-index:7;
+    }
+
+    .wheel-star-cap{
+      position:absolute;
+      inset:50%;
+      width:56px;
+      height:56px;
+      transform:translate(-50%, -50%);
+      z-index:8;
+      pointer-events:none;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.3));
+    }
+
+    .wheel-star-cap::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg,#ffd66b 0%, #d99614 58%, #8e5600 100%);
+      clip-path:polygon(50% 0%, 61% 33%, 97% 33%, 68% 55%, 79% 89%, 50% 68%, 21% 89%, 32% 55%, 3% 33%, 39% 33%);
+      border-radius:6px;
+    }
+
+    .wheel-star-cap::after{
+      content:"";
+      position:absolute;
+      inset:17px;
+      border-radius:50%;
+      background:radial-gradient(circle, #a26700 0%, #6a4100 100%);
+      box-shadow:inset 0 2px 4px rgba(255,255,255,.18);
+    }
+
+    .ticker-dot{
+      position:absolute;
+      top:33px;
+      left:50%;
+      width:8px;
+      height:18px;
+      transform:translateX(-50%);
+      border-radius:10px;
+      background:#fff6cc;
+      opacity:0;
+      z-index:35;
+      box-shadow:0 0 10px rgba(255,246,204,.8);
+    }
+
+    .premium-wheel.spinning + .ticker-dot,
+    .ticker-dot.active{
+      animation:tickerPulse .12s linear infinite;
+      opacity:1;
+    }
+
+    @keyframes tickerPulse{
+      0%{transform:translateX(-50%) scaleY(1)}
+      50%{transform:translateX(-50%) scaleY(.55)}
+      100%{transform:translateX(-50%) scaleY(1)}
     }
 
     .spin-info{
@@ -453,7 +524,7 @@
       }
 
       .wheel-label{
-        width:82px;
+        width:86px;
         font-size:11px;
       }
 
@@ -466,6 +537,11 @@
       .wheel-center-shadow{
         width:102px;
         height:102px;
+      }
+
+      .wheel-star-cap{
+        width:48px;
+        height:48px;
       }
     }
   </style>
@@ -557,7 +633,10 @@
 
                 <div class="wheel-center-shadow"></div>
                 <div class="wheel-center-btn">SPIN</div>
+                <div class="wheel-star-cap"></div>
               </div>
+
+              <div class="ticker-dot" id="tickerDot"></div>
             </div>
 
             <div class="spin-info">
@@ -656,13 +735,23 @@
           return `₦${Number(item.amount || 0).toLocaleString()}`;
         }
         if (item.reward_type === "gift_code") {
-          return "₦75 Gift Code";
+          return "₦75 GIFT CODE";
         }
-        return "Try Again";
+        return "TRY AGAIN";
       }
 
       function isDarkTextColor(colorClass) {
         return colorClass === "gold";
+      }
+
+      function startTickerFeel() {
+        const dot = document.getElementById("tickerDot");
+        if (dot) dot.classList.add("active");
+      }
+
+      function stopTickerFeel() {
+        const dot = document.getElementById("tickerDot");
+        if (dot) dot.classList.remove("active");
       }
 
       async function loadWheelRewards() {
@@ -684,7 +773,7 @@
           return;
         }
 
-        const colors = ["blue", "red", "gold", "purple", "green", "blue", "gold", "red"];
+        const colors = ["green", "blue", "red", "gold", "purple", "blue", "gold", "red"];
         const total = currentRewards.length;
         const angleStep = 360 / total;
 
@@ -700,7 +789,7 @@
                 class="wheel-label ${isDarkTextColor(colorClass) ? "dark-text" : ""}"
                 style="transform:translate(-50%, -50%) rotate(${90 + midAngle}deg);"
               >
-                ${label}
+                <span>${label}</span>
               </div>
             </div>
           `;
@@ -710,7 +799,10 @@
       function findWinningIndex(data) {
         return currentRewards.findIndex((item) => {
           if (data.reward_type === "wallet_bonus") {
-            return item.reward_type === "wallet_bonus" && Number(item.amount || 0) === Number(data.amount || 0);
+            return (
+              item.reward_type === "wallet_bonus" &&
+              Number(item.amount || 0) === Number(data.amount || 0)
+            );
           }
           if (data.reward_type === "gift_code") {
             return item.reward_type === "gift_code";
@@ -730,10 +822,18 @@
         const angleStep = 360 / total;
 
         const sliceCenter = index * angleStep + (angleStep / 2);
-        const pointerAngle = 0;
-        const targetAngle = 360 - sliceCenter + pointerAngle;
 
-        wheelTurns += 2160 + targetAngle;
+        const pointerOffset = -90;
+
+        const desiredRotation = pointerOffset - sliceCenter;
+
+        const currentNormalized = ((wheelTurns % 360) + 360) % 360;
+        const desiredNormalized = ((desiredRotation % 360) + 360) % 360;
+
+        let delta = desiredNormalized - currentNormalized;
+        if (delta < 0) delta += 360;
+
+        wheelTurns += (360 * 6) + delta;
         wheel.style.transform = `rotate(${wheelTurns}deg)`;
       }
 
@@ -783,18 +883,19 @@
       async function spinNow() {
         if (spinning) return;
 
-        let wheel;
         try {
           const session = await window.LomaAuth.requireAuth();
           if (!session) return;
 
           const userId = session.user.id;
           const spinBtn = document.getElementById("spinBtn");
-          wheel = document.getElementById("premiumWheel");
+          const wheel = document.getElementById("premiumWheel");
 
           spinning = true;
           spinBtn.disabled = true;
           spinBtn.textContent = "Spinning...";
+          wheel.classList.add("spinning");
+          startTickerFeel();
 
           const { data, error } = await window.sb.rpc("spin_wheel", {
             p_user_id: userId
@@ -830,13 +931,17 @@
             await loadSpinWallet(userId);
             await loadSpinHistory(userId);
 
+            wheel.classList.remove("spinning");
+            stopTickerFeel();
             spinBtn.disabled = false;
             spinBtn.textContent = "Spin Now";
             spinning = false;
-          }, 5200);
+          }, 5300);
         } catch (err) {
           console.error(err);
           showMessage(err.message || "Failed to spin.");
+          document.getElementById("premiumWheel")?.classList.remove("spinning");
+          stopTickerFeel();
 
           const spinBtn = document.getElementById("spinBtn");
           spinBtn.disabled = false;
