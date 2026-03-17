@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Active Investments | LomaShares Admin</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="../assets/js/supabase.js" defer></script>
+  <script src="../assets/js/auth.js" defer></script>
+</head>
+
+<body
+  data-page="admin"
+  data-role="admin"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+  <div class="main-content">
+    <h1>Active Investments</h1>
+    <div id="msg" class="msg"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>All Active Investments</h2>
+      </div>
+
+      <div id="investmentsList" class="list-wrap">
+        <p class="empty-state">Loading active investments...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function showMessage(text, type = "error") {
+        const box = document.getElementById("msg");
+        if (!box) return;
+        box.textContent = text;
+        box.className = "msg " + type;
+        box.style.display = "block";
+      }
+
+      function money(v) {
+        return "₦" + Number(v || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function formatDate(v) {
+        if (!v) return "-";
+        return new Date(v).toLocaleDateString();
+      }
+
+      async function loadActiveInvestments() {
+        try {
+          await window.LomaAuth.requireRole("admin");
+
+          const { data, error } = await window.sb
+            .from("investments")
+            .select(`
+              id,
+              user_id,
+              amount,
+              daily_profit,
+              duration_days,
+              days_paid,
+              start_date,
+              end_date,
+              status,
+              created_at,
+              investment_plans(name),
+              profiles(username, full_name, email)
+            `)
+            .eq("status", "active")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          const wrap = document.getElementById("investmentsList");
+
+          if (!data || !data.length) {
+            wrap.innerHTML = '<p class="empty-state">No active investments found.</p>';
+            return;
+          }
+
+          wrap.innerHTML = data.map((item) => {
+            const profile = item.profiles || {};
+            const plan = item.investment_plans || {};
+
+            return `
+              <div class="list-item" style="align-items:flex-start; gap:14px;">
+                <div style="flex:1;">
+                  <strong>${plan.name || "Investment Plan"}</strong>
+                  <p><b>Username:</b> ${profile.username || "-"}</p>
+                  <p><b>Full Name:</b> ${profile.full_name || "-"}</p>
+                  <p><b>Email:</b> ${profile.email || "-"}</p>
+                  <p><b>User ID:</b> ${item.user_id || "-"}</p>
+                </div>
+
+                <div class="list-item-right" style="text-align:right; min-width:180px;">
+                  <p><b>Amount:</b> ${money(item.amount)}</p>
+                  <p><b>Daily Profit:</b> ${money(item.daily_profit)}</p>
+                  <p><b>Progress:</b> ${item.days_paid || 0}/${item.duration_days || 0} days</p>
+                  <p><b>Start:</b> ${formatDate(item.start_date)}</p>
+                  <p><b>End:</b> ${formatDate(item.end_date)}</p>
+                  <span class="status-pill active">${item.status || "active"}</span>
+                </div>
+              </div>
+            `;
+          }).join("");
+        } catch (err) {
+          console.error(err);
+          showMessage(err.message || "Failed to load active investments.");
+          document.getElementById("investmentsList").innerHTML =
+            '<p class="empty-state">Failed to load active investments.</p>';
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadActiveInvestments);
+    })();
+  </script>
+</body>
+</html>
