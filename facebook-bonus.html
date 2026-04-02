@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facebook Bonus | LomaShares</title>
+
+<link rel="stylesheet" href="assets/css/styles.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase.js" defer></script>
+<script src="assets/js/auth.js" defer></script>
+
+<style>
+  .bonus-shell{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:16px;
+    align-items:start;
+  }
+
+  .bonus-hero{
+    margin-bottom:18px;
+  }
+
+  .hero-card{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:
+      radial-gradient(circle at top right, rgba(47,123,255,.22), transparent 28%),
+      linear-gradient(180deg, rgba(17,29,49,.96) 0%, rgba(10,18,32,.98) 100%);
+    border-radius:26px;
+    box-shadow:var(--glow);
+    padding:22px;
+  }
+
+  .hero-card h2{
+    margin:0 0 8px;
+    color:var(--white);
+    font-size:28px;
+    line-height:1.08;
+  }
+
+  .hero-card p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+  }
+
+  .bonus-grid{
+    display:grid;
+    gap:16px;
+  }
+
+  .promo-box{
+    position:relative;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:22px;
+    background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.015));
+    padding:16px;
+  }
+
+  .promo-box textarea{
+    width:100%;
+    min-height:220px;
+    border:none;
+    outline:none;
+    resize:none;
+    border-radius:18px;
+    background:rgba(255,255,255,.03);
+    color:var(--white);
+    padding:16px;
+    font-size:14px;
+    line-height:1.75;
+    border:1px solid rgba(255,255,255,.06);
+  }
+
+  .promo-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+
+  .task-steps{
+    display:grid;
+    gap:12px;
+  }
+
+  .task-step{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    padding:14px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.05);
+    background:rgba(255,255,255,.025);
+  }
+
+  .task-step-number{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    font-weight:900;
+    color:#fff;
+    background:linear-gradient(180deg, #2f7bff, #155dfc);
+    box-shadow:0 10px 18px rgba(21,93,252,.24);
+  }
+
+  .task-step strong{
+    display:block;
+    margin-bottom:6px;
+    color:var(--white);
+    font-size:15px;
+  }
+
+  .task-step p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .bonus-note{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:18px;
+    border:1px solid rgba(212,175,55,.24);
+    background:rgba(212,175,55,.08);
+    color:#f2df9a;
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  .task-form-wrap{
+    display:grid;
+    gap:14px;
+  }
+
+  .task-form-wrap input{
+    width:100%;
+  }
+
+  .status-card{
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:22px;
+    background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.015));
+    padding:16px;
+  }
+
+  .status-card h3{
+    margin:0 0 10px;
+    color:var(--white);
+    font-size:18px;
+  }
+
+  .status-card p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+  }
+
+  @media (max-width:920px){
+    .bonus-shell{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+</head>
+
+<body
+data-page="user"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">LomaShares</div>
+    <nav class="nav-menu">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link active" href="facebook-bonus.html">Facebook Bonus</a>
+      <a class="nav-link" href="deposit.html">Deposit</a>
+      <a class="nav-link" href="invest.html">Invest</a>
+      <a class="nav-link" href="transactions.html">Transactions</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" data-action="logout">Logout</button>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Get ₦1,000 Facebook Bonus</h1>
+        <p>Complete this one-time Facebook task and submit your post link for review.</p>
+      </div>
+    </header>
+
+    <div id="msg" class="msg"></div>
+
+    <section class="bonus-hero">
+      <div class="hero-card">
+        <h2>One-time bonus task for active members.</h2>
+        <p>
+          Copy the official LomaShares promo text, post it on your Facebook timeline, then
+          submit your Facebook post link. Once approved, your ₦1,000 bonus will be credited
+          to your wallet.
+        </p>
+      </div>
+    </section>
+
+    <section class="bonus-shell">
+      <div class="bonus-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>How It Works</h2>
+          </div>
+
+          <div class="task-steps">
+            <div class="task-step">
+              <div class="task-step-number">1</div>
+              <div>
+                <strong>Copy the promo text</strong>
+                <p>Use the official LomaShares promo write-up provided below.</p>
+              </div>
+            </div>
+
+            <div class="task-step">
+              <div class="task-step-number">2</div>
+              <div>
+                <strong>Post on Facebook</strong>
+                <p>Post it on your Facebook timeline and keep the post public.</p>
+              </div>
+            </div>
+
+            <div class="task-step">
+              <div class="task-step-number">3</div>
+              <div>
+                <strong>Submit your post link</strong>
+                <p>Paste the public Facebook post link in the form and submit it.</p>
+              </div>
+            </div>
+
+            <div class="task-step">
+              <div class="task-step-number">4</div>
+              <div>
+                <strong>Get reviewed and credited</strong>
+                <p>Once approved by admin, ₦1,000 is added to your wallet balance.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bonus-note">
+            Important: This task is one-time only. Your post must remain public during review.
+            Invalid, fake, or inaccessible links will be rejected.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Official Promo Text</h2>
+          </div>
+
+          <div class="promo-box">
+            <textarea id="promoText" readonly>🔥 I just joined LomaShares!
+
+LomaShares is a digital platform where users can fund wallet, invest, earn, and withdraw with ease.
+
+✅ Easy registration
+✅ Investment plans
+✅ Referral rewards
+✅ Smooth user dashboard
+
+Join LomaShares today:
+https://lomashares-v1.vercel.app/register.html
+
+#LomaShares #OnlineInvestment #EarnOnline</textarea>
+
+            <div class="promo-actions">
+              <button id="copyPromoBtn" type="button">Copy Promo Text</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bonus-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Submit Facebook Post Link</h2>
+          </div>
+
+          <div class="task-form-wrap">
+            <form id="taskForm" class="simple-form">
+              <input
+                id="post_link"
+                type="url"
+                placeholder="Paste your public Facebook post link"
+                required
+              />
+              <button type="submit">Submit for Approval</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <h3>Submission Status</h3>
+          <div id="taskStatusBox">
+            <p>You have not submitted any Facebook bonus task yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  function showMessage(text, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) return;
+    box.textContent = text;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
+
+  function renderStatus(task) {
+    const wrap = document.getElementById("taskStatusBox");
+    if (!wrap) return;
+
+    if (!task) {
+      wrap.innerHTML = "<p>You have not submitted any Facebook bonus task yet.</p>";
+      return;
+    }
+
+    wrap.innerHTML = `
+      <div class="list-item" style="padding:0;border:none;background:none;">
+        <div style="width:100%;">
+          <p><strong>Status:</strong> ${task.status}</p>
+          <p><strong>Post Link:</strong> <a href="${task.post_link}" target="_blank">${task.post_link}</a></p>
+          <p><strong>Submitted:</strong> ${new Date(task.created_at).toLocaleString()}</p>
+          ${task.admin_note ? `<p><strong>Admin Note:</strong> ${task.admin_note}</p>` : ""}
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadTask() {
+    try {
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
+
+      const userId = session.user.id;
+
+      const { data, error } = await window.sb
+        .from("social_bonus_tasks")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      renderStatus(data || null);
+    } catch (err) {
+      console.error(err);
+      showMessage(err.message || "Failed to load task.");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("copyPromoBtn")?.addEventListener("click", async function () {
+      try {
+        await navigator.clipboard.writeText(document.getElementById("promoText").value);
+        showMessage("Promo text copied.", "success");
+      } catch (err) {
+        showMessage("Failed to copy promo text.");
+      }
+    });
+
+    document.getElementById("taskForm")?.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      try {
+        const session = await window.LomaAuth.requireAuth();
+        if (!session) return;
+
+        const userId = session.user.id;
+        const postLink = document.getElementById("post_link").value.trim();
+
+        const { data: existing, error: checkError } = await window.sb
+          .from("social_bonus_tasks")
+          .select("id,status")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (checkError) throw checkError;
+
+        if (existing) {
+          showMessage("You have already submitted this one-time task.");
+          return;
+        }
+
+        const { error } = await window.sb
+          .from("social_bonus_tasks")
+          .insert({
+            user_id: userId,
+            platform: "facebook",
+            post_link: postLink,
+            bonus_amount: 1000,
+            status: "pending"
+          });
+
+        if (error) throw error;
+
+        showMessage("Task submitted successfully. Awaiting admin approval.", "success");
+        e.target.reset();
+        loadTask();
+      } catch (err) {
+        console.error(err);
+        showMessage(err.message || "Failed to submit task.");
+      }
+    });
+
+    loadTask();
+  });
+})();
+</script>
+</body>
+  </html>
