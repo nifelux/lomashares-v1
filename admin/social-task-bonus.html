@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Social Bonus Tasks | LomaShares Admin</title>
+<link rel="stylesheet" href="../assets/css/styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="../assets/js/supabase.js" defer></script>
+<script src="../assets/js/auth.js" defer></script>
+</head>
+<body
+data-page="admin"
+data-role="admin"
+data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+data-supabase-anon="YOUR_ANON_KEY"
+>
+<div class="main-content">
+  <h1>Facebook Bonus Tasks</h1>
+  <div id="msg" class="msg"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Pending / Reviewed Tasks</h2>
+    </div>
+    <div id="taskList" class="list-wrap">
+      <p class="empty-state">Loading tasks...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  function showMessage(text, type = "error") {
+    const box = document.getElementById("msg");
+    if (!box) return;
+    box.textContent = text;
+    box.className = "msg " + type;
+    box.style.display = "block";
+  }
+
+  async function loadTasks() {
+    try {
+      await window.LomaAuth.requireRole("admin");
+
+      const { data, error } = await window.sb
+        .from("social_bonus_tasks")
+        .select(`
+          *,
+          profiles!social_bonus_tasks_user_id_fkey(username, full_name, email)
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const wrap = document.getElementById("taskList");
+
+      if (!data || !data.length) {
+        wrap.innerHTML = '<p class="empty-state">No social bonus tasks found.</p>';
+        return;
+      }
+
+      wrap.innerHTML = data.map((item) => {
+        const user = item.profiles || {};
+        return `
+          <div class="list-item" style="align-items:flex-start;gap:14px;">
+            <div style="flex:1;">
+              <strong>${user.username || "No username"}</strong>
+              <p>${user.full_name || "-"}</p>
+              <p>${user.email || "-"}</p>
+              <p><a href="${item.post_link}" target="_blank">Open Facebook Post</a></p>
+              <p>Submitted: ${new Date(item.created_at).toLocaleString()}</p>
+              ${item.admin_note ? `<p>Admin Note: ${item.admin_note}</p>` : ""}
+            </div>
+            <div class="list-item-right" style="min-width:220px;text-align:right;">
+              <p><b>Bonus:</b> ₦${Number(item.bonus_amount || 0).toLocaleString()}</p>
+              <span class="status-pill ${item.status === "approved" ? "credit" : item.status === "rejected" ? "debit" : "active"}">${item.status}</span>
+              ${item.status === "pending" ? `
+                <div style="margin-top:10px;display:grid;gap:8px;">
+                  <button onclick="approveTask('${item.id}')">Approve</button>
+                  <button onclick="rejectTask('${item.id}')">Reject</button>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      console.error(err);
+      showMessage(err.message || "Failed to load tasks.");
+    }
+  }
+
+  window.approveTask = async function (taskId) {
+    try {
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
+
+      const { data, error } = await window.sb.rpc("approve_social_bonus_task", {
+        p_task_id: taskId,
+        p_admin_user_id: session.user.id
+      });
+
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.error || "Approval failed");
+
+      showMessage("Task approved and bonus credited.", "success");
+      loadTasks();
+    } catch (err) {
+      console.error(err);
+      showMessage(err.message || "Failed to approve task.");
+    }
+  };
+
+  window.rejectTask = async function (taskId) {
+    try {
+      const session = await window.LomaAuth.requireAuth();
+      if (!session) return;
+
+      const note = prompt("Reason for rejection:", "Invalid or private post link");
+      const { data, error } = await window.sb.rpc("reject_social_bonus_task", {
+        p_task_id: taskId,
+        p_admin_user_id: session.user.id,
+        p_note: note || null
+      });
+
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.error || "Rejection failed");
+
+      showMessage("Task rejected.", "success");
+      loadTasks();
+    } catch (err) {
+      console.error(err);
+      showMessage(err.message || "Failed to reject task.");
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", loadTasks);
+})();
+</script>
+</body>
+</html>
