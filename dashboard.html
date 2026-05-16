@@ -5,231 +5,756 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LomaShares Dashboard</title>
 
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/supabase.js" defer></script>
   <script src="assets/js/auth.js" defer></script>
 
   <style>
-    .mobile-header{display:none;}
-    .mobile-drawer{display:none;}
-    .mobile-bottom-nav{display:none;}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .dashboard-hero{
-      display:grid;
-      grid-template-columns:1.35fr .9fr;
-      gap:16px;
-      margin-bottom:18px;
+    :root {
+      --bg:        #050d1f;
+      --bg2:       #091428;
+      --card:      #0d1e38;
+      --card2:     #0f2240;
+      --accent:    #00c853;
+      --accent2:   #00e676;
+      --blue:      #1565e8;
+      --blue2:     #2979ff;
+      --white:     #ffffff;
+      --text:      #e3eaff;
+      --muted:     #6b88b8;
+      --line:      rgba(255,255,255,.07);
+      --radius:    18px;
+      --radius-sm: 12px;
     }
 
-    .hero-card{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at top right, rgba(47,123,255,.22), transparent 28%),
-        linear-gradient(180deg, rgba(17,29,49,.96) 0%, rgba(10,18,32,.98) 100%);
-      border-radius:26px;
-      box-shadow:var(--glow);
-      padding:22px;
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .hero-card h2{
-      margin:0 0 8px;
-      color:var(--white);
-      font-size:28px;
-      line-height:1.08;
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* ── BACKGROUND DECORATION ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -80px; left: -80px;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(21,101,232,.22) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: 40px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,200,83,.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .hero-card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:14px;
-      max-width:520px;
+    /* ── TOP HEADER ── */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: rgba(5,13,31,.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:18px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: -.3px;
     }
 
-    .hero-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:48px;
-      padding:12px 16px;
-      border-radius:16px;
-      border:1px solid rgba(110,164,255,.16);
-      background:linear-gradient(135deg, rgba(47,123,255,.96) 0%, rgba(21,93,252,.92) 100%);
-      color:var(--white);
-      font-weight:800;
-      letter-spacing:.15px;
-      box-shadow:0 14px 24px rgba(21,93,252,.22);
+    .brand-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
     }
 
-    .hero-btn.secondary{
-      background:rgba(255,255,255,.04);
-      color:var(--text-2);
-      box-shadow:none;
+    .brand-sub {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .5px;
+      margin-top: -3px;
+      text-transform: uppercase;
     }
 
-    .referral-card{
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      min-height:100%;
+    .menu-btn {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+      transition: background .2s;
+    }
+    .menu-btn:hover { background: rgba(255,255,255,.12); }
+    .menu-btn span {
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+    .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-btn.open span:nth-child(2) { opacity: 0; }
+    .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── DRAWER BACKDROP ── */
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 110;
+      backdrop-filter: blur(2px);
+    }
+    .drawer-backdrop.show { display: block; }
+
+    /* ── SLIDE DRAWER (from RIGHT) ── */
+    .nav-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 82%;
+      max-width: 300px;
+      z-index: 120;
+      background: linear-gradient(180deg, #091428 0%, #050d1f 100%);
+      border-left: 1px solid var(--line);
+      box-shadow: -20px 0 60px rgba(0,0,0,.5);
+      transform: translateX(110%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px 32px;
+      overflow-y: auto;
+    }
+    .nav-drawer.open { transform: translateX(0); }
+
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
     }
 
-    .referral-label{
-      display:block;
-      margin-bottom:8px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.18px;
+    .drawer-close {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      color: var(--muted);
+      transition: background .2s, color .2s;
+    }
+    .drawer-close:hover { background: rgba(255,255,255,.14); color: var(--white); }
+
+    .drawer-user {
+      margin-bottom: 24px;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+    }
+    .drawer-user-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .drawer-user-code {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .drawer-user-code span {
+      color: var(--accent2);
+      font-weight: 600;
     }
 
-    .referral-code-big{
-      display:block;
-      font-size:28px;
-      font-weight:900;
-      color:var(--white);
-      line-height:1.1;
-      margin-bottom:12px;
-      word-break:break-word;
+    .drawer-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
     }
 
-    .quick-actions .action-card{
-      min-height:58px;
+    .drawer-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: background .2s, color .2s;
+    }
+    .drawer-link:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .drawer-link.active {
+      background: linear-gradient(135deg, rgba(21,101,232,.25) 0%, rgba(41,121,255,.1) 100%);
+      color: var(--white);
+      border: 1px solid rgba(41,121,255,.2);
+    }
+    .drawer-link .icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .drawer-link.active .icon {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
     }
 
-    @media (max-width: 920px){
-      .mobile-header{
-        position:sticky;
-        top:0;
-        z-index:80;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:12px;
-        min-height:68px;
-        padding:14px;
-        background:rgba(7,13,24,.88);
-        backdrop-filter:blur(18px);
-        border-bottom:1px solid rgba(255,255,255,.05);
-        box-shadow:0 10px 24px rgba(0,0,0,.18);
-      }
-
-      .mobile-header .brand{
-        padding:0;
-        min-height:auto;
-        font-size:22px;
-      }
-
-      .menu-btn{
-        width:46px;
-        height:46px;
-        min-height:46px;
-        padding:0;
-        border-radius:14px;
-        box-shadow:none;
-        background:rgba(255,255,255,.06);
-        border:1px solid rgba(255,255,255,.06);
-      }
-
-      .mobile-drawer{
-        position:fixed;
-        inset:0 auto 0 0;
-        width:84%;
-        max-width:320px;
-        z-index:120;
-        display:block;
-        padding:18px 14px 24px;
-        background:linear-gradient(180deg, rgba(7,13,24,.98) 0%, rgba(10,18,32,.98) 100%);
-        border-right:1px solid rgba(255,255,255,.06);
-        box-shadow:var(--shadow-xl);
-        transform:translateX(-110%);
-        transition:transform .22s ease;
-        overflow-y:auto;
-      }
-
-      .mobile-drawer.open{ transform:translateX(0); }
-
-      .mobile-drawer-backdrop{
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.45);
-        z-index:110;
-        display:none;
-      }
-
-      .mobile-drawer-backdrop.show{ display:block; }
-
-      .mobile-drawer .brand{
-        padding:0 8px 14px;
-      }
-
-      .mobile-drawer .nav-menu{
-        display:flex;
-        flex-direction:column;
-      }
-
-      .mobile-drawer .logout-btn{
-        margin-top:14px;
-      }
-
-      .mobile-bottom-nav{
-        position:fixed;
-        left:12px;
-        right:12px;
-        bottom:12px;
-        z-index:90;
-        display:grid;
-        grid-template-columns:repeat(5, 1fr);
-        gap:8px;
-        padding:10px;
-        border-radius:22px;
-        border:1px solid rgba(255,255,255,.06);
-        background:rgba(10,18,32,.9);
-        backdrop-filter:blur(18px);
-        box-shadow:var(--shadow-lg);
-      }
-
-      .mobile-bottom-nav a{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        min-height:44px;
-        padding:8px 6px;
-        border-radius:14px;
-        color:var(--muted);
-        font-size:12px;
-        font-weight:800;
-        text-align:center;
-      }
-
-      .mobile-bottom-nav a.active{
-        color:var(--white);
-        background:rgba(47,123,255,.16);
-      }
-
-      .sidebar{ display:none; }
-      .main-content{ padding-top:14px; padding-bottom:96px; }
-      .dashboard-hero{ grid-template-columns:1fr; }
+    .drawer-divider {
+      height: 1px;
+      background: var(--line);
+      margin: 12px 0;
     }
 
-    @media (max-width: 620px){
-      .hero-card{ padding:18px; }
-      .hero-card h2{ font-size:24px; }
-      .referral-code-big{ font-size:24px; }
-      .hero-actions{ display:grid; grid-template-columns:1fr 1fr; }
+    .drawer-logout {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: #ef5350;
+      transition: background .2s;
     }
+    .drawer-logout:hover { background: rgba(239,83,80,.08); }
+    .drawer-logout .icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(239,83,80,.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    /* ── MAIN SCROLL ── */
+    .main {
+      position: relative;
+      z-index: 1;
+      padding: 20px 16px 100px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── BALANCE CARD ── */
+    .balance-card {
+      border-radius: 24px;
+      background: linear-gradient(145deg, #122040 0%, #0d1b36 60%, #091428 100%);
+      border: 1px solid rgba(41,121,255,.18);
+      box-shadow: 0 24px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+      padding: 24px 22px 22px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(21,101,232,.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 20px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,200,83,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .balance-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 10px;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .balance-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.5px;
+      line-height: 1;
+    }
+
+    .deposit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent) 0%, #00a846 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      box-shadow: 0 8px 20px rgba(0,200,83,.3);
+      transition: transform .15s, box-shadow .15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .deposit-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,200,83,.4); }
+    .deposit-btn:active { transform: translateY(0); }
+
+    .balance-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .bstat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bstat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .bstat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .quick-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 8px;
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      transition: background .2s, transform .15s;
+    }
+    .quick-item:hover { background: var(--card2); transform: translateY(-2px); color: var(--text); }
+
+    .quick-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(21,101,232,.3) 0%, rgba(41,121,255,.15) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    /* ── DAILY INCOME CARD ── */
+    .income-card {
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0f2240 0%, #122040 100%);
+      border: 1px solid rgba(41,121,255,.15);
+      padding: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .income-card::before {
+      content: '';
+      position: absolute;
+      top: -30px; left: -30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,200,83,.12) 0%, transparent 70%);
+    }
+
+    .income-left {}
+    .income-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 6px;
+    }
+    .income-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent2);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .income-next {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .income-next span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .income-emoji {
+      font-size: 52px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+      flex-shrink: 0;
+    }
+
+    /* ── ACTIVE PLAN CARD ── */
+    .plan-card {
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0d1e38 0%, #0f2240 100%);
+      border: 1px solid rgba(41,121,255,.15);
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .plan-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(21,101,232,.15) 0%, transparent 70%);
+    }
+
+    .plan-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .plan-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 4px;
+    }
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.3px;
+    }
+    .plan-badge {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(21,101,232,.35);
+    }
+
+    .plan-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .pstat { display: flex; flex-direction: column; gap: 4px; }
+    .pstat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .pstat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* ── SECTION PANELS ── */
+    .panel {
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-head h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .panel-head a {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue2);
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      transition: background .15s;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: rgba(255,255,255,.03); }
+
+    .list-item strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+    .list-item p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .list-item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+    .list-item-right strong {
+      font-size: 14px;
+      color: var(--white);
+    }
+
+    .status-pill {
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .status-pill.active { background: rgba(0,200,83,.15); color: var(--accent2); }
+    .status-pill.credit { background: rgba(0,200,83,.15); color: var(--accent2); }
+    .status-pill.debit  { background: rgba(239,83,80,.12); color: #ef9a9a; }
+
+    .empty-state {
+      padding: 24px 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ── MSG ── */
+    .msg {
+      display: none;
+      margin-bottom: 14px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .msg.error   { background: rgba(239,83,80,.12); color: #ef9a9a; border: 1px solid rgba(239,83,80,.2); }
+    .msg.success { background: rgba(0,200,83,.12);  color: var(--accent2); border: 1px solid rgba(0,200,83,.2); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 12px;
+      z-index: 90;
+      width: calc(100% - 24px);
+      max-width: 460px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 8px 10px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(9,20,40,.92);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
+
+    .bnav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 6px;
+      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: background .2s, color .2s;
+      text-align: center;
+    }
+    .bnav-link:hover { color: var(--text); }
+    .bnav-link.active {
+      background: linear-gradient(135deg, rgba(21,101,232,.3) 0%, rgba(41,121,255,.12) 100%);
+      color: var(--white);
+    }
+    .bnav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* ── BONUS BANNER ── */
+    .bonus-banner {
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0,200,83,.15) 0%, rgba(0,200,83,.05) 100%);
+      border: 1px solid rgba(0,200,83,.2);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .bonus-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+    .bonus-sub { font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+    .bonus-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent) 0%, #00a846 100%);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,200,83,.25);
+    }
+
+    /* ── GREET ROW ── */
+    .greet-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .greet-text { font-size: 13px; color: var(--muted); }
+    .greet-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .ref-badge {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(41,121,255,.12);
+      border: 1px solid rgba(41,121,255,.2);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blue2);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim { animation: fadeUp .45s ease both; }
+    .anim-1 { animation-delay: .05s; }
+    .anim-2 { animation-delay: .1s; }
+    .anim-3 { animation-delay: .15s; }
+    .anim-4 { animation-delay: .2s; }
+    .anim-5 { animation-delay: .25s; }
+    .anim-6 { animation-delay: .3s; }
   </style>
 </head>
 
@@ -238,153 +763,226 @@
   data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
   data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
-  <div class="mobile-header">
-    <button class="menu-btn" id="menuToggle" type="button">☰</button>
-    <div class="brand">LomaShares</div>
-    <div style="width:46px;"></div>
-  </div>
 
-  <div class="mobile-drawer-backdrop" id="drawerBackdrop"></div>
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="brand">
+      <div class="brand-icon">♾️</div>
+      <div>
+        LomaShares
+        <span class="brand-sub">Invest Smart. Earn More.</span>
+      </div>
+    </div>
+    <button class="menu-btn" id="menuToggle" type="button" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-  <aside class="mobile-drawer" id="mobileDrawer">
-    <div class="brand">LomaShares</div>
-    <nav class="nav-menu">
-      <a class="nav-link active" href="dashboard.html">Dashboard</a>
-      <a class="nav-link" href="deposit.html">Deposit</a>
-      <a class="nav-link" href="invest.html">Invest</a>
-      <a class="nav-link" href="investments.html">My Investments</a>
-      <a class="nav-link" href="withdraw.html">Withdraw</a>
-      <a class="nav-link" href="transactions.html">Transactions</a>
-      <a class="nav-link" href="spin.html">Spin & Win</a>
-      <a class="nav-link" href="referrals.html">Referrals</a>
-      <a class="nav-link" href="team.html">Team</a>
-      <a class="nav-link" href="gift.html">Gift Code</a>
-      <a class="nav-link" href="profile.html">Profile</a>
+  <!-- DRAWER BACKDROP -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- SLIDE-IN DRAWER (right) -->
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="brand" style="font-size:17px;">
+        <div class="brand-icon" style="width:30px;height:30px;font-size:15px;">♾️</div>
+        LomaShares
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+
+    <div class="drawer-user">
+      <div class="drawer-user-name" data-auth="full_name">User</div>
+      <div class="drawer-user-code">Ref Code: <span data-auth="referral_code">-</span></div>
+    </div>
+
+    <nav class="drawer-nav">
+      <a class="drawer-link active" href="dashboard.html">
+        <span class="icon">🏠</span> Home
+      </a>
+      <a class="drawer-link" href="invest.html">
+        <span class="icon">📈</span> Invest
+      </a>
+      <a class="drawer-link" href="investments.html">
+        <span class="icon">💼</span> My Investments
+      </a>
+      <a class="drawer-link" href="deposit.html">
+        <span class="icon">💳</span> Deposit
+      </a>
+      <a class="drawer-link" href="withdraw.html">
+        <span class="icon">💸</span> Withdraw
+      </a>
+      <a class="drawer-link" href="transactions.html">
+        <span class="icon">📋</span> Transactions
+      </a>
+      <a class="drawer-link" href="spin.html">
+        <span class="icon">🎰</span> Spin &amp; Win
+      </a>
+      <a class="drawer-link" href="referrals.html">
+        <span class="icon">👥</span> Referrals
+      </a>
+      <a class="drawer-link" href="profile.html">
+        <span class="icon">👤</span> Profile
+      </a>
+      <div class="drawer-divider"></div>
+      <a class="drawer-link" href="facebook-bonus.html">
+        <span class="icon">🎁</span> Get ₦1,000 Bonus
+      </a>
     </nav>
-    <button class="logout-btn" data-action="logout">Logout</button>
+
+    <div class="drawer-divider"></div>
+    <a class="drawer-logout" href="#" id="logoutBtn">
+      <span class="icon">🚪</span> Logout
+    </a>
   </aside>
 
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">LomaShares</div>
-      <nav class="nav-menu">
-        <a class="nav-link active" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="deposit.html">Deposit</a>
-        <a class="nav-link" href="invest.html">Invest</a>
-        <a class="nav-link" href="investments.html">My Investments</a>
-        <a class="nav-link" href="withdraw.html">Withdraw</a>
-        <a class="nav-link" href="transactions.html">Transactions</a>
-        <a class="nav-link" href="spin.html">Spin & Win</a>
-        <a class="nav-link" href="referrals.html">Referrals</a>
-        <a class="nav-link" href="team.html">Team</a>
-        <a class="nav-link" href="gift.html">Gift Code</a>
-        <a class="nav-link" href="profile.html">Profile</a>
-      </nav>
-      <button class="logout-btn" data-action="logout">Logout</button>
-    </aside>
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div id="msg" class="msg"></div>
 
-    <main class="main-content">
-      <header class="topbar">
+    <!-- GREET ROW -->
+    <div class="greet-row anim anim-1">
+      <div>
+        <div class="greet-text">Welcome back 👋</div>
+        <div class="greet-name" data-auth="full_name">User</div>
+      </div>
+      <div class="ref-badge">Ref: <span data-auth="referral_code">-</span></div>
+    </div>
+
+    <!-- BALANCE CARD -->
+    <div class="balance-card anim anim-2">
+      <div class="balance-label">Total Balance</div>
+      <div class="balance-row">
+        <div class="balance-amount" id="walletBalance">₦0.00</div>
+        <a href="deposit.html" class="deposit-btn">+ Deposit</a>
+      </div>
+      <div class="balance-stats">
+        <div class="bstat">
+          <span class="bstat-label">Deposited</span>
+          <span class="bstat-value" id="totalDeposit">₦0.00</span>
+        </div>
+        <div class="bstat">
+          <span class="bstat-label">Profit</span>
+          <span class="bstat-value" id="totalProfit">₦0.00</span>
+        </div>
+        <div class="bstat">
+          <span class="bstat-label">Referral</span>
+          <span class="bstat-value" id="totalReferralBonus">₦0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-grid anim anim-3">
+      <a class="quick-item" href="invest.html">
+        <div class="quick-icon">📈</div>
+        Invest
+      </a>
+      <a class="quick-item" href="withdraw.html">
+        <div class="quick-icon">💸</div>
+        Withdraw
+      </a>
+      <a class="quick-item" href="spin.html">
+        <div class="quick-icon">🎰</div>
+        Spin2Win
+      </a>
+      <a class="quick-item" href="referrals.html">
+        <div class="quick-icon">👥</div>
+        Referrals
+      </a>
+    </div>
+
+    <!-- DAILY INCOME CARD -->
+    <div class="income-card anim anim-4">
+      <div class="income-left">
+        <div class="income-title">Daily Income</div>
+        <div class="income-amount" id="dailyIncome">₦0.00</div>
+        <div class="income-next">Next Drop: <span id="nextDrop">—</span></div>
+      </div>
+      <div class="income-emoji">💰</div>
+    </div>
+
+    <!-- ACTIVE PLAN CARD -->
+    <div class="plan-card anim anim-5" id="activePlanCard" style="display:none;">
+      <div class="plan-head">
         <div>
-          <h1>Dashboard</h1>
-          <p>Welcome back, <span data-auth="full_name">User</span></p>
+          <div class="plan-label">Active Plan</div>
+          <div class="plan-name" id="planName">—</div>
         </div>
-        <div class="topbar-meta">
-          <div class="mini-badge">Referral Code: <span data-auth="referral_code">-</span></div>
+        <div class="plan-badge" id="planDaysLeft">— DAYS LEFT</div>
+      </div>
+      <div class="plan-stats">
+        <div class="pstat">
+          <span class="pstat-label">Total Invest</span>
+          <span class="pstat-value" id="planAmount">₦0.00</span>
         </div>
-      </header>
+        <div class="pstat">
+          <span class="pstat-label">Daily Income</span>
+          <span class="pstat-value" id="planDaily">₦0.00</span>
+        </div>
+        <div class="pstat">
+          <span class="pstat-label">Total Return</span>
+          <span class="pstat-value" id="planTotal">₦0.00</span>
+        </div>
+      </div>
+    </div>
 
-      <div id="msg" class="msg"></div>
+    <!-- BONUS BANNER -->
+    <a href="facebook-bonus.html" class="bonus-banner anim anim-5">
+      <div>
+        <div class="bonus-text">🎁 Get ₦1,000 Bonus</div>
+        <div class="bonus-sub">Follow us on social media</div>
+      </div>
+      <div class="bonus-btn">Claim Now</div>
+    </a>
 
-      <section class="dashboard-hero">
-        <div class="hero-card">
-          <h2>Build wealth with smarter share growth.</h2>
-          <p>Track your wallet, investments, profits, and referrals from one premium dashboard built for speed and mobile convenience.</p>
-          <div class="hero-actions">
-            <a href="deposit.html" class="hero-btn">Fund Wallet</a>
-            <a href="invest.html" class="hero-btn secondary">Start Investing</a>
-          </div>
-        </div>
+    <!-- ACTIVE INVESTMENTS PANEL -->
+    <div class="panel anim anim-6">
+      <div class="panel-head">
+        <h3>Active Investments</h3>
+        <a href="investments.html">View all</a>
+      </div>
+      <div id="activeInvestmentsList">
+        <p class="empty-state">Loading investments…</p>
+      </div>
+    </div>
 
-        <div class="hero-card referral-card">
-          <div>
-            <span class="referral-label">Your Referral Code</span>
-            <span class="referral-code-big" data-auth="referral_code">-</span>
-            <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6;">Invite new users and grow your referral bonus earnings automatically.</p>
-          </div>
-          <div class="hero-actions" style="margin-top:16px;">
-            <a href="referrals.html" class="hero-btn" style="width:100%;">View Referral Page</a>
-          </div>
-        </div>
-      </section>
+    <!-- RECENT TRANSACTIONS PANEL -->
+    <div class="panel anim anim-6">
+      <div class="panel-head">
+        <h3>Recent Transactions</h3>
+        <a href="transactions.html">View all</a>
+      </div>
+      <div id="recentTransactionsList">
+        <p class="empty-state">Loading transactions…</p>
+      </div>
+    </div>
+  </main>
 
-      <section class="cards-grid">
-        <div class="stat-card">
-          <span class="stat-title">Wallet Balance</span>
-          <strong id="walletBalance">₦0.00</strong>
-        </div>
-        <div class="stat-card">
-          <span class="stat-title">Total Deposits</span>
-          <strong id="totalDeposit">₦0.00</strong>
-        </div>
-        <div class="stat-card">
-          <span class="stat-title">Total Profit</span>
-          <strong id="totalProfit">₦0.00</strong>
-        </div>
-        <div class="stat-card">
-          <span class="stat-title">Referral Bonus</span>
-          <strong id="totalReferralBonus">₦0.00</strong>
-        </div>
-        <div class="stat-card">
-          <span class="stat-title">Active Investments</span>
-          <strong id="activeInvestmentsCount">0</strong>
-        </div>
-      </section>
-
-      <section class="quick-actions">
-        <a href="facebook-bonus.html" class="action-card">🎁 Get ₦1,000 Bonus</a>
-        <a href="deposit.html" class="action-card">Deposit</a>
-        <a href="invest.html" class="action-card">Invest Now</a>
-        <a href="withdraw.html" class="action-card">Withdraw</a>
-        <a href="transactions.html" class="action-card">Transactions</a>
-      </section>
-
-      <section class="content-grid">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Active Investments</h2>
-            <a href="investments.html">View all</a>
-          </div>
-          <div id="activeInvestmentsList" class="list-wrap">
-            <p class="empty-state">Loading investments...</p>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Recent Transactions</h2>
-            <a href="transactions.html">View all</a>
-          </div>
-          <div id="recentTransactionsList" class="list-wrap">
-            <p class="empty-state">Loading transactions...</p>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <nav class="mobile-bottom-nav">
-    <a class="active" href="dashboard.html">Home</a>
-    <a href="deposit.html">Deposit</a>
-    <a href="invest.html">Invest</a>
-    <a href="withdraw.html">Withdraw</a>
-    <a href="profile.html">Profile</a>
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a class="bnav-link active" href="dashboard.html">
+      <span class="bnav-icon">🏠</span>Home
+    </a>
+    <a class="bnav-link" href="invest.html">
+      <span class="bnav-icon">📊</span>Plans
+    </a>
+    <a class="bnav-link" href="deposit.html">
+      <span class="bnav-icon">👛</span>Wallet
+    </a>
+    <a class="bnav-link" href="transactions.html">
+      <span class="bnav-icon">🕐</span>History
+    </a>
+    <a class="bnav-link" href="profile.html">
+      <span class="bnav-icon">👤</span>Profile
+    </a>
   </nav>
 
   <script>
     (function () {
       "use strict";
 
+      /* ── FORMAT MONEY ── */
       function formatMoney(value) {
         const amount = Number(value || 0);
         return "₦" + amount.toLocaleString(undefined, {
@@ -393,6 +991,7 @@
         });
       }
 
+      /* ── SHOW MESSAGE ── */
       function showMessage(message, type = "error") {
         const box = document.getElementById("msg");
         if (!box) return;
@@ -401,16 +1000,37 @@
         box.style.display = "block";
       }
 
+      /* ── COUNTDOWN TIMER ── */
+      function startCountdown(targetHour = 1, targetMin = 0, targetSec = 0) {
+        const el = document.getElementById("nextDrop");
+        if (!el) return;
+
+        function tick() {
+          const now = new Date();
+          const next = new Date();
+          next.setHours(targetHour, targetMin, targetSec, 0);
+          if (next <= now) next.setDate(next.getDate() + 1);
+          const diff = Math.max(0, next - now);
+          const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
+          const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0");
+          const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0");
+          el.textContent = h + ":" + m + ":" + s + " AM";
+        }
+        tick();
+        setInterval(tick, 1000);
+      }
+
+      /* ── LOAD DASHBOARD ── */
       async function loadDashboard() {
         try {
           const session = await window.LomaAuth.requireAuth();
           if (!session) return;
           const userId = session.user.id;
-
           if (!userId) throw new Error("User session not found.");
 
           await window.LomaAuth.getProfile(userId);
 
+          /* wallet */
           const { data: wallet, error: walletError } = await window.sb
             .from("wallets")
             .select("*")
@@ -424,17 +1044,12 @@
           document.getElementById("totalProfit").textContent = formatMoney(wallet.total_profit);
           document.getElementById("totalReferralBonus").textContent = formatMoney(wallet.total_referral_bonus);
 
+          /* active investments */
           const { data: activeInvestments, error: investError } = await window.sb
             .from("investments")
             .select(`
-              id,
-              amount,
-              daily_profit,
-              days_paid,
-              duration_days,
-              status,
-              start_date,
-              end_date,
+              id, amount, daily_profit, days_paid, duration_days,
+              status, start_date, end_date,
               investment_plans(name)
             `)
             .eq("user_id", userId)
@@ -444,9 +1059,31 @@
 
           if (investError) throw investError;
 
-          document.getElementById("activeInvestmentsCount").textContent = activeInvestments.length;
+          document.getElementById("activeInvestmentsCount") &&
+            (document.getElementById("activeInvestmentsCount").textContent = activeInvestments.length);
+
+          /* fill daily income + plan card from latest investment */
+          let totalDailyIncome = 0;
+          activeInvestments.forEach(i => { totalDailyIncome += Number(i.daily_profit || 0); });
+          document.getElementById("dailyIncome").textContent = formatMoney(totalDailyIncome);
+          startCountdown(1, 0, 0);
+
+          if (activeInvestments.length > 0) {
+            const top = activeInvestments[0];
+            const daysLeft = Math.max(0, (top.duration_days || 0) - (top.days_paid || 0));
+            const totalReturn = (top.amount || 0) + (top.daily_profit || 0) * (top.duration_days || 0);
+
+            document.getElementById("planName").textContent = top.investment_plans?.name || "—";
+            document.getElementById("planDaysLeft").textContent = daysLeft + " DAYS LEFT";
+            document.getElementById("planAmount").textContent = formatMoney(top.amount);
+            document.getElementById("planDaily").textContent = formatMoney(top.daily_profit);
+            document.getElementById("planTotal").textContent = formatMoney(totalReturn);
+            document.getElementById("activePlanCard").style.display = "block";
+          }
+
           renderActiveInvestments(activeInvestments || []);
 
+          /* recent transactions */
           const { data: recentTransactions, error: txError } = await window.sb
             .from("wallet_transactions")
             .select("*")
@@ -455,14 +1092,15 @@
             .limit(6);
 
           if (txError) throw txError;
-
           renderRecentTransactions(recentTransactions || []);
+
         } catch (err) {
           console.error(err);
           showMessage(err.message || "Failed to load dashboard.");
         }
       }
 
+      /* ── RENDER INVESTMENTS ── */
       function renderActiveInvestments(items) {
         const wrap = document.getElementById("activeInvestmentsList");
         if (!wrap) return;
@@ -474,12 +1112,14 @@
 
         wrap.innerHTML = items.map((item) => {
           const planName = item.investment_plans?.name || "Investment Plan";
+          const progress = item.duration_days
+            ? Math.round((item.days_paid / item.duration_days) * 100)
+            : 0;
           return `
             <div class="list-item">
               <div>
                 <strong>${planName}</strong>
-                <p>Daily Profit: ${formatMoney(item.daily_profit)}</p>
-                <p>Progress: ${item.days_paid}/${item.duration_days} days</p>
+                <p>Daily: ${formatMoney(item.daily_profit)} &nbsp;·&nbsp; ${item.days_paid}/${item.duration_days} days</p>
               </div>
               <div class="list-item-right">
                 <strong>${formatMoney(item.amount)}</strong>
@@ -490,6 +1130,7 @@
         }).join("");
       }
 
+      /* ── RENDER TRANSACTIONS ── */
       function renderRecentTransactions(items) {
         const wrap = document.getElementById("recentTransactionsList");
         if (!wrap) return;
@@ -514,30 +1155,51 @@
         `).join("");
       }
 
-      function initMobileDrawer() {
-        const toggle = document.getElementById("menuToggle");
-        const drawer = document.getElementById("mobileDrawer");
+      /* ── DRAWER ── */
+      function initDrawer() {
+        const toggle   = document.getElementById("menuToggle");
+        const drawer   = document.getElementById("navDrawer");
         const backdrop = document.getElementById("drawerBackdrop");
+        const closeBtn = document.getElementById("drawerClose");
         if (!toggle || !drawer || !backdrop) return;
+
+        function openDrawer() {
+          drawer.classList.add("open");
+          backdrop.classList.add("show");
+          toggle.classList.add("open");
+          drawer.setAttribute("aria-hidden", "false");
+        }
 
         function closeDrawer() {
           drawer.classList.remove("open");
           backdrop.classList.remove("show");
+          toggle.classList.remove("open");
+          drawer.setAttribute("aria-hidden", "true");
         }
 
-        toggle.addEventListener("click", function () {
-          drawer.classList.toggle("open");
-          backdrop.classList.toggle("show");
-        });
+        toggle.addEventListener("click", () =>
+          drawer.classList.contains("open") ? closeDrawer() : openDrawer()
+        );
 
         backdrop.addEventListener("click", closeDrawer);
-        drawer.querySelectorAll("a").forEach((link) => {
+        if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+
+        drawer.querySelectorAll("a:not(#logoutBtn)").forEach(link => {
           link.addEventListener("click", closeDrawer);
         });
+
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            closeDrawer();
+            if (window.LomaAuth?.logout) await window.LomaAuth.logout();
+          });
+        }
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        initMobileDrawer();
+        initDrawer();
         loadDashboard();
       });
     })();
