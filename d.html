@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LomaShares Dashboard</title>
+  <title>Profile | LomaShares</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="assets/css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -18,20 +18,21 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #050d1f;
-      --bg2:       #091428;
-      --card:      #0d1e38;
-      --card2:     #0f2240;
-      --accent:    #00c853;
-      --accent2:   #00e676;
-      --blue:      #1565e8;
-      --blue2:     #2979ff;
-      --white:     #ffffff;
-      --text:      #e3eaff;
-      --muted:     #6b88b8;
-      --line:      rgba(255,255,255,.07);
-      --radius:    18px;
-      --radius-sm: 12px;
+      --bg:      #050e20;
+      --bg2:     #091428;
+      --card:    #0b1c35;
+      --card2:   #0d2040;
+      --green:   #1db954;
+      --green2:  #00e676;
+      --blue:    #1565e0;
+      --blue2:   #2979ff;
+      --blue3:   #1a237e;
+      --white:   #ffffff;
+      --text:    #dce8ff;
+      --muted:   #607aaa;
+      --line:    rgba(255,255,255,.07);
+      --r:       18px;
+      --r-sm:    12px;
     }
 
     html, body {
@@ -45,26 +46,22 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
-    /* ── BACKGROUND DECORATION ── */
-    body::before {
-      content: '';
+    /* ── BG AMBIENT ── */
+    .bg-orb {
       position: fixed;
-      top: -80px; left: -80px;
-      width: 420px; height: 420px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(21,101,232,.22) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: 40px; right: -60px;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,200,83,.1) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
+    .bg-orb-1 {
+      top: -100px; left: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(21,101,224,.2) 0%, transparent 70%);
+    }
+    .bg-orb-2 {
+      bottom: 60px; right: -60px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(29,185,84,.1) 0%, transparent 70%);
     }
 
     /* ── TOP HEADER ── */
@@ -75,8 +72,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
-      background: rgba(5,13,31,.85);
+      padding: 14px 18px;
+      background: rgba(5,14,32,.9);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--line);
     }
@@ -85,189 +82,56 @@
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+    .brand-logo {
+      position: relative;
+      width: 38px; height: 38px;
+    }
+    .brand-logo svg { width: 38px; height: 38px; }
+    .brand-name {
       font-family: 'Syne', sans-serif;
+      font-size: 22px;
       font-weight: 800;
-      font-size: 20px;
       color: var(--white);
-      letter-spacing: -.3px;
+      letter-spacing: -.4px;
     }
-
-    .brand-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-
+    .brand-name span { color: var(--green); }
     .brand-sub {
       display: block;
-      font-family: 'DM Sans', sans-serif;
       font-size: 10px;
       font-weight: 500;
       color: var(--muted);
-      letter-spacing: .5px;
-      margin-top: -3px;
-      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-top: -2px;
     }
 
-    .menu-btn {
-      width: 42px; height: 42px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid var(--line);
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column;
-      gap: 5px;
-      padding: 10px;
-      transition: background .2s;
-    }
-    .menu-btn:hover { background: rgba(255,255,255,.12); }
-    .menu-btn span {
-      display: block;
-      width: 20px; height: 2px;
-      background: var(--white);
-      border-radius: 2px;
-      transition: transform .25s, opacity .25s;
-    }
-    .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .menu-btn.open span:nth-child(2) { opacity: 0; }
-    .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ── DRAWER BACKDROP ── */
-    .drawer-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      z-index: 110;
-      backdrop-filter: blur(2px);
-    }
-    .drawer-backdrop.show { display: block; }
-
-    /* ── SLIDE DRAWER (from RIGHT) ── */
-    .nav-drawer {
-      position: fixed;
-      top: 0; right: 0; bottom: 0;
-      width: 82%;
-      max-width: 300px;
-      z-index: 120;
-      background: linear-gradient(180deg, #091428 0%, #050d1f 100%);
-      border-left: 1px solid var(--line);
-      box-shadow: -20px 0 60px rgba(0,0,0,.5);
-      transform: translateX(110%);
-      transition: transform .28s cubic-bezier(.4,0,.2,1);
-      display: flex;
-      flex-direction: column;
-      padding: 24px 20px 32px;
-      overflow-y: auto;
-    }
-    .nav-drawer.open { transform: translateX(0); }
-
-    .drawer-head {
+    .header-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
+      gap: 10px;
     }
-
-    .drawer-close {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.07);
+    .hdr-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
       display: flex; align-items: center; justify-content: center;
       font-size: 18px;
-      color: var(--muted);
-      transition: background .2s, color .2s;
-    }
-    .drawer-close:hover { background: rgba(255,255,255,.14); color: var(--white); }
-
-    .drawer-user {
-      margin-bottom: 24px;
-      padding: 16px;
-      border-radius: var(--radius-sm);
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--line);
-    }
-    .drawer-user-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 4px;
-    }
-    .drawer-user-code {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .drawer-user-code span {
-      color: var(--accent2);
-      font-weight: 600;
-    }
-
-    .drawer-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-    }
-
-    .drawer-link {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 13px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--muted);
-      transition: background .2s, color .2s;
-    }
-    .drawer-link:hover { background: rgba(255,255,255,.06); color: var(--text); }
-    .drawer-link.active {
-      background: linear-gradient(135deg, rgba(21,101,232,.25) 0%, rgba(41,121,255,.1) 100%);
-      color: var(--white);
-      border: 1px solid rgba(41,121,255,.2);
-    }
-    .drawer-link .icon {
-      width: 34px; height: 34px;
-      border-radius: 9px;
-      background: rgba(255,255,255,.06);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .drawer-link.active .icon {
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
-    }
-
-    .drawer-divider {
-      height: 1px;
-      background: var(--line);
-      margin: 12px 0;
-    }
-
-    .drawer-logout {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 13px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      color: #ef5350;
+      color: var(--text);
       transition: background .2s;
+      position: relative;
     }
-    .drawer-logout:hover { background: rgba(239,83,80,.08); }
-    .drawer-logout .icon {
-      width: 34px; height: 34px;
-      border-radius: 9px;
-      background: rgba(239,83,80,.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+    .hdr-btn:hover { background: rgba(255,255,255,.12); }
+    .notif-dot {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 1.5px solid var(--bg);
     }
 
-    /* ── MAIN SCROLL ── */
+    /* ── MAIN ── */
     .main {
       position: relative;
       z-index: 1;
@@ -276,383 +140,546 @@
       margin: 0 auto;
     }
 
-    /* ── BALANCE CARD ── */
-    .balance-card {
-      border-radius: 24px;
-      background: linear-gradient(145deg, #122040 0%, #0d1b36 60%, #091428 100%);
-      border: 1px solid rgba(41,121,255,.18);
-      box-shadow: 0 24px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
-      padding: 24px 22px 22px;
-      margin-bottom: 18px;
+    /* ── MSG ── */
+    .msg {
+      display: none;
+      margin-bottom: 14px;
+      padding: 12px 16px;
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .msg.error   { background: rgba(239,83,80,.12); color: #ef9a9a; border: 1px solid rgba(239,83,80,.2); }
+    .msg.success { background: rgba(29,185,84,.12);  color: var(--green2); border: 1px solid rgba(29,185,84,.2); }
+
+    /* ── PROFILE HERO ── */
+    .profile-hero {
+      border-radius: 22px;
+      background: linear-gradient(145deg, #0d2040 0%, #091428 100%);
+      border: 1px solid rgba(21,101,224,.2);
+      padding: 22px 18px 18px;
+      margin-bottom: 16px;
       position: relative;
       overflow: hidden;
     }
-
-    .balance-card::before {
+    .profile-hero::before {
       content: '';
       position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
+      top: -30px; right: -30px;
+      width: 140px; height: 140px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(21,101,232,.3) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .balance-card::after {
-      content: '';
-      position: absolute;
-      bottom: -20px; left: 20px;
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,200,83,.1) 0%, transparent 70%);
-      pointer-events: none;
+      background: radial-gradient(circle, rgba(21,101,224,.2) 0%, transparent 70%);
     }
 
-    .balance-label {
-      font-size: 12px;
+    .hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .avatar-ring {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: conic-gradient(var(--blue2) 0deg, var(--green) 120deg, var(--blue) 240deg, var(--blue2) 360deg);
+      padding: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-inner {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      background: var(--card);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+    }
+    .avatar-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .avatar-cam {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 2px solid var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .avatar-cam:hover { transform: scale(1.1); }
+
+    /* Profile info */
+    .hero-info { flex: 1; min-width: 0; }
+    .hero-label {
+      font-size: 13px;
       font-weight: 600;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 10px;
+      margin-bottom: 2px;
     }
-
-    .balance-row {
+    .hero-welcome {
+      font-size: 13px;
+      color: var(--green2);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .verified-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--green);
+      font-size: 11px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .vip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .4px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 14px rgba(21,101,224,.35);
+    }
+    .user-id-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .user-id-row span { color: var(--text); font-weight: 600; }
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.08);
+      font-size: 11px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,.15); color: var(--white); }
+
+    /* Account status box */
+    .status-box {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: var(--r-sm);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
       gap: 12px;
-      margin-bottom: 20px;
+    }
+    .status-shield {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .status-info {}
+    .status-title {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .status-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--green2);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status-since {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .status-since strong { color: var(--white); font-weight: 700; }
+
+    /* ── WALLET OVERVIEW ── */
+    .wallet-card {
+      border-radius: 22px;
+      background: linear-gradient(145deg, #0d2040 0%, #091428 100%);
+      border: 1px solid rgba(21,101,224,.18);
+      padding: 20px 18px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .wallet-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='120' height='90' viewBox='0 0 120 90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='60' y='10' width='55' height='70' rx='10' fill='rgba(13,32,64,0.8)' stroke='rgba(41,121,255,0.15)' stroke-width='1.5'/%3E%3Crect x='68' y='25' width='38' height='8' rx='4' fill='rgba(41,121,255,0.12)'/%3E%3Ccircle cx='87' cy='50' r='10' fill='rgba(41,121,255,0.08)' stroke='rgba(41,121,255,0.15)' stroke-width='1'/%3E%3C/svg%3E") right 10px center / 110px no-repeat;
+      pointer-events: none;
     }
 
-    .balance-amount {
+    .wallet-title {
       font-family: 'Syne', sans-serif;
-      font-size: 32px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .wallet-body {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .wallet-left {}
+    .bal-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .bal-amount {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .bal-amount strong {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
       font-weight: 800;
       color: var(--white);
       letter-spacing: -.5px;
-      line-height: 1;
     }
-
-    .deposit-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent) 0%, #00a846 100%);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .2px;
-      box-shadow: 0 8px 20px rgba(0,200,83,.3);
-      transition: transform .15s, box-shadow .15s;
-      white-space: nowrap;
-      flex-shrink: 0;
+    .eye-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background .15s;
     }
-    .deposit-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,200,83,.4); }
-    .deposit-btn:active { transform: translateY(0); }
+    .eye-btn:hover { background: rgba(255,255,255,.15); }
+    .avail-label { font-size: 12px; color: var(--green2); font-weight: 700; }
+    .avail-amt { font-size: 15px; font-weight: 800; color: var(--green2); }
 
-    .balance-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-    }
-
-    .bstat {
+    .wallet-actions {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 8px;
+      min-width: 160px;
     }
-    .bstat-label {
-      font-size: 10px;
+    .w-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform .15s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .w-btn:hover { transform: translateY(-1px); }
+    .w-btn.green {
+      background: linear-gradient(135deg, var(--green) 0%, #00a041 100%);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(29,185,84,.3);
+    }
+    .w-btn.green:hover { box-shadow: 0 10px 24px rgba(29,185,84,.4); }
+    .w-btn.blue {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(21,101,224,.25);
+    }
+    .w-btn.blue:hover { box-shadow: 0 10px 24px rgba(21,101,224,.35); }
+    .w-btn.ghost {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+    .w-btn.ghost:hover { background: rgba(255,255,255,.1); }
+    .w-btn-arrow { margin-left: auto; font-size: 14px; color: var(--muted); }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      border-radius: var(--r);
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 16px 14px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .stat-icon.green { background: linear-gradient(135deg, rgba(29,185,84,.25) 0%, rgba(0,230,118,.1) 100%); }
+    .stat-icon.blue  { background: linear-gradient(135deg, rgba(21,101,224,.25) 0%, rgba(41,121,255,.1) 100%); }
+
+    .stat-label {
+      font-size: 11px;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .5px;
+      margin-bottom: 4px;
     }
-    .bstat-value {
+    .stat-value {
       font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: 800;
       color: var(--white);
+      margin-bottom: 8px;
     }
-
-    /* ── QUICK ACTIONS ── */
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .quick-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 8px;
-      border-radius: var(--radius);
-      background: var(--card);
-      border: 1px solid var(--line);
+    .stat-link {
       font-size: 11px;
       font-weight: 700;
-      color: var(--muted);
-      text-align: center;
-      transition: background .2s, transform .15s;
-    }
-    .quick-item:hover { background: var(--card2); transform: translateY(-2px); color: var(--text); }
-
-    .quick-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(21,101,232,.3) 0%, rgba(41,121,255,.15) 100%);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-
-    /* ── SECTION LABEL ── */
-    .section-label {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 12px;
-    }
-
-    /* ── DAILY INCOME CARD ── */
-    .income-card {
-      border-radius: 22px;
-      background: linear-gradient(135deg, #0f2240 0%, #122040 100%);
-      border: 1px solid rgba(41,121,255,.15);
-      padding: 20px;
-      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 3px;
+    }
+    .stat-link.green { color: var(--green2); }
+    .stat-link.blue  { color: var(--blue2); }
+
+    /* ── REFER & EARN ── */
+    .refer-card {
+      border-radius: 22px;
+      background: linear-gradient(145deg, #0a1f3a 0%, #071428 100%);
+      border: 1px solid rgba(21,101,224,.2);
+      padding: 20px 18px;
+      margin-bottom: 16px;
       position: relative;
       overflow: hidden;
     }
-    .income-card::before {
-      content: '';
-      position: absolute;
-      top: -30px; left: -30px;
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,200,83,.12) 0%, transparent 70%);
+    .refer-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
     }
-
-    .income-left {}
-    .income-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .6px;
+    .refer-left {}
+    .refer-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
       margin-bottom: 6px;
     }
-    .income-amount {
+    .refer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .refer-desc strong { color: var(--green2); }
+    .copy-ref-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green) 0%, #00a041 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 6px 18px rgba(29,185,84,.3);
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+      border: none;
+    }
+    .copy-ref-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(29,185,84,.4); }
+
+    .refer-right { display: flex; flex-direction: column; gap: 10px; }
+    .refer-stat {}
+    .refer-stat-label { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+    .refer-stat-value {
       font-family: 'Syne', sans-serif;
       font-size: 26px;
       font-weight: 800;
-      color: var(--accent2);
-      line-height: 1;
-      margin-bottom: 8px;
+      color: var(--green2);
     }
-    .income-next {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .income-next span {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .income-emoji {
-      font-size: 52px;
+    .refer-emoji {
+      font-size: 60px;
       line-height: 1;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+    }
+
+    /* ── MENU GRID ── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--r);
+      background: var(--card);
+      border: 1px solid var(--line);
+      transition: background .2s, transform .15s;
+      cursor: pointer;
+    }
+    .menu-item:hover { background: var(--card2); transform: translateY(-1px); }
+
+    .menu-icon {
+      width: 40px; height: 40px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .menu-icon.blue  { background: linear-gradient(135deg, rgba(21,101,224,.3) 0%, rgba(41,121,255,.15) 100%); }
+    .menu-icon.green { background: linear-gradient(135deg, rgba(29,185,84,.3) 0%, rgba(0,230,118,.1) 100%); }
+    .menu-icon.red   { background: linear-gradient(135deg, rgba(239,83,80,.3) 0%, rgba(239,83,80,.1) 100%); }
+
+    .menu-text { flex: 1; min-width: 0; }
+    .menu-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .menu-desc {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .menu-arrow {
+      font-size: 14px;
+      color: var(--muted);
       flex-shrink: 0;
     }
 
-    /* ── ACTIVE PLAN CARD ── */
-    .plan-card {
-      border-radius: 22px;
-      background: linear-gradient(135deg, #0d1e38 0%, #0f2240 100%);
-      border: 1px solid rgba(41,121,255,.15);
-      padding: 20px;
-      margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    .plan-card::after {
-      content: '';
-      position: absolute;
-      bottom: -20px; right: -20px;
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(21,101,232,.15) 0%, transparent 70%);
-    }
-
-    .plan-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .plan-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      margin-bottom: 4px;
-    }
-    .plan-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--white);
-      letter-spacing: -.3px;
-    }
-    .plan-badge {
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
-      font-size: 10px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(21,101,232,.35);
-    }
-
-    .plan-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-    }
-    .pstat { display: flex; flex-direction: column; gap: 4px; }
-    .pstat-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-    .pstat-value {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--white);
-    }
-
-    /* ── SECTION PANELS ── */
-    .panel {
+    /* ── PROFILE FORM PANEL ── */
+    .form-panel {
       border-radius: 22px;
       background: var(--card);
       border: 1px solid var(--line);
       margin-bottom: 16px;
       overflow: hidden;
     }
-
-    .panel-head {
+    .form-panel-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 16px 18px 14px;
       border-bottom: 1px solid var(--line);
     }
-    .panel-head h3 {
+    .form-panel-head h3 {
       font-family: 'Syne', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--white);
     }
-    .panel-head a {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--blue2);
-    }
+    .form-panel-body { padding: 18px; }
 
-    .list-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--line);
-      transition: background .15s;
-    }
-    .list-item:last-child { border-bottom: none; }
-    .list-item:hover { background: rgba(255,255,255,.03); }
-
-    .list-item strong {
+    .field-row { margin-bottom: 14px; }
+    .field-label {
       display: block;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 700;
-      color: var(--white);
-      margin-bottom: 3px;
-    }
-    .list-item p {
-      font-size: 12px;
       color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .list-item-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-    }
-    .list-item-right strong {
-      font-size: 14px;
-      color: var(--white);
-    }
-
-    .status-pill {
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .4px;
+      letter-spacing: .6px;
+      margin-bottom: 6px;
     }
-    .status-pill.active { background: rgba(0,200,83,.15); color: var(--accent2); }
-    .status-pill.credit { background: rgba(0,200,83,.15); color: var(--accent2); }
-    .status-pill.debit  { background: rgba(239,83,80,.12); color: #ef9a9a; }
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      transition: border-color .2s, background .2s;
+      -webkit-appearance: none;
+    }
+    .field-input:focus {
+      border-color: rgba(41,121,255,.5);
+      background: rgba(255,255,255,.07);
+    }
+    .field-input:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
 
-    .empty-state {
-      padding: 24px 18px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
+    .field-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
-    /* ── MSG ── */
-    .msg {
-      display: none;
-      margin-bottom: 14px;
-      padding: 12px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 600;
+    .save-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(21,101,224,.3);
+      transition: transform .15s, box-shadow .15s;
+      margin-top: 6px;
     }
-    .msg.error   { background: rgba(239,83,80,.12); color: #ef9a9a; border: 1px solid rgba(239,83,80,.2); }
-    .msg.success { background: rgba(0,200,83,.12);  color: var(--accent2); border: 1px solid rgba(0,200,83,.2); }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(21,101,224,.4); }
+    .save-btn:active { transform: translateY(0); }
 
     /* ── BOTTOM NAV ── */
     .bottom-nav {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 12px;
+      bottom: 10px;
       z-index: 90;
       width: calc(100% - 24px);
       max-width: 460px;
@@ -661,17 +688,17 @@
       padding: 8px 10px;
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,.07);
-      background: rgba(9,20,40,.92);
+      background: rgba(9,20,40,.94);
       backdrop-filter: blur(20px);
-      box-shadow: 0 20px 40px rgba(0,0,0,.4);
+      box-shadow: 0 20px 40px rgba(0,0,0,.45);
     }
 
     .bnav-link {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
-      padding: 8px 6px;
+      gap: 4px;
+      padding: 8px 4px;
       border-radius: 14px;
       font-size: 10px;
       font-weight: 700;
@@ -681,80 +708,60 @@
     }
     .bnav-link:hover { color: var(--text); }
     .bnav-link.active {
-      background: linear-gradient(135deg, rgba(21,101,232,.3) 0%, rgba(41,121,255,.12) 100%);
-      color: var(--white);
+      color: var(--green2);
     }
-    .bnav-icon {
-      font-size: 20px;
-      line-height: 1;
+    .bnav-link.active .bnav-dot {
+      display: block;
     }
-
-    /* ── BONUS BANNER ── */
-    .bonus-banner {
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(0,200,83,.15) 0%, rgba(0,200,83,.05) 100%);
-      border: 1px solid rgba(0,200,83,.2);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .bonus-text {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent2);
-    }
-    .bonus-sub { font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; }
-    .bonus-btn {
-      padding: 8px 16px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent) 0%, #00a846 100%);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0,200,83,.25);
-    }
-
-    /* ── GREET ROW ── */
-    .greet-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-    .greet-text { font-size: 13px; color: var(--muted); }
-    .greet-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--white);
-    }
-    .ref-badge {
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: rgba(41,121,255,.12);
-      border: 1px solid rgba(41,121,255,.2);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--blue2);
+    .bnav-icon { font-size: 20px; line-height: 1; }
+    .bnav-dot {
+      display: none;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--green2);
+      margin: 0 auto;
     }
 
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    .a { animation: fadeUp .4s ease both; }
+    .a1 { animation-delay: .04s; }
+    .a2 { animation-delay: .08s; }
+    .a3 { animation-delay: .13s; }
+    .a4 { animation-delay: .18s; }
+    .a5 { animation-delay: .23s; }
+    .a6 { animation-delay: .28s; }
+    .a7 { animation-delay: .33s; }
 
-    .anim { animation: fadeUp .45s ease both; }
-    .anim-1 { animation-delay: .05s; }
-    .anim-2 { animation-delay: .1s; }
-    .anim-3 { animation-delay: .15s; }
-    .anim-4 { animation-delay: .2s; }
-    .anim-5 { animation-delay: .25s; }
-    .anim-6 { animation-delay: .3s; }
+    /* ── HIDDEN ── */
+    .hidden { display: none !important; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(9,20,40,.96);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green2);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      backdrop-filter: blur(16px);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 
@@ -764,217 +771,290 @@
   data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
 
+  <!-- AMBIENT BG -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
   <!-- TOP HEADER -->
   <header class="top-header">
     <div class="brand">
-      <div class="brand-icon">♾️</div>
+      <div class="brand-logo">
+        <!-- LomaShares loop icon -->
+        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="19" r="8" stroke="#1db954" stroke-width="3" fill="none"/>
+          <circle cx="24" cy="19" r="8" stroke="#1565e0" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
       <div>
-        LomaShares
+        <div class="brand-name">Loma<span>Shares</span></div>
         <span class="brand-sub">Invest Smart. Earn More.</span>
       </div>
     </div>
-    <button class="menu-btn" id="menuToggle" type="button" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="header-actions">
+      <div class="hdr-btn" title="Notifications">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <a class="hdr-btn" href="#settings-section" title="Settings">⚙️</a>
+    </div>
   </header>
 
-  <!-- DRAWER BACKDROP -->
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
-
-  <!-- SLIDE-IN DRAWER (right) -->
-  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
-    <div class="drawer-head">
-      <div class="brand" style="font-size:17px;">
-        <div class="brand-icon" style="width:30px;height:30px;font-size:15px;">♾️</div>
-        LomaShares
-      </div>
-      <button class="drawer-close" id="drawerClose">✕</button>
-    </div>
-
-    <div class="drawer-user">
-      <div class="drawer-user-name" data-auth="full_name">User</div>
-      <div class="drawer-user-code">Ref Code: <span data-auth="referral_code">-</span></div>
-    </div>
-
-    <nav class="drawer-nav">
-      <a class="drawer-link active" href="dashboard.html">
-        <span class="icon">🏠</span> Home
-      </a>
-      <a class="drawer-link" href="invest.html">
-        <span class="icon">📈</span> Invest
-      </a>
-      <a class="drawer-link" href="investments.html">
-        <span class="icon">💼</span> My Investments
-      </a>
-      <a class="drawer-link" href="deposit.html">
-        <span class="icon">💳</span> Deposit
-      </a>
-      <a class="drawer-link" href="withdraw.html">
-        <span class="icon">💸</span> Withdraw
-      </a>
-      <a class="drawer-link" href="transactions.html">
-        <span class="icon">📋</span> Transactions
-      </a>
-      <a class="drawer-link" href="spin.html">
-        <span class="icon">🎰</span> Spin &amp; Win
-      </a>
-      <a class="drawer-link" href="referrals.html">
-        <span class="icon">👥</span> Referrals
-      </a>
-      <a class="drawer-link" href="profile.html">
-        <span class="icon">👤</span> Profile
-      </a>
-      <div class="drawer-divider"></div>
-      <a class="drawer-link" href="facebook-bonus.html">
-        <span class="icon">🎁</span> Get ₦1,000 Bonus
-      </a>
-    </nav>
-
-    <div class="drawer-divider"></div>
-    <a class="drawer-logout" href="#" id="logoutBtn">
-      <span class="icon">🚪</span> Logout
-    </a>
-  </aside>
-
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main class="main">
     <div id="msg" class="msg"></div>
 
-    <!-- GREET ROW -->
-    <div class="greet-row anim anim-1">
-      <div>
-        <div class="greet-text">Welcome back 👋</div>
-        <div class="greet-name" data-auth="full_name">User</div>
+    <!-- PROFILE HERO -->
+    <div class="profile-hero a a1">
+      <div class="hero-top">
+        <!-- Avatar -->
+        <div class="avatar-wrap">
+          <div class="avatar-ring">
+            <div class="avatar-inner" id="avatarEl">👤</div>
+          </div>
+          <div class="avatar-cam" title="Change photo">📷</div>
+        </div>
+
+        <!-- Info -->
+        <div class="hero-info">
+          <div class="hero-label">My Profile</div>
+          <div class="hero-welcome">Welcome back,</div>
+          <div class="hero-name">
+            <span id="heroName">User</span>
+            <div class="verified-check">✓</div>
+          </div>
+          <div class="vip-badge">👑 VIP INVESTOR</div>
+          <div class="user-id-row">
+            User ID: <span id="heroUserId">-</span>
+            <div class="copy-btn" id="copyUid" title="Copy User ID">⧉</div>
+          </div>
+        </div>
+
+        <!-- Account Status -->
+        <div style="margin-left:auto; flex-shrink:0;">
+          <div style="padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--line); text-align:center; min-width:110px;">
+            <div class="status-shield">🛡️</div>
+            <div class="status-title" style="margin-top:4px;">Account Status</div>
+            <div class="status-value" style="justify-content:center; font-size:13px;">Verified ✓</div>
+            <div class="status-since" style="margin-top:6px;">Member Since<br><strong id="memberSince">-</strong></div>
+          </div>
+        </div>
       </div>
-      <div class="ref-badge">Ref: <span data-auth="referral_code">-</span></div>
     </div>
 
-    <!-- BALANCE CARD -->
-    <div class="balance-card anim anim-2">
-      <div class="balance-label">Total Balance</div>
-      <div class="balance-row">
-        <div class="balance-amount" id="walletBalance">₦0.00</div>
-        <a href="deposit.html" class="deposit-btn">+ Deposit</a>
-      </div>
-      <div class="balance-stats">
-        <div class="bstat">
-          <span class="bstat-label">Deposited</span>
-          <span class="bstat-value" id="totalDeposit">₦0.00</span>
+    <!-- WALLET OVERVIEW -->
+    <div class="wallet-card a a2">
+      <div class="wallet-title">Wallet Overview</div>
+      <div class="wallet-body">
+        <div class="wallet-left">
+          <div class="bal-label">Total Balance</div>
+          <div class="bal-amount">
+            <strong id="walletBalance">₦0.00</strong>
+            <div class="eye-btn" id="toggleBalance" title="Show/Hide">👁</div>
+          </div>
+          <div class="avail-label">Available Balance</div>
+          <div class="avail-amt" id="availBalance">₦0.00</div>
         </div>
-        <div class="bstat">
-          <span class="bstat-label">Profit</span>
-          <span class="bstat-value" id="totalProfit">₦0.00</span>
-        </div>
-        <div class="bstat">
-          <span class="bstat-label">Referral</span>
-          <span class="bstat-value" id="totalReferralBonus">₦0.00</span>
+        <div class="wallet-actions">
+          <a href="deposit.html" class="w-btn green">
+            <span>💳</span> + Deposit
+          </a>
+          <a href="withdraw.html" class="w-btn blue">
+            <span>🔄</span> Withdraw
+          </a>
+          <a href="transactions.html" class="w-btn ghost">
+            <span>📋</span> Transaction History
+            <span class="w-btn-arrow">›</span>
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- QUICK ACTIONS -->
-    <div class="quick-grid anim anim-3">
-      <a class="quick-item" href="invest.html">
-        <div class="quick-icon">📈</div>
-        Invest
+    <!-- STAT CARDS -->
+    <div class="stats-grid a a3">
+      <div class="stat-card">
+        <div class="stat-icon green">📈</div>
+        <div class="stat-label">Total Invested</div>
+        <div class="stat-value" id="totalInvested">₦0.00</div>
+        <a href="investments.html" class="stat-link green">View Details ›</a>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">💰</div>
+        <div class="stat-label">Total Earnings</div>
+        <div class="stat-value" id="totalEarnings">₦0.00</div>
+        <a href="transactions.html" class="stat-link blue">View Details ›</a>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">👥</div>
+        <div class="stat-label">Referral Earnings</div>
+        <div class="stat-value" id="referralEarnings">₦0.00</div>
+        <a href="referrals.html" class="stat-link green">View Details ›</a>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">🎁</div>
+        <div class="stat-label">Bonus Earnings</div>
+        <div class="stat-value" id="bonusEarnings">₦0.00</div>
+        <a href="facebook-bonus.html" class="stat-link blue">View Details ›</a>
+      </div>
+    </div>
+
+    <!-- REFER & EARN -->
+    <div class="refer-card a a4">
+      <div class="refer-inner">
+        <div class="refer-left">
+          <div class="refer-title">REFER &amp; EARN</div>
+          <div class="refer-desc">
+            Earn up to <strong>10%</strong> referral commission.<br>
+            Invite more people and earn more.
+          </div>
+          <button class="copy-ref-btn" id="copyRefLink">
+            Copy Referral Link 🔗
+          </button>
+        </div>
+        <div class="refer-right">
+          <div>
+            <div class="refer-stat-label">Total Referrals</div>
+            <div class="refer-stat-value" id="totalReferrals">0</div>
+          </div>
+          <div>
+            <div class="refer-stat-label">Referral Commission</div>
+            <div class="refer-stat-value">10%</div>
+          </div>
+          <div class="refer-emoji">👥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENU GRID -->
+    <div class="menu-grid a a5" id="settings-section">
+      <a href="profile.html#edit" class="menu-item">
+        <div class="menu-icon blue">👤</div>
+        <div class="menu-text">
+          <div class="menu-name">Personal Information</div>
+          <div class="menu-desc">View and update your info</div>
+        </div>
+        <div class="menu-arrow">›</div>
       </a>
-      <a class="quick-item" href="withdraw.html">
-        <div class="quick-icon">💸</div>
-        Withdraw
+      <a href="#security" class="menu-item">
+        <div class="menu-icon green">🛡️</div>
+        <div class="menu-text">
+          <div class="menu-name">Security Settings</div>
+          <div class="menu-desc">Change password and security</div>
+        </div>
+        <div class="menu-arrow">›</div>
       </a>
-      <a class="quick-item" href="spin.html">
-        <div class="quick-icon">🎰</div>
-        Spin2Win
+      <a href="#bank" class="menu-item">
+        <div class="menu-icon green">🏦</div>
+        <div class="menu-text">
+          <div class="menu-name">Bank Details</div>
+          <div class="menu-desc">Manage your bank details</div>
+        </div>
+        <div class="menu-arrow">›</div>
       </a>
-      <a class="quick-item" href="referrals.html">
-        <div class="quick-icon">👥</div>
-        Referrals
+      <a href="https://t.me/lomasharesAgent" target="_blank" class="menu-item">
+        <div class="menu-icon blue">🎧</div>
+        <div class="menu-text">
+          <div class="menu-name">Support Center</div>
+          <div class="menu-desc">Get help and support</div>
+        </div>
+        <div class="menu-arrow">›</div>
       </a>
-    </div>
-
-    <!-- DAILY INCOME CARD -->
-    <div class="income-card anim anim-4">
-      <div class="income-left">
-        <div class="income-title">Daily Income</div>
-        <div class="income-amount" id="dailyIncome">₦0.00</div>
-        <div class="income-next">Next Drop: <span id="nextDrop">—</span></div>
-      </div>
-      <div class="income-emoji">💰</div>
-    </div>
-
-    <!-- ACTIVE PLAN CARD -->
-    <div class="plan-card anim anim-5" id="activePlanCard" style="display:none;">
-      <div class="plan-head">
-        <div>
-          <div class="plan-label">Active Plan</div>
-          <div class="plan-name" id="planName">—</div>
+      <a href="#notifications" class="menu-item">
+        <div class="menu-icon blue">🔔</div>
+        <div class="menu-text">
+          <div class="menu-name">Notification Settings</div>
+          <div class="menu-desc">Manage your notifications</div>
         </div>
-        <div class="plan-badge" id="planDaysLeft">— DAYS LEFT</div>
+        <div class="menu-arrow">›</div>
+      </a>
+      <button class="menu-item" id="logoutItem">
+        <div class="menu-icon red">⏻</div>
+        <div class="menu-text">
+          <div class="menu-name" style="color:#ef9a9a;">Logout</div>
+          <div class="menu-desc">Sign out from your account</div>
+        </div>
+        <div class="menu-arrow">›</div>
+      </button>
+    </div>
+
+    <!-- EDIT PROFILE FORM -->
+    <div class="form-panel a a6" id="edit">
+      <div class="form-panel-head">
+        <h3>✏️ Edit Profile</h3>
       </div>
-      <div class="plan-stats">
-        <div class="pstat">
-          <span class="pstat-label">Total Invest</span>
-          <span class="pstat-value" id="planAmount">₦0.00</span>
-        </div>
-        <div class="pstat">
-          <span class="pstat-label">Daily Income</span>
-          <span class="pstat-value" id="planDaily">₦0.00</span>
-        </div>
-        <div class="pstat">
-          <span class="pstat-label">Total Return</span>
-          <span class="pstat-value" id="planTotal">₦0.00</span>
-        </div>
+      <div class="form-panel-body">
+        <form id="profileForm">
+          <div class="field-row">
+            <label class="field-label" for="full_name">Full Name</label>
+            <input class="field-input" id="full_name" type="text" placeholder="Full Name" />
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="email">Email</label>
+            <input class="field-input" id="email" type="email" placeholder="Email" disabled />
+          </div>
+          <div class="field-grid-2">
+            <div class="field-row">
+              <label class="field-label" for="phone">Phone</label>
+              <input class="field-input" id="phone" type="text" placeholder="Phone Number" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="username">Username</label>
+              <input class="field-input" id="username" type="text" placeholder="Username" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="state">State</label>
+              <input class="field-input" id="state" type="text" placeholder="State" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="lga">LGA</label>
+              <input class="field-input" id="lga" type="text" placeholder="LGA" />
+            </div>
+          </div>
+          <div class="field-grid-2">
+            <div class="field-row">
+              <label class="field-label" for="referral_code">Referral Code</label>
+              <input class="field-input" id="referral_code" type="text" disabled />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="role">Role</label>
+              <input class="field-input" id="role" type="text" disabled />
+            </div>
+          </div>
+          <button class="save-btn" type="submit">Save Changes</button>
+        </form>
       </div>
     </div>
 
-    <!-- BONUS BANNER -->
-    <a href="facebook-bonus.html" class="bonus-banner anim anim-5">
-      <div>
-        <div class="bonus-text">🎁 Get ₦1,000 Bonus</div>
-        <div class="bonus-sub">Follow us on social media</div>
-      </div>
-      <div class="bonus-btn">Claim Now</div>
-    </a>
-
-    <!-- ACTIVE INVESTMENTS PANEL -->
-    <div class="panel anim anim-6">
-      <div class="panel-head">
-        <h3>Active Investments</h3>
-        <a href="investments.html">View all</a>
-      </div>
-      <div id="activeInvestmentsList">
-        <p class="empty-state">Loading investments…</p>
-      </div>
-    </div>
-
-    <!-- RECENT TRANSACTIONS PANEL -->
-    <div class="panel anim anim-6">
-      <div class="panel-head">
-        <h3>Recent Transactions</h3>
-        <a href="transactions.html">View all</a>
-      </div>
-      <div id="recentTransactionsList">
-        <p class="empty-state">Loading transactions…</p>
-      </div>
-    </div>
   </main>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <a class="bnav-link active" href="dashboard.html">
-      <span class="bnav-icon">🏠</span>Home
+    <a class="bnav-link" href="dashboard.html">
+      <span class="bnav-icon">🏠</span>
+      Dashboard
+      <span class="bnav-dot"></span>
     </a>
     <a class="bnav-link" href="invest.html">
-      <span class="bnav-icon">📊</span>Plans
+      <span class="bnav-icon">🚀</span>
+      Invest
+      <span class="bnav-dot"></span>
     </a>
-    <a class="bnav-link" href="deposit.html">
-      <span class="bnav-icon">👛</span>Wallet
+    <a class="bnav-link" href="spin.html">
+      <span class="bnav-icon">🎰</span>
+      Spin2Win
+      <span class="bnav-dot"></span>
     </a>
-    <a class="bnav-link" href="transactions.html">
-      <span class="bnav-icon">🕐</span>History
+    <a class="bnav-link" href="referrals.html">
+      <span class="bnav-icon">👥</span>
+      Referrals
+      <span class="bnav-dot"></span>
     </a>
-    <a class="bnav-link" href="profile.html">
-      <span class="bnav-icon">👤</span>Profile
+    <a class="bnav-link active" href="profile.html">
+      <span class="bnav-icon">👤</span>
+      Profile
+      <span class="bnav-dot"></span>
     </a>
   </nav>
 
@@ -982,226 +1062,176 @@
     (function () {
       "use strict";
 
-      /* ── FORMAT MONEY ── */
-      function formatMoney(value) {
-        const amount = Number(value || 0);
-        return "₦" + amount.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
+      /* ── HELPERS ── */
+      function fmt(v) {
+        return "₦" + Number(v || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
 
-      /* ── SHOW MESSAGE ── */
-      function showMessage(message, type = "error") {
+      function showMsg(text, type = "error") {
         const box = document.getElementById("msg");
-        if (!box) return;
-        box.textContent = message;
+        box.textContent = text;
         box.className = "msg " + type;
         box.style.display = "block";
+        box.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
 
-      /* ── COUNTDOWN TIMER ── */
-      function startCountdown(targetHour = 1, targetMin = 0, targetSec = 0) {
-        const el = document.getElementById("nextDrop");
-        if (!el) return;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2200);
+      }
 
-        function tick() {
-          const now = new Date();
-          const next = new Date();
-          next.setHours(targetHour, targetMin, targetSec, 0);
-          if (next <= now) next.setDate(next.getDate() + 1);
-          const diff = Math.max(0, next - now);
-          const h = String(Math.floor(diff / 3600000)).padStart(2, "0");
-          const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0");
-          const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0");
-          el.textContent = h + ":" + m + ":" + s + " AM";
+      function copyText(text) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
         }
-        tick();
-        setInterval(tick, 1000);
+      }
+      function fallbackCopy(text) {
+        const el = document.createElement("textarea");
+        el.value = text;
+        el.style.position = "fixed";
+        el.style.opacity = "0";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
       }
 
-      /* ── LOAD DASHBOARD ── */
-      async function loadDashboard() {
+      /* ── BALANCE TOGGLE ── */
+      let balanceHidden = false;
+      const balEl    = document.getElementById("walletBalance");
+      const availEl  = document.getElementById("availBalance");
+      let rawBalance = 0;
+
+      document.getElementById("toggleBalance")?.addEventListener("click", function () {
+        balanceHidden = !balanceHidden;
+        balEl.textContent  = balanceHidden ? "₦ ••••••" : fmt(rawBalance);
+        availEl.textContent = balanceHidden ? "₦ ••••••" : fmt(rawBalance);
+        this.textContent   = balanceHidden ? "🙈" : "👁";
+      });
+
+      /* ── LOAD PROFILE ── */
+      async function loadProfile() {
         try {
           const session = await window.LomaAuth.requireAuth();
           if (!session) return;
           const userId = session.user.id;
-          if (!userId) throw new Error("User session not found.");
 
-          await window.LomaAuth.getProfile(userId);
+          const profile = await window.LomaAuth.getProfile(userId);
+
+          /* hero section */
+          const fullName = profile.full_name || "User";
+          document.getElementById("heroName").textContent = fullName;
+          document.getElementById("heroUserId").textContent = profile.referral_code || userId.slice(0, 8).toUpperCase();
+
+          /* member since */
+          if (profile.created_at) {
+            const d = new Date(profile.created_at);
+            document.getElementById("memberSince").textContent = d.toLocaleDateString("en-GB", {
+              day: "numeric", month: "short", year: "numeric"
+            });
+          }
+
+          /* form fields */
+          document.getElementById("full_name").value    = profile.full_name || "";
+          document.getElementById("email").value        = profile.email || session.user.email || "";
+          document.getElementById("phone").value        = profile.phone || "";
+          document.getElementById("state").value        = profile.state || "";
+          document.getElementById("lga").value          = profile.lga || "";
+          document.getElementById("username").value     = profile.username || "";
+          document.getElementById("referral_code").value = profile.referral_code || "";
+          document.getElementById("role").value         = profile.role || "user";
 
           /* wallet */
-          const { data: wallet, error: walletError } = await window.sb
+          const { data: wallet } = await window.sb
             .from("wallets")
             .select("*")
             .eq("user_id", userId)
             .single();
 
-          if (walletError) throw walletError;
-
-          document.getElementById("walletBalance").textContent = formatMoney(wallet.balance);
-          document.getElementById("totalDeposit").textContent = formatMoney(wallet.total_deposit);
-          document.getElementById("totalProfit").textContent = formatMoney(wallet.total_profit);
-          document.getElementById("totalReferralBonus").textContent = formatMoney(wallet.total_referral_bonus);
-
-          /* active investments */
-          const { data: activeInvestments, error: investError } = await window.sb
-            .from("investments")
-            .select(`
-              id, amount, daily_profit, days_paid, duration_days,
-              status, start_date, end_date,
-              investment_plans(name)
-            `)
-            .eq("user_id", userId)
-            .eq("status", "active")
-            .order("created_at", { ascending: false })
-            .limit(5);
-
-          if (investError) throw investError;
-
-          document.getElementById("activeInvestmentsCount") &&
-            (document.getElementById("activeInvestmentsCount").textContent = activeInvestments.length);
-
-          /* fill daily income + plan card from latest investment */
-          let totalDailyIncome = 0;
-          activeInvestments.forEach(i => { totalDailyIncome += Number(i.daily_profit || 0); });
-          document.getElementById("dailyIncome").textContent = formatMoney(totalDailyIncome);
-          startCountdown(1, 0, 0);
-
-          if (activeInvestments.length > 0) {
-            const top = activeInvestments[0];
-            const daysLeft = Math.max(0, (top.duration_days || 0) - (top.days_paid || 0));
-            const totalReturn = (top.amount || 0) + (top.daily_profit || 0) * (top.duration_days || 0);
-
-            document.getElementById("planName").textContent = top.investment_plans?.name || "—";
-            document.getElementById("planDaysLeft").textContent = daysLeft + " DAYS LEFT";
-            document.getElementById("planAmount").textContent = formatMoney(top.amount);
-            document.getElementById("planDaily").textContent = formatMoney(top.daily_profit);
-            document.getElementById("planTotal").textContent = formatMoney(totalReturn);
-            document.getElementById("activePlanCard").style.display = "block";
+          if (wallet) {
+            rawBalance = wallet.balance || 0;
+            balEl.textContent   = fmt(rawBalance);
+            availEl.textContent = fmt(rawBalance);
+            document.getElementById("totalInvested").textContent  = fmt(wallet.total_deposit);
+            document.getElementById("totalEarnings").textContent  = fmt(wallet.total_profit);
+            document.getElementById("referralEarnings").textContent = fmt(wallet.total_referral_bonus);
+            document.getElementById("bonusEarnings").textContent  = fmt(wallet.bonus_balance || 0);
           }
 
-          renderActiveInvestments(activeInvestments || []);
+          /* referral count */
+          const { count } = await window.sb
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("referred_by", profile.referral_code || "");
+          document.getElementById("totalReferrals").textContent = count || 0;
 
-          /* recent transactions */
-          const { data: recentTransactions, error: txError } = await window.sb
-            .from("wallet_transactions")
-            .select("*")
-            .eq("user_id", userId)
-            .order("created_at", { ascending: false })
-            .limit(6);
+          /* copy UID */
+          document.getElementById("copyUid")?.addEventListener("click", function () {
+            copyText(profile.referral_code || userId);
+            showToast("✓ User ID copied!");
+          });
 
-          if (txError) throw txError;
-          renderRecentTransactions(recentTransactions || []);
+          /* copy referral link */
+          document.getElementById("copyRefLink")?.addEventListener("click", function () {
+            const link = `${location.origin}/register.html?ref=${profile.referral_code || ""}`;
+            copyText(link);
+            showToast("✓ Referral link copied!");
+          });
 
         } catch (err) {
           console.error(err);
-          showMessage(err.message || "Failed to load dashboard.");
+          showMsg(err.message || "Failed to load profile.");
         }
       }
 
-      /* ── RENDER INVESTMENTS ── */
-      function renderActiveInvestments(items) {
-        const wrap = document.getElementById("activeInvestmentsList");
-        if (!wrap) return;
+      /* ── SAVE PROFILE ── */
+      document.getElementById("profileForm")?.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const btn = this.querySelector("button[type=submit]");
+        btn.textContent = "Saving…";
+        btn.disabled = true;
 
-        if (!items.length) {
-          wrap.innerHTML = '<p class="empty-state">No active investments found.</p>';
-          return;
+        try {
+          const session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+
+          const { error } = await window.sb
+            .from("profiles")
+            .update({
+              full_name: document.getElementById("full_name").value.trim() || null,
+              phone:     document.getElementById("phone").value.trim() || null,
+              state:     document.getElementById("state").value.trim() || null,
+              lga:       document.getElementById("lga").value.trim() || null,
+              username:  document.getElementById("username").value.trim() || null
+            })
+            .eq("id", session.user.id);
+
+          if (error) throw error;
+          showMsg("Profile updated successfully.", "success");
+          showToast("✓ Profile saved!");
+          document.getElementById("heroName").textContent =
+            document.getElementById("full_name").value.trim() || "User";
+
+        } catch (err) {
+          console.error(err);
+          showMsg(err.message || "Failed to update profile.");
+        } finally {
+          btn.textContent = "Save Changes";
+          btn.disabled = false;
         }
-
-        wrap.innerHTML = items.map((item) => {
-          const planName = item.investment_plans?.name || "Investment Plan";
-          const progress = item.duration_days
-            ? Math.round((item.days_paid / item.duration_days) * 100)
-            : 0;
-          return `
-            <div class="list-item">
-              <div>
-                <strong>${planName}</strong>
-                <p>Daily: ${formatMoney(item.daily_profit)} &nbsp;·&nbsp; ${item.days_paid}/${item.duration_days} days</p>
-              </div>
-              <div class="list-item-right">
-                <strong>${formatMoney(item.amount)}</strong>
-                <span class="status-pill active">${item.status}</span>
-              </div>
-            </div>
-          `;
-        }).join("");
-      }
-
-      /* ── RENDER TRANSACTIONS ── */
-      function renderRecentTransactions(items) {
-        const wrap = document.getElementById("recentTransactionsList");
-        if (!wrap) return;
-
-        if (!items.length) {
-          wrap.innerHTML = '<p class="empty-state">No transactions found.</p>';
-          return;
-        }
-
-        wrap.innerHTML = items.map((item) => `
-          <div class="list-item">
-            <div>
-              <strong>${item.type || "Transaction"}</strong>
-              <p>${item.description || "-"}</p>
-              <p>${new Date(item.created_at).toLocaleString()}</p>
-            </div>
-            <div class="list-item-right">
-              <strong>${item.direction === "credit" ? "+" : "-"}${formatMoney(item.amount)}</strong>
-              <span class="status-pill ${item.direction === "credit" ? "credit" : "debit"}">${item.status || "completed"}</span>
-            </div>
-          </div>
-        `).join("");
-      }
-
-      /* ── DRAWER ── */
-      function initDrawer() {
-        const toggle   = document.getElementById("menuToggle");
-        const drawer   = document.getElementById("navDrawer");
-        const backdrop = document.getElementById("drawerBackdrop");
-        const closeBtn = document.getElementById("drawerClose");
-        if (!toggle || !drawer || !backdrop) return;
-
-        function openDrawer() {
-          drawer.classList.add("open");
-          backdrop.classList.add("show");
-          toggle.classList.add("open");
-          drawer.setAttribute("aria-hidden", "false");
-        }
-
-        function closeDrawer() {
-          drawer.classList.remove("open");
-          backdrop.classList.remove("show");
-          toggle.classList.remove("open");
-          drawer.setAttribute("aria-hidden", "true");
-        }
-
-        toggle.addEventListener("click", () =>
-          drawer.classList.contains("open") ? closeDrawer() : openDrawer()
-        );
-
-        backdrop.addEventListener("click", closeDrawer);
-        if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
-
-        drawer.querySelectorAll("a:not(#logoutBtn)").forEach(link => {
-          link.addEventListener("click", closeDrawer);
-        });
-
-        const logoutBtn = document.getElementById("logoutBtn");
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            closeDrawer();
-            if (window.LomaAuth?.logout) await window.LomaAuth.logout();
-          });
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        initDrawer();
-        loadDashboard();
       });
+
+      /* ── LOGOUT ── */
+      document.getElementById("logoutItem")?.addEventListener("click", async function () {
+        if (window.LomaAuth?.logout) await window.LomaAuth.logout();
+      });
+
+      /* ── INIT ── */
+      document.addEventListener("DOMContentLoaded", loadProfile);
     })();
   </script>
 </body>
