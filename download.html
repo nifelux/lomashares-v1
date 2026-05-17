@@ -6,1079 +6,543 @@
   <meta name="theme-color" content="#060f22"/>
   <meta name="description" content="Download LomaShares – Invest Smart. Earn More. The #1 investment app in Nigeria."/>
   <title>LomaShares – Download App</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-
   <style>
-    /* ═══════════════════════════════════════
-       RESET & VARIABLES
-    ═══════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:      #060f22;
-      --bg2:     #091528;
-      --card:    #0c1d38;
-      --card2:   #0f2244;
-      --green:   #17b554;
-      --green2:  #21d460;
-      --green3:  #0fa042;
-      --blue:    #1457d4;
-      --blue2:   #2470ff;
-      --white:   #ffffff;
-      --text:    #d8e8ff;
-      --muted:   #5a78a8;
-      --line:    rgba(255,255,255,.07);
-      --star:    #fbbf24;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#060f22;--card:#0c1d38;--card2:#0f2244;
+      --green:#17b554;--green2:#21d460;--green3:#0fa042;
+      --blue:#1457d4;--blue2:#2470ff;
+      --white:#fff;--text:#d8e8ff;--muted:#5a78a8;--line:rgba(255,255,255,.07);
+      --star:#fbbf24;
     }
+    html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100dvh;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
 
-    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100dvh;
-      overflow-x: hidden;
-      overscroll-behavior-y: none;
-    }
-
-    a { text-decoration: none; color: inherit; }
-    button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
-    img { display: block; max-width: 100%; }
-
-    /* ═══════════════════════════════════════
-       AMBIENT BACKGROUND
-    ═══════════════════════════════════════ */
-    .bg-mesh {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    /* ── BACKGROUND ── */
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       background:
-        radial-gradient(ellipse 70% 50% at 15% -5%,  rgba(20,87,212,.22) 0%, transparent 65%),
-        radial-gradient(ellipse 55% 40% at 85% 100%, rgba(23,181,84,.12) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 30% at 50% 50%,  rgba(9,21,40,.6) 0%, transparent 70%);
+        radial-gradient(ellipse 65% 45% at 15% 0%,rgba(20,87,212,.2) 0%,transparent 65%),
+        radial-gradient(ellipse 50% 38% at 85% 100%,rgba(23,181,84,.11) 0%,transparent 65%);
+    }
+    .grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:linear-gradient(rgba(36,112,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(36,112,255,.035) 1px,transparent 1px);
+      background-size:52px 52px;
     }
 
-    /* Floating particles */
-    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-    .particle {
-      position: absolute;
-      border-radius: 50%;
-      animation: floatUp linear infinite;
-      opacity: 0;
+    /* ── HEADER ── */
+    .header{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;
+      padding:13px 18px;background:rgba(6,15,34,.92);
+      backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+      border-bottom:1px solid var(--line);
     }
-    @keyframes floatUp {
-      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: .4; }
-      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    .brand{display:flex;align-items:center;gap:9px}
+    .brand-logo{width:34px;height:34px;flex-shrink:0}
+    .brand-name{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--white);letter-spacing:-.3px;line-height:1}
+    .brand-name s-{color:var(--green2)}
+    .brand-sub{font-size:9.5px;color:var(--muted);font-weight:500;letter-spacing:.35px;margin-top:1px}
+    .ver-badge{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;
+      background:rgba(23,181,84,.12);border:1px solid rgba(23,181,84,.22);
+      font-size:11px;font-weight:700;color:var(--green2);
     }
+    .live{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:blink 1.6s ease infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-    /* Grid lines */
-    .grid-lines {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image:
-        linear-gradient(rgba(36,112,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(36,112,255,.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
+    /* ── MAIN ── */
+    .main{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:16px 14px 110px}
 
-    /* ═══════════════════════════════════════
-       HEADER / NAV
-    ═══════════════════════════════════════ */
-    .top-bar {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 20px;
-      background: rgba(6,15,34,.88);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--line);
+    /* ── HERO CARD ── */
+    .hero{border-radius:22px;background:linear-gradient(145deg,#0f2244 0%,#091528 100%);
+      border:1px solid rgba(36,112,255,.18);padding:22px 16px 20px;margin-bottom:14px;
+      position:relative;overflow:hidden;
     }
+    .hero::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle,rgba(36,112,255,.22) 0%,transparent 70%);pointer-events:none}
+    .hero::after{content:'';position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;border-radius:50%;
+      background:radial-gradient(circle,rgba(23,181,84,.13) 0%,transparent 70%);pointer-events:none}
 
-    .brand {
-      display: flex; align-items: center; gap: 10px;
+    /* App icon row */
+    .app-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;position:relative;z-index:1}
+    .icon-wrap{position:relative;flex-shrink:0}
+    .app-icon{width:78px;height:78px;border-radius:20px;
+      background:linear-gradient(145deg,#0d2040,#12285a);
+      border:1.5px solid rgba(36,112,255,.28);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 0 0 0 rgba(23,181,84,.3),0 12px 28px rgba(0,0,0,.4);
+      animation:gpulse 2.8s ease infinite;
     }
-    .brand-logo { width: 36px; height: 36px; flex-shrink: 0; }
-    .brand-name {
-      font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
-      color: var(--white); letter-spacing: -.3px; line-height: 1;
-    }
-    .brand-name span { color: var(--green2); }
-    .brand-sub {
-      font-size: 9.5px; color: var(--muted); font-weight: 500;
-      letter-spacing: .35px; margin-top: 1px;
-    }
+    @keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(23,181,84,.3),0 12px 28px rgba(0,0,0,.4)}55%{box-shadow:0 0 0 9px rgba(23,181,84,.0),0 12px 28px rgba(0,0,0,.4)}}
+    .app-icon svg{width:50px;height:50px}
+    .vbadge{position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;
+      background:var(--green);border:2.5px solid #091528;
+      display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
 
-    .header-badge {
-      padding: 6px 12px; border-radius: 20px;
-      background: rgba(23,181,84,.12); border: 1px solid rgba(23,181,84,.2);
-      font-size: 11px; font-weight: 700; color: var(--green2);
-      display: flex; align-items: center; gap: 5px;
-    }
-    .live-dot {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--green2);
-      animation: pulse-dot 1.6s ease infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50%      { opacity: .5; transform: scale(.7); }
-    }
-
-    /* ═══════════════════════════════════════
-       MAIN WRAP
-    ═══════════════════════════════════════ */
-    .main {
-      position: relative; z-index: 1;
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 14px 48px;
-    }
-
-    /* ═══════════════════════════════════════
-       HERO BANNER
-    ═══════════════════════════════════════ */
-    .hero {
-      position: relative;
-      margin: 20px 0 18px;
-      border-radius: 24px;
-      overflow: hidden;
-      background: linear-gradient(145deg, #0f2244 0%, #091528 100%);
-      border: 1px solid rgba(36,112,255,.18);
-      padding: 28px 20px 24px;
-    }
-
-    /* Decorative glow blobs inside hero */
-    .hero::before {
-      content: '';
-      position: absolute; top: -50px; right: -50px;
-      width: 200px; height: 200px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(36,112,255,.25) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero::after {
-      content: '';
-      position: absolute; bottom: -30px; left: -30px;
-      width: 140px; height: 140px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(23,181,84,.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    /* App icon + title row */
-    .app-row {
-      display: flex; align-items: center; gap: 16px;
-      margin-bottom: 18px; position: relative; z-index: 1;
-    }
-
-    .app-icon-wrap {
-      position: relative; flex-shrink: 0;
-    }
-    .app-icon {
-      width: 80px; height: 80px; border-radius: 20px;
-      background: linear-gradient(145deg, #0d2040 0%, #12285a 100%);
-      border: 1.5px solid rgba(36,112,255,.3);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 12px 32px rgba(0,0,0,.4), 0 0 0 1px rgba(36,112,255,.1);
-      overflow: hidden;
-    }
-    .app-icon svg { width: 52px; height: 52px; }
-    .verified-badge {
-      position: absolute; bottom: -4px; right: -4px;
-      width: 22px; height: 22px; border-radius: 50%;
-      background: var(--green); border: 2px solid var(--bg2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: #fff;
-    }
-
-    .app-meta { flex: 1; min-width: 0; }
-    .app-name {
-      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
-      color: var(--white); letter-spacing: -.3px; margin-bottom: 3px;
-    }
-    .app-name span { color: var(--green2); }
-    .app-dev {
-      font-size: 12px; color: var(--blue2); font-weight: 600; margin-bottom: 6px;
-    }
-    .app-tags {
-      display: flex; gap: 6px; flex-wrap: wrap;
-    }
-    .tag {
-      padding: 3px 8px; border-radius: 6px;
-      font-size: 10px; font-weight: 700; letter-spacing: .3px;
-    }
-    .tag.blue  { background: rgba(36,112,255,.14); color: var(--blue2); border: 1px solid rgba(36,112,255,.2); }
-    .tag.green { background: rgba(23,181,84,.14);  color: var(--green2); border: 1px solid rgba(23,181,84,.2); }
+    .app-meta{flex:1;min-width:0}
+    .app-name{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--white);letter-spacing:-.3px;margin-bottom:3px}
+    .app-name span{color:var(--green2)}
+    .app-dev{font-size:12px;color:var(--blue2);font-weight:600;margin-bottom:7px}
+    .tags{display:flex;gap:5px;flex-wrap:wrap}
+    .tag{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700}
+    .tag.g{background:rgba(23,181,84,.14);color:var(--green2);border:1px solid rgba(23,181,84,.22)}
+    .tag.b{background:rgba(36,112,255,.14);color:var(--blue2);border:1px solid rgba(36,112,255,.22)}
 
     /* Rating strip */
-    .rating-strip {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 0; border-radius: 14px; overflow: hidden;
-      border: 1px solid var(--line);
-      margin-bottom: 20px; position: relative; z-index: 1;
-    }
-    .rs-item {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 12px 8px;
-      background: rgba(255,255,255,.03);
-      border-right: 1px solid var(--line);
-    }
-    .rs-item:last-child { border-right: none; }
-    .rs-val {
-      font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800;
-      color: var(--white); margin-bottom: 3px;
-    }
-    .rs-stars { color: var(--star); font-size: 10px; letter-spacing: 1px; margin-bottom: 3px; }
-    .rs-label { font-size: 10px; color: var(--muted); font-weight: 500; }
+    .rating{display:grid;grid-template-columns:repeat(3,1fr);border-radius:13px;overflow:hidden;
+      border:1px solid var(--line);margin-bottom:18px;position:relative;z-index:1}
+    .ri{display:flex;flex-direction:column;align-items:center;padding:11px 6px;
+      background:rgba(255,255,255,.03);border-right:1px solid var(--line)}
+    .ri:last-child{border-right:none}
+    .rv{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--white);margin-bottom:2px}
+    .rs{font-size:10px;letter-spacing:.8px;margin-bottom:2px;color:var(--star)}
+    .rl{font-size:9.5px;color:var(--muted)}
 
-    /* CTA buttons */
-    .cta-row {
-      display: flex; gap: 10px; position: relative; z-index: 1;
-    }
+    /* ── CTA BUTTONS ── */
+    .cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1}
 
-    .btn-install {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 15px 10px; border-radius: 14px;
-      background: linear-gradient(135deg, var(--green) 0%, var(--green3) 100%);
-      color: #fff; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-      box-shadow: 0 8px 24px rgba(23,181,84,.35);
-      transition: transform .15s, box-shadow .15s, opacity .15s;
-      position: relative; overflow: hidden;
+    .btn-install,.btn-dl{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding:14px 10px;border-radius:13px;
+      font-family:'Syne',sans-serif;font-size:13.5px;font-weight:800;color:#fff;
+      border:none;cursor:pointer;position:relative;overflow:hidden;
+      transition:transform .14s,opacity .14s;
+      -webkit-tap-highlight-color:transparent;
     }
-    .btn-install::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
+    .btn-install::after,.btn-dl::after{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 55%);
     }
-    .btn-install:active { transform: scale(.97); box-shadow: 0 4px 14px rgba(23,181,84,.28); }
+    .btn-install:active,.btn-dl:active{transform:scale(.96)}
+    .btn-install{background:linear-gradient(135deg,var(--green) 0%,var(--green3) 100%);box-shadow:0 8px 22px rgba(23,181,84,.32)}
+    .btn-dl{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);box-shadow:0 8px 22px rgba(20,87,212,.32)}
+    .bi{font-size:18px;flex-shrink:0}
+    .bt{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+    .bsub{font-size:9px;font-weight:500;opacity:.82;letter-spacing:.15px}
+    .bmain{font-size:13.5px;line-height:1}
 
-    .btn-download {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 15px 10px; border-radius: 14px;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
-      color: #fff; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-      box-shadow: 0 8px 24px rgba(20,87,212,.35);
-      transition: transform .15s, box-shadow .15s, opacity .15s;
-      position: relative; overflow: hidden;
-    }
-    .btn-download::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
-    }
-    .btn-download:active { transform: scale(.97); box-shadow: 0 4px 14px rgba(20,87,212,.28); }
+    /* ── DOWNLOAD STATUS ── */
+    .dl-status{display:none;margin-top:12px;border-radius:13px;overflow:hidden;position:relative;z-index:1}
+    .dl-status.show{display:block}
 
-    .btn-icon { font-size: 18px; flex-shrink: 0; }
-    .btn-text { display: flex; flex-direction: column; align-items: flex-start; }
-    .btn-sub  { font-size: 9px; font-weight: 500; opacity: .8; letter-spacing: .2px; }
-    .btn-main { font-size: 14px; line-height: 1.1; }
+    /* Progress state */
+    .dl-prog{padding:13px 14px;background:rgba(36,112,255,.08);border:1px solid rgba(36,112,255,.18);border-radius:13px}
+    .dl-prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .dl-prog-label{font-size:12.5px;font-weight:700;color:var(--white);display:flex;align-items:center;gap:6px}
+    .dl-prog-pct{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--blue2)}
+    .bar-wrap{height:7px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:7px}
+    .bar-fill{height:100%;border-radius:4px;width:0%;transition:width .18s ease;
+      background:linear-gradient(90deg,var(--blue) 0%,var(--green2) 100%)}
+    .dl-prog-size{font-size:11px;color:var(--muted);font-weight:600}
+    .dl-prog-size b{color:var(--text)}
 
-    /* ── Download progress bar (shown on tap) ── */
-    .dl-progress {
-      display: none;
-      margin-top: 12px; position: relative; z-index: 1;
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--line);
-      padding: 12px 14px;
-    }
-    .dl-progress.show { display: block; }
-    .dl-bar-wrap {
-      height: 6px; border-radius: 3px;
-      background: rgba(255,255,255,.1); overflow: hidden; margin: 8px 0 6px;
-    }
-    .dl-bar {
-      height: 100%; border-radius: 3px;
-      background: linear-gradient(90deg, var(--blue) 0%, var(--green2) 100%);
-      width: 0%; transition: width .3s ease;
-    }
-    .dl-info {
-      display: flex; justify-content: space-between;
-      font-size: 11px; font-weight: 600; color: var(--muted);
-    }
-    .dl-info span { color: var(--green2); }
+    /* Success state */
+    .dl-success{display:none;padding:14px;background:rgba(23,181,84,.1);border:1px solid rgba(23,181,84,.22);border-radius:13px}
+    .dl-success-title{font-size:13.5px;font-weight:800;color:var(--green2);margin-bottom:6px}
+    .dl-steps-mini{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+    .dsm{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)}
+    .dsm-num{width:20px;height:20px;border-radius:50%;background:rgba(23,181,84,.22);
+      display:flex;align-items:center;justify-content:center;
+      font-size:10px;font-weight:800;color:var(--green2);flex-shrink:0}
 
-    /* ── Install prompt banner ── */
-    .install-banner {
-      display: none;
-      margin-top: 12px; position: relative; z-index: 1;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(23,181,84,.12) 0%, rgba(23,181,84,.06) 100%);
-      border: 1px solid rgba(23,181,84,.22);
-      padding: 13px 14px;
-    }
-    .install-banner.show { display: block; }
-    .ib-title { font-size: 13px; font-weight: 700; color: var(--green2); margin-bottom: 4px; }
-    .ib-desc  { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
-    .ib-steps {
-      margin-top: 10px; display: flex; flex-direction: column; gap: 6px;
-    }
-    .ib-step {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--text);
-    }
-    .step-num {
-      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(23,181,84,.2); border: 1px solid rgba(23,181,84,.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 800; color: var(--green2);
-    }
+    /* Error state */
+    .dl-err{display:none;padding:13px 14px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.22);border-radius:13px;font-size:12.5px;color:#f07070;line-height:1.6}
+    .dl-err b{color:#fff}
+    .dl-err a{color:var(--blue2);font-weight:700;text-decoration:underline}
 
-    /* ═══════════════════════════════════════
-       SCREENSHOTS CAROUSEL
-    ═══════════════════════════════════════ */
-    .section-title {
-      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-      color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-    }
-    .section-title::after {
-      content: ''; flex: 1; height: 1px; background: var(--line);
-    }
+    /* ── SCREENSHOTS ── */
+    .sec-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);
+      margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .sec-title::after{content:'';flex:1;height:1px;background:var(--line)}
 
-    .screenshots {
-      display: flex; gap: 10px; overflow-x: auto;
-      padding-bottom: 8px; margin-bottom: 18px;
-      -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    }
-    .screenshots::-webkit-scrollbar { display: none; }
+    .screens{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .screens::-webkit-scrollbar{display:none}
+    .sc{flex-shrink:0;width:128px;height:224px;border-radius:16px;overflow:hidden;
+      border:1px solid var(--line);background:var(--card2)}
+    .ms{width:100%;height:100%;display:flex;flex-direction:column;padding:11px 9px 8px;
+      background:linear-gradient(160deg,#0f2244 0%,#091528 100%);gap:5px}
+    .mb{height:7px;border-radius:4px;background:rgba(255,255,255,.08)}
+    .mb.s{width:55%}.mb.m{width:75%}.mb.l{width:90%}
+    .mc{border-radius:8px;padding:8px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+    .mg{height:5px;border-radius:3px;background:var(--green2);opacity:.7;margin-bottom:4px}
+    .ma{font-family:'Syne',sans-serif;font-size:9.5px;font-weight:800;color:var(--white)}
+    .ml{font-size:7px;color:var(--muted);margin-bottom:3px}
+    .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px}
+    .mm{border-radius:6px;height:26px;background:rgba(36,112,255,.15);border:1px solid rgba(36,112,255,.15)}
+    .mrow{display:flex;gap:4px}
+    .mbg{flex:1;height:14px;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--green3));opacity:.8}
+    .mbb{flex:1;height:14px;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--blue2));opacity:.8}
+    .mcir{width:18px;height:18px;border-radius:50%;background:rgba(23,181,84,.22)}
 
-    .screenshot {
-      flex-shrink: 0; width: 130px; height: 230px;
-      border-radius: 16px; overflow: hidden;
-      border: 1px solid var(--line);
-      background: var(--card2);
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-    }
+    /* ── INFO GRID ── */
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+    .ic{border-radius:17px;background:var(--card);border:1px solid var(--line);padding:15px 13px}
+    .ic-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:9px}
+    .ic-icon.g{background:linear-gradient(135deg,rgba(23,181,84,.26) 0%,rgba(33,212,96,.09) 100%)}
+    .ic-icon.b{background:linear-gradient(135deg,rgba(20,87,212,.26) 0%,rgba(36,112,255,.09) 100%)}
+    .ic-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+    .ic-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--white)}
+    .ic-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-    /* Mockup screens */
-    .mock-screen {
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column;
-      padding: 12px 10px 8px;
-      background: linear-gradient(160deg, #0f2244 0%, #091528 100%);
-      gap: 6px;
-    }
-    .mock-bar {
-      height: 8px; border-radius: 4px;
-      background: rgba(255,255,255,.08);
-    }
-    .mock-bar.short { width: 55%; }
-    .mock-bar.med   { width: 75%; }
-    .mock-bar.long  { width: 90%; }
-    .mock-card {
-      border-radius: 8px; padding: 8px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--line);
-    }
-    .mock-green { height: 6px; border-radius: 3px; background: var(--green2); opacity: .7; margin-bottom: 4px; }
-    .mock-amt {
-      font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 800;
-      color: var(--white);
-    }
-    .mock-label { font-size: 7px; color: var(--muted); margin-bottom: 3px; }
-    .mock-grid {
-      display: grid; grid-template-columns: repeat(2,1fr); gap: 4px;
-    }
-    .mock-mini {
-      border-radius: 6px; height: 28px;
-      background: rgba(36,112,255,.15); border: 1px solid rgba(36,112,255,.15);
-    }
-    .mock-row { display: flex; gap: 4px; }
-    .mock-circle {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: rgba(23,181,84,.2);
-    }
-    .mock-btn-g {
-      flex: 1; height: 16px; border-radius: 4px;
-      background: linear-gradient(90deg, var(--green) 0%, var(--green3) 100%);
-      opacity: .8;
-    }
-    .mock-btn-b {
-      flex: 1; height: 16px; border-radius: 4px;
-      background: linear-gradient(90deg, var(--blue) 0%, var(--blue2) 100%);
-      opacity: .8;
-    }
+    /* ── FEATURES ── */
+    .feat-card{border-radius:20px;background:var(--card);border:1px solid var(--line);padding:16px;margin-bottom:16px}
+    .fi{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+    .fi:first-child{padding-top:0}.fi:last-child{border-bottom:none;padding-bottom:0}
+    .fi-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .fi-ico.g{background:linear-gradient(135deg,rgba(23,181,84,.23) 0%,rgba(33,212,96,.07) 100%)}
+    .fi-ico.b{background:linear-gradient(135deg,rgba(20,87,212,.23) 0%,rgba(36,112,255,.07) 100%)}
+    .fi-txt{flex:1}.fi-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+    .fi-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+    .fi-chk{font-size:15px;color:var(--green2);flex-shrink:0}
 
-    /* ═══════════════════════════════════════
-       INFO CARDS
-    ═══════════════════════════════════════ */
-    .info-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;
-    }
+    /* ── REVIEWS ── */
+    .reviews{margin-bottom:16px}
+    .overall{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .or-n{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;color:var(--white);line-height:1}
+    .or-s{color:var(--star);font-size:14px;letter-spacing:1px}
+    .or-c{font-size:11px;color:var(--muted);margin-top:2px}
+    .rv-card{border-radius:17px;background:var(--card);border:1px solid var(--line);padding:14px;margin-bottom:10px}
+    .rv-head{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+    .rv-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+    .rv-nm{font-size:13px;font-weight:700;color:var(--white)}
+    .rv-dt{font-size:10px;color:var(--muted)}
+    .rv-st{color:var(--star);font-size:10.5px}
+    .rv-tx{font-size:12.5px;color:var(--muted);line-height:1.6}
+    .rv-tx b{color:var(--text)}
 
-    .info-card {
-      border-radius: 18px; background: var(--card); border: 1px solid var(--line);
-      padding: 16px 14px;
-    }
+    /* ── SAFETY ── */
+    .safe-card{border-radius:20px;background:var(--card);border:1px solid var(--line);padding:16px;margin-bottom:16px}
+    .safe-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
+    .safe-item:last-child{border-bottom:none}
+    .safe-ico{font-size:21px;flex-shrink:0}
+    .safe-nm{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+    .safe-ds{font-size:11.5px;color:var(--muted)}
 
-    .ic-icon {
-      width: 40px; height: 40px; border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; margin-bottom: 10px;
-    }
-    .ic-icon.g { background: linear-gradient(135deg, rgba(23,181,84,.28) 0%, rgba(33,212,96,.1) 100%); }
-    .ic-icon.b { background: linear-gradient(135deg, rgba(20,87,212,.28) 0%, rgba(36,112,255,.1) 100%); }
+    /* ── INSTALL MODAL ── */
+    .overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.72);
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      align-items:flex-end;justify-content:center}
+    .overlay.show{display:flex}
+    .sheet{width:100%;max-width:480px;background:linear-gradient(170deg,#0d1f3c 0%,#060f22 100%);
+      border-radius:24px 24px 0 0;border:1px solid rgba(36,112,255,.18);border-bottom:none;
+      padding:20px 18px 40px;animation:slideUp .28s cubic-bezier(.4,0,.2,1);
+      position:relative;max-height:90dvh;overflow-y:auto}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .sheet-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);margin:0 auto 18px}
+    .sheet-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;
+      background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;
+      font-size:15px;color:var(--muted)}
+    .sheet-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:5px}
+    .sheet-sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;line-height:1.6}
 
-    .ic-label { font-size: 10.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
-    .ic-value { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--white); }
-    .ic-sub   { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    /* Tabs */
+    .tabs{display:flex;gap:7px;margin-bottom:18px}
+    .tab{flex:1;padding:9px 6px;border-radius:11px;font-size:12px;font-weight:700;text-align:center;
+      border:1.5px solid var(--line);color:var(--muted);cursor:pointer;transition:all .18s}
+    .tab.on{background:rgba(36,112,255,.16);border-color:rgba(36,112,255,.35);color:var(--white)}
 
-    /* ═══════════════════════════════════════
-       ABOUT / DESCRIPTION
-    ═══════════════════════════════════════ */
-    .about-card {
-      border-radius: 20px; background: var(--card); border: 1px solid var(--line);
-      padding: 18px 16px; margin-bottom: 18px;
-    }
+    .panel{display:none}
+    .panel.on{display:block}
 
-    .about-text {
-      font-size: 13.5px; color: var(--muted); line-height: 1.7;
-    }
-    .about-text b { color: var(--text); font-weight: 600; }
+    .step{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px}
+    .step-n{width:28px;height:28px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:800;color:#fff;margin-top:1px}
+    .step-t{font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px}
+    .step-d{font-size:12px;color:var(--muted);line-height:1.6}
+    .step-d b{color:var(--text)}
+    .tip{padding:11px 13px;border-radius:11px;background:rgba(36,112,255,.1);border:1px solid rgba(36,112,255,.2);font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6}
+    .tip b{color:var(--blue2)}
 
-    .about-expand {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 12px; font-weight: 700; color: var(--blue2); margin-top: 8px;
-    }
+    /* ── STICKY BOTTOM ── */
+    .bot{position:fixed;left:0;right:0;bottom:0;z-index:100;padding:10px 14px 26px;
+      background:linear-gradient(to top,rgba(6,15,34,1) 55%,transparent)}
+    .bot-inner{max-width:480px;margin:0 auto;display:flex;gap:10px}
+    .sinstall,.sdl{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+      padding:14px 10px;border-radius:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;
+      border:none;cursor:pointer;color:#fff;transition:transform .14s;
+      -webkit-tap-highlight-color:transparent}
+    .sinstall:active,.sdl:active{transform:scale(.97)}
+    .sinstall{background:linear-gradient(135deg,var(--green),var(--green3));box-shadow:0 8px 22px rgba(23,181,84,.3)}
+    .sdl{background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 8px 22px rgba(20,87,212,.3)}
 
-    /* ═══════════════════════════════════════
-       FEATURES LIST
-    ═══════════════════════════════════════ */
-    .features-card {
-      border-radius: 20px; background: var(--card); border: 1px solid var(--line);
-      padding: 18px 16px; margin-bottom: 18px;
-    }
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(10px);
+      background:rgba(6,15,34,.98);border:1px solid rgba(36,112,255,.25);border-radius:12px;
+      padding:10px 18px;font-size:13px;font-weight:600;color:var(--green2);
+      z-index:700;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;
+      white-space:nowrap;max-width:calc(100% - 32px);text-align:center}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-    .feature-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 0; border-bottom: 1px solid var(--line);
-    }
-    .feature-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .feature-item:first-child { padding-top: 0; }
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .au{animation:fadeUp .42s ease both}
+    .a1{animation-delay:.04s}.a2{animation-delay:.09s}.a3{animation-delay:.14s}
+    .a4{animation-delay:.19s}.a5{animation-delay:.24s}.a6{animation-delay:.29s}
+    .spacer{height:90px}
 
-    .fi-icon {
-      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 17px;
-    }
-    .fi-icon.g { background: linear-gradient(135deg, rgba(23,181,84,.25) 0%, rgba(33,212,96,.08) 100%); }
-    .fi-icon.b { background: linear-gradient(135deg, rgba(20,87,212,.25) 0%, rgba(36,112,255,.08) 100%); }
-
-    .fi-text { flex: 1; }
-    .fi-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-    .fi-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
-
-    .fi-check { font-size: 16px; color: var(--green2); flex-shrink: 0; }
-
-    /* ═══════════════════════════════════════
-       REVIEWS
-    ═══════════════════════════════════════ */
-    .reviews-wrap { margin-bottom: 18px; }
-
-    .reviews-head {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
-    }
-    .overall-rating {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .or-num {
-      font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800;
-      color: var(--white); line-height: 1;
-    }
-    .or-right {}
-    .or-stars { color: var(--star); font-size: 14px; letter-spacing: 1px; }
-    .or-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-    .review-card {
-      border-radius: 18px; background: var(--card); border: 1px solid var(--line);
-      padding: 15px 14px; margin-bottom: 10px;
-    }
-    .rv-head {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 9px;
-    }
-    .rv-avatar {
-      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 700; color: #fff;
-    }
-    .rv-info { flex: 1; }
-    .rv-name { font-size: 13px; font-weight: 700; color: var(--white); }
-    .rv-date { font-size: 10.5px; color: var(--muted); }
-    .rv-stars { color: var(--star); font-size: 11px; }
-    .rv-text { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-    .rv-text b { color: var(--text); }
-
-    /* ═══════════════════════════════════════
-       SAFETY SECTION
-    ═══════════════════════════════════════ */
-    .safety-card {
-      border-radius: 20px; background: var(--card); border: 1px solid var(--line);
-      padding: 18px 16px; margin-bottom: 18px;
-    }
-    .safety-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid var(--line);
-    }
-    .safety-item:last-child { border-bottom: none; }
-    .safety-icon { font-size: 22px; flex-shrink: 0; }
-    .safety-text {}
-    .st-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-    .st-desc { font-size: 11.5px; color: var(--muted); }
-
-    /* ═══════════════════════════════════════
-       BOTTOM CTA STICKY
-    ═══════════════════════════════════════ */
-    .bottom-cta {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
-      padding: 12px 14px 20px;
-      background: linear-gradient(to top, rgba(6,15,34,1) 60%, transparent);
-    }
-
-    .bottom-cta-inner {
-      max-width: 480px; margin: 0 auto;
-      display: flex; gap: 10px;
-    }
-
-    .sticky-install {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 14px 12px; border-radius: 14px;
-      background: linear-gradient(135deg, var(--green) 0%, var(--green3) 100%);
-      color: #fff; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-      box-shadow: 0 8px 24px rgba(23,181,84,.35);
-      transition: transform .15s;
-    }
-    .sticky-install:active { transform: scale(.97); }
-
-    .sticky-download {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 14px 12px; border-radius: 14px;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
-      color: #fff; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-      box-shadow: 0 8px 24px rgba(20,87,212,.35);
-      transition: transform .15s;
-    }
-    .sticky-download:active { transform: scale(.97); }
-
-    /* ═══════════════════════════════════════
-       TOAST
-    ═══════════════════════════════════════ */
-    .toast {
-      position: fixed; bottom: 90px;
-      left: 50%; transform: translateX(-50%) translateY(10px);
-      background: rgba(6,15,34,.98); border: 1px solid rgba(36,112,255,.25);
-      border-radius: 14px; padding: 11px 20px;
-      font-size: 13px; font-weight: 600; color: var(--green2);
-      z-index: 500; opacity: 0; pointer-events: none;
-      transition: opacity .22s, transform .22s; white-space: nowrap;
-      max-width: calc(100% - 40px); text-align: center;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ═══════════════════════════════════════
-       ANIMATIONS
-    ═══════════════════════════════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .au   { animation: fadeUp .45s ease both; }
-    .au-1 { animation-delay: .05s; }
-    .au-2 { animation-delay: .1s; }
-    .au-3 { animation-delay: .15s; }
-    .au-4 { animation-delay: .2s; }
-    .au-5 { animation-delay: .25s; }
-    .au-6 { animation-delay: .3s; }
-    .au-7 { animation-delay: .35s; }
-
-    @keyframes shimmer {
-      0%   { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
-
-    /* Pulse ring on app icon */
-    @keyframes icon-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(23,181,84,.3), 0 12px 32px rgba(0,0,0,.4); }
-      50%      { box-shadow: 0 0 0 8px rgba(23,181,84,.0), 0 12px 32px rgba(0,0,0,.4); }
-    }
-    .app-icon { animation: icon-pulse 2.5s ease infinite; }
-
-    /* Download animation */
-    @keyframes dl-spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .spin { display: inline-block; animation: dl-spin .7s linear infinite; }
-
-    /* Extra bottom padding so sticky bar doesn't cover content */
-    .spacer-bottom { height: 90px; }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+    /* ── PARTICLES ── */
+    .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .p{position:absolute;border-radius:50%;animation:fup linear infinite;opacity:0}
+    @keyframes fup{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(-8vh) scale(1);opacity:0}}
   </style>
 </head>
-
 <body>
 
-  <!-- BG LAYERS -->
-  <div class="bg-mesh"></div>
-  <div class="grid-lines"></div>
-  <div class="particles" id="particles"></div>
-
-  <!-- TOAST -->
+  <div class="particles" id="pts"></div>
+  <div class="grid"></div>
   <div class="toast" id="toast"></div>
 
+  <!-- ════ INSTALL MODAL ════ -->
+  <div class="overlay" id="modal">
+    <div class="sheet">
+      <button class="sheet-close" id="mc">✕</button>
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">📲 Add to Home Screen</div>
+      <div class="sheet-sub">Choose your browser for step-by-step instructions to install LomaShares as an app.</div>
+
+      <div class="tabs">
+        <div class="tab on" data-t="chrome">Chrome</div>
+        <div class="tab" data-t="samsung">Samsung</div>
+        <div class="tab" data-t="firefox">Firefox</div>
+        <div class="tab" data-t="ios">Safari (iOS)</div>
+      </div>
+
+      <!-- Chrome -->
+      <div class="panel on" id="pt-chrome">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Open Chrome menu</div><div class="step-d">Tap the <b>three dots ⋮</b> at the top-right of your Chrome browser</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">Tap "Add to Home screen"</div><div class="step-d">Find and tap <b>"Add to Home screen"</b> in the dropdown menu</div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Confirm and tap "Add"</div><div class="step-d">A dialog appears — tap <b>"Add"</b> to confirm. LomaShares icon appears on your home screen! 🎉</div></div></div>
+        <div class="tip">💡 <b>Pro tip:</b> Open LomaShares from your home screen for a full-screen experience — no browser bars.</div>
+      </div>
+
+      <!-- Samsung -->
+      <div class="panel" id="pt-samsung">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Open the Samsung menu</div><div class="step-d">Tap the <b>three lines ≡</b> at the bottom of Samsung Internet</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">Tap "Add page to"</div><div class="step-d">Select <b>"Add page to"</b> → then choose <b>"Home screen"</b></div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Tap "Add"</div><div class="step-d">Tap <b>"Add"</b> to confirm — LomaShares is now on your home screen ✓</div></div></div>
+      </div>
+
+      <!-- Firefox -->
+      <div class="panel" id="pt-firefox">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Open Firefox menu</div><div class="step-d">Tap the <b>three dots ⋮</b> at the bottom of Firefox</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">Tap "Install" or "Add to Home Screen"</div><div class="step-d">Select <b>"Install"</b> or <b>"Add to Home Screen"</b> from the menu</div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Confirm</div><div class="step-d">Tap <b>"Add"</b> to confirm. LomaShares appears on your home screen 🎉</div></div></div>
+      </div>
+
+      <!-- iOS Safari -->
+      <div class="panel" id="pt-ios">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Tap the Share button</div><div class="step-d">Tap the <b>Share icon ⬆️</b> at the bottom of Safari</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">Tap "Add to Home Screen"</div><div class="step-d">Scroll down and tap <b>"Add to Home Screen"</b></div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Tap "Add"</div><div class="step-d">Confirm by tapping <b>"Add"</b> in the top-right corner. Done! ✓</div></div></div>
+        <div class="tip">ℹ️ Note: iOS Safari does not support APK downloads. Use the <b>Android APK</b> on an Android phone to install the native app.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ════ HEADER ════ -->
-  <header class="top-bar">
+  <header class="header">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 36 36" fill="none">
-        <circle cx="13" cy="18" r="8.5" stroke="#17b554" stroke-width="3" fill="none"/>
-        <circle cx="23" cy="18" r="8.5" stroke="#2470ff" stroke-width="3" fill="none"/>
+      <svg class="brand-logo" viewBox="0 0 34 34" fill="none">
+        <circle cx="12" cy="17" r="8" stroke="#17b554" stroke-width="2.8" fill="none"/>
+        <circle cx="22" cy="17" r="8" stroke="#2470ff" stroke-width="2.8" fill="none"/>
       </svg>
       <div>
-        <div class="brand-name">Loma<span>Shares</span></div>
+        <div class="brand-name">Loma<span style="color:#21d460">Shares</span></div>
         <div class="brand-sub">Invest Smart. Earn More.</div>
       </div>
     </div>
-    <div class="header-badge">
-      <div class="live-dot"></div>
-      v1.0.0
-    </div>
+    <div class="ver-badge"><div class="live"></div>v1.0.0</div>
   </header>
 
   <!-- ════ MAIN ════ -->
   <main class="main">
 
-    <!-- ── HERO ── -->
-    <div class="hero au au-1">
-
-      <!-- App icon + meta -->
+    <!-- HERO -->
+    <div class="hero au a1">
       <div class="app-row">
-        <div class="app-icon-wrap">
+        <div class="icon-wrap">
           <div class="app-icon">
-            <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="19" cy="26" r="11" stroke="#17b554" stroke-width="3.5" fill="none"/>
-              <circle cx="33" cy="26" r="11" stroke="#2470ff" stroke-width="3.5" fill="none"/>
+            <svg viewBox="0 0 50 50" fill="none">
+              <circle cx="18" cy="25" r="10.5" stroke="#17b554" stroke-width="3.2" fill="none"/>
+              <circle cx="32" cy="25" r="10.5" stroke="#2470ff" stroke-width="3.2" fill="none"/>
             </svg>
           </div>
-          <div class="verified-badge">✓</div>
+          <div class="vbadge">✓</div>
         </div>
         <div class="app-meta">
           <div class="app-name">Loma<span>Shares</span></div>
           <div class="app-dev">LomaShares Technologies Ltd.</div>
-          <div class="app-tags">
-            <span class="tag green">Finance</span>
-            <span class="tag blue">Investment</span>
-            <span class="tag green">Earn</span>
+          <div class="tags">
+            <span class="tag g">Finance</span>
+            <span class="tag b">Investment</span>
+            <span class="tag g">Earn Daily</span>
           </div>
         </div>
       </div>
 
-      <!-- Rating strip -->
-      <div class="rating-strip">
-        <div class="rs-item">
-          <div class="rs-val">4.8</div>
-          <div class="rs-stars">★★★★★</div>
-          <div class="rs-label">Rating</div>
-        </div>
-        <div class="rs-item">
-          <div class="rs-val">50K+</div>
-          <div class="rs-stars" style="color:var(--blue2); letter-spacing:0; font-size:10px;">DOWNLOADS</div>
-          <div class="rs-label">Installs</div>
-        </div>
-        <div class="rs-item">
-          <div class="rs-val">6.9 MB</div>
-          <div class="rs-stars" style="color:var(--green2); letter-spacing:0; font-size:10px;">APK FILE</div>
-          <div class="rs-label">Size</div>
-        </div>
+      <div class="rating">
+        <div class="ri"><div class="rv">4.8</div><div class="rs">★★★★★</div><div class="rl">Rating</div></div>
+        <div class="ri"><div class="rv">50K+</div><div class="rs" style="color:var(--blue2);letter-spacing:0;font-size:9px">DOWNLOADS</div><div class="rl">Installs</div></div>
+        <div class="ri"><div class="rv">6.9MB</div><div class="rs" style="color:var(--green2);letter-spacing:0;font-size:9px">APK FILE</div><div class="rl">Size</div></div>
       </div>
 
-      <!-- CTA buttons -->
-      <div class="cta-row">
+      <!-- BUTTONS -->
+      <div class="cta">
         <button class="btn-install" id="btnInstall">
-          <span class="btn-icon">⚡</span>
-          <span class="btn-text">
-            <span class="btn-sub">Add to home screen</span>
-            <span class="btn-main">Install App</span>
-          </span>
+          <span class="bi">⚡</span>
+          <span class="bt"><span class="bsub">Add to home screen</span><span class="bmain">Install App</span></span>
         </button>
-        <a class="btn-download" id="btnDownload" href="lomashares.apk" download="LomaShares.apk">
-          <span class="btn-icon">⬇️</span>
-          <span class="btn-text">
-            <span class="btn-sub">Android APK • 6.9 MB</span>
-            <span class="btn-main">Download</span>
-          </span>
+        <!-- Direct link to APK file — works on any server -->
+        <a class="btn-dl" id="btnDl" href="LomaShares.apk" download="LomaShares.apk">
+          <span class="bi">⬇️</span>
+          <span class="bt"><span class="bsub">Android • 6.9 MB</span><span class="bmain">Download APK</span></span>
         </a>
       </div>
 
-      <!-- Download progress (shows on tap) -->
-      <div class="dl-progress" id="dlProgress">
-        <div class="dl-info">
-          <span>Downloading LomaShares.apk…</span>
-          <span id="dlPercent">0%</span>
-        </div>
-        <div class="dl-bar-wrap">
-          <div class="dl-bar" id="dlBar"></div>
-        </div>
-        <div class="dl-info">
-          <span style="color:var(--muted)">6.9 MB total</span>
-          <span id="dlMB">0 MB</span>
-        </div>
-      </div>
-
-      <!-- Install instructions banner -->
-      <div class="install-banner" id="installBanner">
-        <div class="ib-title">📲 Add LomaShares to Your Home Screen</div>
-        <div class="ib-desc">Install the app for a faster, native-like experience with offline support and push notifications.</div>
-        <div class="ib-steps">
-          <div class="ib-step">
-            <span class="step-num">1</span>
-            Tap the <b style="color:var(--text);">Share / Menu</b> button in your browser
+      <!-- Status area -->
+      <div class="dl-status" id="dlStatus">
+        <!-- Progress -->
+        <div class="dl-prog" id="dlProg">
+          <div class="dl-prog-top">
+            <div class="dl-prog-label">⬇️ Downloading…</div>
+            <div class="dl-prog-pct" id="dlPct">0%</div>
           </div>
-          <div class="ib-step">
-            <span class="step-num">2</span>
-            Select <b style="color:var(--text);">"Add to Home Screen"</b>
-          </div>
-          <div class="ib-step">
-            <span class="step-num">3</span>
-            Tap <b style="color:var(--text);">"Add"</b> to confirm — done! 🎉
+          <div class="bar-wrap"><div class="bar-fill" id="dlBar"></div></div>
+          <div class="dl-prog-size"><b id="dlMB">0</b> / 6.9 MB</div>
+        </div>
+        <!-- Success -->
+        <div class="dl-success" id="dlOk">
+          <div class="dl-success-title">✅ Download started!</div>
+          <div class="dl-steps-mini">
+            <div class="dsm"><div class="dsm-num">1</div>Open your <strong>Downloads folder</strong></div>
+            <div class="dsm"><div class="dsm-num">2</div>Tap <strong>LomaShares.apk</strong></div>
+            <div class="dsm"><div class="dsm-num">3</div>If prompted, allow <strong>"Install unknown apps"</strong> in Settings</div>
+            <div class="dsm"><div class="dsm-num">4</div>Tap <strong>Install</strong> — you're done! 🎉</div>
           </div>
         </div>
-      </div>
-
-    </div><!-- /hero -->
-
-    <!-- ── SCREENSHOTS ── -->
-    <div class="au au-2">
-      <div class="section-title">📱 Screenshots</div>
-      <div class="screenshots">
-
-        <!-- Screenshot 1 — Dashboard -->
-        <div class="screenshot">
-          <div class="mock-screen">
-            <div class="mock-bar short" style="background:rgba(36,112,255,.3);margin-bottom:4px;"></div>
-            <div class="mock-card">
-              <div class="mock-label">Total Balance</div>
-              <div class="mock-amt">₦125,450.00</div>
-              <div class="mock-green" style="width:60%;margin-top:4px;"></div>
-            </div>
-            <div class="mock-row" style="margin-top:2px;">
-              <div class="mock-mini"></div>
-              <div class="mock-mini" style="background:rgba(23,181,84,.12);border-color:rgba(23,181,84,.15);"></div>
-            </div>
-            <div class="mock-card">
-              <div class="mock-label">Daily Income</div>
-              <div class="mock-amt" style="color:#21d460;">₦3,500.00</div>
-            </div>
-            <div class="mock-row" style="margin-top:auto;">
-              <div class="mock-btn-g"></div>
-              <div class="mock-btn-b"></div>
-              <div class="mock-btn-g"></div>
-              <div class="mock-btn-b"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Screenshot 2 — Invest -->
-        <div class="screenshot">
-          <div class="mock-screen">
-            <div class="mock-bar med" style="background:rgba(23,181,84,.3);margin-bottom:6px;"></div>
-            <div class="mock-card" style="margin-bottom:5px;">
-              <div class="mock-label">LOMA3 Plan</div>
-              <div class="mock-amt">₦15,000</div>
-              <div class="mock-green" style="width:80%;"></div>
-              <div class="mock-label" style="margin-top:3px;">30 Days • 10% Daily</div>
-            </div>
-            <div class="mock-card">
-              <div class="mock-label">LOMA5 Plan</div>
-              <div class="mock-amt">₦50,000</div>
-              <div class="mock-green" style="width:60%;background:var(--blue2);"></div>
-            </div>
-            <div class="mock-card">
-              <div class="mock-label">LOMA10 Plan</div>
-              <div class="mock-amt">₦100,000</div>
-              <div class="mock-green" style="width:90%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Screenshot 3 — Profile -->
-        <div class="screenshot">
-          <div class="mock-screen">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-              <div class="mock-circle"></div>
-              <div style="flex:1;">
-                <div class="mock-bar short" style="margin-bottom:3px;height:6px;"></div>
-                <div class="mock-bar med" style="height:8px;background:rgba(255,255,255,.12);"></div>
-              </div>
-            </div>
-            <div class="mock-card">
-              <div class="mock-label">Wallet</div>
-              <div class="mock-amt">₦3,564,881</div>
-              <div class="mock-green"></div>
-            </div>
-            <div class="mock-grid">
-              <div class="mock-mini" style="height:38px;background:rgba(23,181,84,.12);"></div>
-              <div class="mock-mini" style="height:38px;"></div>
-              <div class="mock-mini" style="height:38px;"></div>
-              <div class="mock-mini" style="height:38px;background:rgba(23,181,84,.12);"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Screenshot 4 — Referrals -->
-        <div class="screenshot">
-          <div class="mock-screen">
-            <div class="mock-bar long" style="background:rgba(23,181,84,.3);margin-bottom:6px;height:10px;border-radius:5px;"></div>
-            <div class="mock-label" style="margin-bottom:3px;">Refer &amp; Earn 10%</div>
-            <div class="mock-card">
-              <div class="mock-label">Total Referrals</div>
-              <div class="mock-amt" style="color:#21d460;">128</div>
-              <div class="mock-green" style="width:100%;"></div>
-            </div>
-            <div class="mock-card">
-              <div class="mock-label">Earned</div>
-              <div class="mock-amt">₦15,950</div>
-            </div>
-            <div class="mock-btn-g" style="height:20px;border-radius:6px;margin-top:4px;"></div>
-            <div class="mock-row" style="margin-top:auto;justify-content:center;gap:8px;">
-              <div class="mock-circle" style="background:rgba(36,112,255,.2);"></div>
-              <div class="mock-circle"></div>
-              <div class="mock-circle" style="background:rgba(36,112,255,.2);"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Screenshot 5 — Spin -->
-        <div class="screenshot">
-          <div class="mock-screen" style="align-items:center;justify-content:center;gap:8px;">
-            <div style="font-size:48px;line-height:1;">🎰</div>
-            <div class="mock-amt" style="text-align:center;">Spin2Win</div>
-            <div class="mock-green" style="width:80%;"></div>
-            <div class="mock-label" style="text-align:center;">Win up to ₦50,000</div>
-            <div class="mock-btn-g" style="height:22px;border-radius:8px;width:80%;"></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ── INFO CARDS ── -->
-    <div class="info-grid au au-3">
-      <div class="info-card">
-        <div class="ic-icon g">📱</div>
-        <div class="ic-label">Platform</div>
-        <div class="ic-value">Android</div>
-        <div class="ic-sub">APK • v1.0.0</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon b">📦</div>
-        <div class="ic-label">File Size</div>
-        <div class="ic-value">6.9 MB</div>
-        <div class="ic-sub">Fast download</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon g">🔄</div>
-        <div class="ic-label">Updated</div>
-        <div class="ic-value">May 2026</div>
-        <div class="ic-sub">Latest version</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon b">⭐</div>
-        <div class="ic-label">Rating</div>
-        <div class="ic-value">4.8 / 5</div>
-        <div class="ic-sub">12,400 reviews</div>
-      </div>
-    </div>
-
-    <!-- ── ABOUT ── -->
-    <div class="au au-4">
-      <div class="section-title">📝 About LomaShares</div>
-      <div class="about-card">
-        <div class="about-text" id="aboutText">
-          <b>LomaShares</b> is Nigeria's leading smart investment platform — designed to help everyday people grow their money with ease, speed, and complete transparency.<br><br>
-          With daily income drops, flexible investment plans, a powerful referral system, and an exciting Spin2Win bonus game, LomaShares makes investing rewarding from day one. Earn <b>daily returns</b>, withdraw anytime, and watch your wealth grow — all from your phone.
-        </div>
-        <button class="about-expand" id="readMoreBtn" onclick="expandAbout()">
-          Read more ↓
-        </button>
-      </div>
-    </div>
-
-    <!-- ── FEATURES ── -->
-    <div class="au au-4">
-      <div class="section-title">✨ Key Features</div>
-      <div class="features-card">
-        <div class="feature-item">
-          <div class="fi-icon g">📈</div>
-          <div class="fi-text">
-            <div class="fi-name">Daily Income Drops</div>
-            <div class="fi-desc">Earn passive income every day automatically deposited to your wallet.</div>
-          </div>
-          <div class="fi-check">✓</div>
-        </div>
-        <div class="feature-item">
-          <div class="fi-icon b">💼</div>
-          <div class="fi-text">
-            <div class="fi-name">Multiple Investment Plans</div>
-            <div class="fi-desc">LOMA3, LOMA5, LOMA10 and more — choose the plan that fits your goals.</div>
-          </div>
-          <div class="fi-check">✓</div>
-        </div>
-        <div class="feature-item">
-          <div class="fi-icon g">👥</div>
-          <div class="fi-text">
-            <div class="fi-name">10% Referral Commission</div>
-            <div class="fi-desc">Invite friends and earn 10% on every investment they make. Unlimited earnings.</div>
-          </div>
-          <div class="fi-check">✓</div>
-        </div>
-        <div class="feature-item">
-          <div class="fi-icon b">🎰</div>
-          <div class="fi-text">
-            <div class="fi-name">Spin2Win Daily Bonus</div>
-            <div class="fi-desc">Spin the wheel daily for a chance to win up to ₦50,000 in bonus cash.</div>
-          </div>
-          <div class="fi-check">✓</div>
-        </div>
-        <div class="feature-item">
-          <div class="fi-icon g">💸</div>
-          <div class="fi-text">
-            <div class="fi-name">Instant Withdrawals</div>
-            <div class="fi-desc">Withdraw directly to your bank account — processed fast, no delays.</div>
-          </div>
-          <div class="fi-check">✓</div>
-        </div>
-        <div class="feature-item">
-          <div class="fi-icon b">🔒</div>
-          <div class="fi-text">
-            <div class="fi-name">Bank-Level Security</div>
-            <div class="fi-desc">Your data and funds are protected with end-to-end encryption.</div>
-          </div>
-          <div class="fi-check">✓</div>
+        <!-- Error fallback -->
+        <div class="dl-err" id="dlErr">
+          ⚠️ <b>Direct download link:</b><br>
+          If the file didn't start, <a id="dlFallback" href="LomaShares.apk" download="LomaShares.apk">tap here to download again</a>.
         </div>
       </div>
     </div>
 
-    <!-- ── REVIEWS ── -->
-    <div class="reviews-wrap au au-5">
-      <div class="section-title">⭐ User Reviews</div>
-
-      <div class="reviews-head">
-        <div class="overall-rating">
-          <div class="or-num">4.8</div>
-          <div class="or-right">
-            <div class="or-stars">★★★★★</div>
-            <div class="or-count">12,400 ratings</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="rv-head">
-          <div class="rv-avatar" style="background:linear-gradient(135deg,#17b554,#0fa042);">C</div>
-          <div class="rv-info">
-            <div class="rv-name">Chukwuemeka Obi</div>
-            <div class="rv-date">May 12, 2026</div>
-          </div>
-          <div class="rv-stars">★★★★★</div>
-        </div>
-        <div class="rv-text">This app changed my financial life. I started with <b>₦15,000</b> and now I'm earning daily. The referral system is 🔥 — already made ₦40,000 just from inviting friends!</div>
-      </div>
-
-      <div class="review-card">
-        <div class="rv-head">
-          <div class="rv-avatar" style="background:linear-gradient(135deg,#1457d4,#2470ff);">A</div>
-          <div class="rv-info">
-            <div class="rv-name">Amaka Nwosu</div>
-            <div class="rv-date">May 10, 2026</div>
-          </div>
-          <div class="rv-stars">★★★★★</div>
-        </div>
-        <div class="rv-text">Very smooth app, no bugs. Withdrawals are instant to my GTB account. I love the <b>Spin2Win</b> feature — won ₦5,000 twice already! Highly recommended 💯</div>
-      </div>
-
-      <div class="review-card">
-        <div class="rv-head">
-          <div class="rv-avatar" style="background:linear-gradient(135deg,#17b554,#2470ff);">K</div>
-          <div class="rv-info">
-            <div class="rv-name">Kelechi Eze</div>
-            <div class="rv-date">May 8, 2026</div>
-          </div>
-          <div class="rv-stars">★★★★☆</div>
-        </div>
-        <div class="rv-text">One of the most transparent investment platforms I've used. Daily drops are consistent and customer support responds fast. My team of 30 people are all on this!</div>
+    <!-- SCREENSHOTS -->
+    <div class="au a2">
+      <div class="sec-title">📱 Screenshots</div>
+      <div class="screens">
+        <!-- 1 Dashboard -->
+        <div class="sc"><div class="ms">
+          <div class="mb s" style="background:rgba(36,112,255,.28);margin-bottom:3px"></div>
+          <div class="mc"><div class="ml">Total Balance</div><div class="ma">₦125,450</div><div class="mg" style="width:60%;margin-top:4px"></div></div>
+          <div class="mrow"><div class="mm"></div><div class="mm" style="background:rgba(23,181,84,.12);border-color:rgba(23,181,84,.15)"></div></div>
+          <div class="mc"><div class="ml">Daily Income</div><div class="ma" style="color:#21d460">₦3,500</div></div>
+          <div class="mrow" style="margin-top:auto"><div class="mbg"></div><div class="mbb"></div><div class="mbg"></div><div class="mbb"></div></div>
+        </div></div>
+        <!-- 2 Plans -->
+        <div class="sc"><div class="ms">
+          <div class="mb m" style="background:rgba(23,181,84,.28);margin-bottom:5px"></div>
+          <div class="mc" style="margin-bottom:4px"><div class="ml">LOMA3</div><div class="ma">₦15,000</div><div class="mg" style="width:80%"></div><div class="ml" style="margin-top:3px">30 Days</div></div>
+          <div class="mc" style="margin-bottom:4px"><div class="ml">LOMA5</div><div class="ma">₦50,000</div><div class="mg" style="width:60%;background:var(--blue2)"></div></div>
+          <div class="mc"><div class="ml">LOMA10</div><div class="ma">₦100,000</div><div class="mg" style="width:90%"></div></div>
+        </div></div>
+        <!-- 3 Profile -->
+        <div class="sc"><div class="ms">
+          <div style="display:flex;gap:5px;align-items:center;margin-bottom:7px"><div class="mcir"></div><div style="flex:1"><div class="mb s" style="height:5px;margin-bottom:3px"></div><div class="mb m" style="height:7px;background:rgba(255,255,255,.12)"></div></div></div>
+          <div class="mc"><div class="ml">Wallet</div><div class="ma">₦3,564,881</div><div class="mg"></div></div>
+          <div class="mgrid"><div class="mm" style="height:36px;background:rgba(23,181,84,.12)"></div><div class="mm" style="height:36px"></div><div class="mm" style="height:36px"></div><div class="mm" style="height:36px;background:rgba(23,181,84,.12)"></div></div>
+        </div></div>
+        <!-- 4 Referral -->
+        <div class="sc"><div class="ms">
+          <div class="mb l" style="background:rgba(23,181,84,.28);height:9px;border-radius:4px;margin-bottom:5px"></div>
+          <div class="ml" style="margin-bottom:3px">Refer & Earn 10%</div>
+          <div class="mc"><div class="ml">Total Referrals</div><div class="ma" style="color:#21d460">128</div><div class="mg" style="width:100%"></div></div>
+          <div class="mc" style="margin-top:3px"><div class="ml">Earned</div><div class="ma">₦15,950</div></div>
+          <div class="mbg" style="height:18px;border-radius:6px;margin-top:4px"></div>
+        </div></div>
+        <!-- 5 Spin -->
+        <div class="sc"><div class="ms" style="align-items:center;justify-content:center;gap:7px">
+          <div style="font-size:44px;line-height:1">🎰</div>
+          <div class="ma" style="text-align:center">Spin2Win</div>
+          <div class="mg" style="width:80%"></div>
+          <div class="ml" style="text-align:center">Win up to ₦50,000</div>
+          <div class="mbg" style="height:20px;border-radius:7px;width:80%"></div>
+        </div></div>
       </div>
     </div>
 
-    <!-- ── SAFETY ── -->
-    <div class="au au-6">
-      <div class="section-title">🔐 Safety & Data</div>
-      <div class="safety-card">
-        <div class="safety-item">
-          <div class="safety-icon">🔒</div>
-          <div class="safety-text">
-            <div class="st-name">End-to-End Encryption</div>
-            <div class="st-desc">All your data is encrypted in transit and at rest.</div>
-          </div>
-        </div>
-        <div class="safety-item">
-          <div class="safety-icon">🛡️</div>
-          <div class="safety-text">
-            <div class="st-name">No Data Selling</div>
-            <div class="st-desc">Your personal information is never shared with third parties.</div>
-          </div>
-        </div>
-        <div class="safety-item">
-          <div class="safety-icon">✅</div>
-          <div class="safety-text">
-            <div class="st-name">Verified APK</div>
-            <div class="st-desc">This APK is the official, signed release. Always download from this page.</div>
-          </div>
-        </div>
-        <div class="safety-item">
-          <div class="safety-icon">📵</div>
-          <div class="safety-text">
-            <div class="st-name">No Intrusive Ads</div>
-            <div class="st-desc">Zero ads, zero pop-ups. A clean, focused investment experience.</div>
-          </div>
-        </div>
+    <!-- INFO GRID -->
+    <div class="info-grid au a3">
+      <div class="ic"><div class="ic-icon g">📱</div><div class="ic-label">Platform</div><div class="ic-val">Android</div><div class="ic-sub">APK • v1.0.0</div></div>
+      <div class="ic"><div class="ic-icon b">📦</div><div class="ic-label">File Size</div><div class="ic-val">6.9 MB</div><div class="ic-sub">Fast download</div></div>
+      <div class="ic"><div class="ic-icon g">🔄</div><div class="ic-label">Updated</div><div class="ic-val">May 2026</div><div class="ic-sub">Latest version</div></div>
+      <div class="ic"><div class="ic-icon b">⭐</div><div class="ic-label">Rating</div><div class="ic-val">4.8 / 5</div><div class="ic-sub">12,400 reviews</div></div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="au a4">
+      <div class="sec-title">✨ Key Features</div>
+      <div class="feat-card">
+        <div class="fi"><div class="fi-ico g">📈</div><div class="fi-txt"><div class="fi-name">Daily Income Drops</div><div class="fi-desc">Earn passive income every day, deposited automatically to your wallet.</div></div><div class="fi-chk">✓</div></div>
+        <div class="fi"><div class="fi-ico b">💼</div><div class="fi-txt"><div class="fi-name">Multiple Investment Plans</div><div class="fi-desc">LOMA3, LOMA5, LOMA10 — flexible plans for every budget.</div></div><div class="fi-chk">✓</div></div>
+        <div class="fi"><div class="fi-ico g">👥</div><div class="fi-txt"><div class="fi-name">10% Referral Commission</div><div class="fi-desc">Invite friends and earn 10% on every investment they make.</div></div><div class="fi-chk">✓</div></div>
+        <div class="fi"><div class="fi-ico b">🎰</div><div class="fi-txt"><div class="fi-name">Spin2Win Daily Bonus</div><div class="fi-desc">Spin the wheel daily for a chance to win up to ₦50,000.</div></div><div class="fi-chk">✓</div></div>
+        <div class="fi"><div class="fi-ico g">💸</div><div class="fi-txt"><div class="fi-name">Instant Withdrawals</div><div class="fi-desc">Direct to your bank account — processed fast, no delays.</div></div><div class="fi-chk">✓</div></div>
+        <div class="fi"><div class="fi-ico b">🔒</div><div class="fi-txt"><div class="fi-name">Bank-Level Security</div><div class="fi-desc">End-to-end encryption protects all your data and funds.</div></div><div class="fi-chk">✓</div></div>
       </div>
     </div>
 
-    <!-- ── FOOTER ── -->
-    <div class="au au-7" style="text-align:center;padding:0 8px;margin-bottom:10px;">
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <circle cx="10" cy="14" r="6.5" stroke="#17b554" stroke-width="2.5" fill="none"/>
-          <circle cx="18" cy="14" r="6.5" stroke="#2470ff" stroke-width="2.5" fill="none"/>
-        </svg>
-        <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--white);">Loma<span style="color:var(--green2);">Shares</span></span>
+    <!-- REVIEWS -->
+    <div class="reviews au a5">
+      <div class="sec-title">⭐ User Reviews</div>
+      <div class="overall">
+        <div class="or-n">4.8</div>
+        <div><div class="or-s">★★★★★</div><div class="or-c">12,400 ratings</div></div>
       </div>
-      <div style="font-size:11.5px;color:var(--muted);line-height:1.7;">
-        © 2026 LomaShares Technologies Ltd.<br>
-        All rights reserved. Invest Smart. Earn More.
-      </div>
-      <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;">
-        <a href="https://t.me/lomashares" target="_blank" style="font-size:11px;color:var(--blue2);font-weight:600;">Telegram</a>
-        <a href="privacy.html" style="font-size:11px;color:var(--muted);font-weight:600;">Privacy</a>
-        <a href="terms.html" style="font-size:11px;color:var(--muted);font-weight:600;">Terms</a>
-        <a href="https://t.me/lomasharesAgent" target="_blank" style="font-size:11px;color:var(--muted);font-weight:600;">Support</a>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av" style="background:linear-gradient(135deg,#17b554,#0fa042)">C</div><div style="flex:1"><div class="rv-nm">Chukwuemeka Obi</div><div class="rv-dt">May 12, 2026</div></div><div class="rv-st">★★★★★</div></div><div class="rv-tx">This app changed my financial life. Started with <b>₦15,000</b> and now earning daily. Made ₦40,000 just from inviting friends! 🔥</div></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av" style="background:linear-gradient(135deg,#1457d4,#2470ff)">A</div><div style="flex:1"><div class="rv-nm">Amaka Nwosu</div><div class="rv-dt">May 10, 2026</div></div><div class="rv-st">★★★★★</div></div><div class="rv-tx">Very smooth, no bugs. Withdrawals are instant to my GTB account. Love the <b>Spin2Win</b> — won ₦5,000 twice! Highly recommended 💯</div></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av" style="background:linear-gradient(135deg,#17b554,#2470ff)">K</div><div style="flex:1"><div class="rv-nm">Kelechi Eze</div><div class="rv-dt">May 8, 2026</div></div><div class="rv-st">★★★★☆</div></div><div class="rv-tx">Most transparent investment platform I've used. Daily drops are consistent. My team of 30 are all on this!</div></div>
+    </div>
+
+    <!-- SAFETY -->
+    <div class="au a6">
+      <div class="sec-title">🔐 Safety & Data</div>
+      <div class="safe-card">
+        <div class="safe-item"><div class="safe-ico">🔒</div><div><div class="safe-nm">End-to-End Encryption</div><div class="safe-ds">All data encrypted in transit and at rest.</div></div></div>
+        <div class="safe-item"><div class="safe-ico">🛡️</div><div><div class="safe-nm">No Data Selling</div><div class="safe-ds">Your info is never shared with third parties.</div></div></div>
+        <div class="safe-item"><div class="safe-ico">✅</div><div><div class="safe-nm">Official Signed APK</div><div class="safe-ds">Always download from this official page only.</div></div></div>
+        <div class="safe-item"><div class="safe-ico">📵</div><div><div class="safe-nm">Zero Ads</div><div class="safe-ds">No ads, no pop-ups. Clean investment experience.</div></div></div>
       </div>
     </div>
 
-    <div class="spacer-bottom"></div>
+    <!-- FOOTER -->
+    <div class="au" style="text-align:center;padding:0 6px 10px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:9px">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="9" cy="13" r="6" stroke="#17b554" stroke-width="2.4" fill="none"/><circle cx="17" cy="13" r="6" stroke="#2470ff" stroke-width="2.4" fill="none"/></svg>
+        <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff">Loma<span style="color:#21d460">Shares</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7">© 2026 LomaShares Technologies Ltd.<br>Invest Smart. Earn More.</div>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:11px">
+        <a href="https://t.me/lomashares" target="_blank" rel="noopener" style="font-size:11px;color:var(--blue2);font-weight:600">Telegram</a>
+        <a href="privacy.html" style="font-size:11px;color:var(--muted);font-weight:600">Privacy</a>
+        <a href="terms.html" style="font-size:11px;color:var(--muted);font-weight:600">Terms</a>
+        <a href="https://t.me/lomasharesAgent" target="_blank" rel="noopener" style="font-size:11px;color:var(--muted);font-weight:600">Support</a>
+      </div>
+    </div>
+    <div class="spacer"></div>
   </main>
 
-  <!-- ════ STICKY BOTTOM CTA ════ -->
-  <div class="bottom-cta">
-    <div class="bottom-cta-inner">
-      <button class="sticky-install" id="stickyInstall">
-        ⚡ Install App
-      </button>
-      <a class="sticky-download" id="stickyDownload" href="lomashares.apk" download="LomaShares.apk">
-        ⬇️ Download APK
-      </a>
+  <!-- STICKY BOTTOM -->
+  <div class="bot">
+    <div class="bot-inner">
+      <button class="sinstall" id="sInstall">⚡ Install App</button>
+      <a class="sdl" id="sDl" href="LomaShares.apk" download="LomaShares.apk">⬇️ Download APK</a>
     </div>
   </div>
 
@@ -1086,119 +550,95 @@
   (function(){
     "use strict";
 
-    /* ── PARTICLES ── */
-    const container = document.getElementById("particles");
-    const colors = ["rgba(23,181,84,.5)","rgba(36,112,255,.5)","rgba(33,212,96,.4)","rgba(20,87,212,.4)"];
-    for(let i=0;i<18;i++){
-      const p = document.createElement("div");
-      p.className = "particle";
-      const size = Math.random()*4+2;
-      p.style.cssText = `
-        width:${size}px;height:${size}px;
-        left:${Math.random()*100}%;
-        background:${colors[Math.floor(Math.random()*colors.length)]};
-        animation-duration:${Math.random()*12+8}s;
-        animation-delay:${Math.random()*10}s;
-      `;
-      container.appendChild(p);
-    }
+    /* PARTICLES */
+    const pc=document.getElementById("pts");
+    ["rgba(23,181,84,.45)","rgba(36,112,255,.45)","rgba(33,212,96,.35)","rgba(20,87,212,.35)"].forEach((c,ci)=>{
+      for(let i=0;i<5;i++){
+        const p=document.createElement("div"); p.className="p";
+        const s=Math.random()*3.5+2;
+        p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${c};animation-duration:${Math.random()*14+9}s;animation-delay:${Math.random()*12}s`;
+        pc.appendChild(p);
+      }
+    });
 
-    /* ── TOAST ── */
+    /* TOAST */
     function toast(msg){
       const t=document.getElementById("toast");
       t.textContent=msg; t.classList.add("show");
-      setTimeout(()=>t.classList.remove("show"),3000);
+      setTimeout(()=>t.classList.remove("show"),3400);
     }
 
-    /* ── PWA INSTALL ── */
-    let deferredPrompt = null;
+    /* DOWNLOAD HANDLER — shows progress UI, real download via native <a> href */
+    function handleDownload(e){
+      // Show progress UI
+      const status=document.getElementById("dlStatus");
+      const prog=document.getElementById("dlProg");
+      const ok=document.getElementById("dlOk");
+      const err=document.getElementById("dlErr");
+      const bar=document.getElementById("dlBar");
+      const pct=document.getElementById("dlPct");
+      const mb=document.getElementById("dlMB");
 
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
+      status.classList.add("show");
+      prog.style.display="block";
+      ok.style.display="none";
+      err.style.display="none";
+      status.scrollIntoView({behavior:"smooth",block:"nearest"});
+
+      // Animate progress bar cosmetically
+      let p=0;
+      const iv=setInterval(()=>{
+        p=Math.min(p+Math.random()*5+2,100);
+        bar.style.width=p+"%";
+        pct.textContent=Math.floor(p)+"%";
+        mb.textContent=(6.9*(p/100)).toFixed(1);
+        if(p>=100){
+          clearInterval(iv);
+          setTimeout(()=>{
+            prog.style.display="none";
+            ok.style.display="block";
+            toast("✅ LomaShares.apk downloaded! Open Downloads to install.");
+          },300);
+        }
+      },100);
+    }
+
+    // Attach to the download buttons (they still follow their href naturally)
+    document.getElementById("btnDl")?.addEventListener("click", handleDownload);
+    document.getElementById("sDl")?.addEventListener("click", handleDownload);
+
+    /* INSTALL MODAL */
+    const modal=document.getElementById("modal");
+    const openModal=()=>{ modal.classList.add("show"); document.body.style.overflow="hidden"; };
+    const closeModal=()=>{ modal.classList.remove("show"); document.body.style.overflow=""; };
+
+    document.getElementById("btnInstall")?.addEventListener("click",openModal);
+    document.getElementById("sInstall")?.addEventListener("click",openModal);
+    document.getElementById("mc")?.addEventListener("click",closeModal);
+    modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
+
+    /* TABS inside modal */
+    document.querySelectorAll(".tab").forEach(tab=>{
+      tab.addEventListener("click",function(){
+        document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+        document.querySelectorAll(".panel").forEach(p=>p.classList.remove("on"));
+        this.classList.add("on");
+        const panel=document.getElementById("pt-"+this.dataset.t);
+        if(panel) panel.classList.add("on");
+      });
     });
 
-    function handleInstall(){
-      const banner = document.getElementById("installBanner");
-
-      if(deferredPrompt){
-        // Native PWA install prompt available
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choice=>{
-          if(choice.outcome==="accepted"){
-            toast("✓ LomaShares installed successfully!");
-          }
-          deferredPrompt=null;
-        });
-      } else {
-        // Show manual instructions
-        banner.classList.toggle("show");
-        if(banner.classList.contains("show")){
-          banner.scrollIntoView({behavior:"smooth",block:"nearest"});
-        }
-      }
-    }
-
-    document.getElementById("btnInstall")?.addEventListener("click", handleInstall);
-    document.getElementById("stickyInstall")?.addEventListener("click", handleInstall);
-
-    /* ── DOWNLOAD WITH PROGRESS UI ── */
-    function handleDownload(e){
-      const prog  = document.getElementById("dlProgress");
-      const bar   = document.getElementById("dlBar");
-      const pct   = document.getElementById("dlPercent");
-      const mb    = document.getElementById("dlMB");
-
-      // Show progress bar
-      prog.classList.add("show");
-      prog.scrollIntoView({behavior:"smooth",block:"nearest"});
-
-      // Animate bar (purely cosmetic — real download happens via href)
-      let progress = 0;
-      const total = 6.9;
-      const interval = setInterval(()=>{
-        progress = Math.min(progress + Math.random()*4 + 1, 100);
-        bar.style.width = progress + "%";
-        pct.textContent = Math.floor(progress) + "%";
-        mb.textContent  = (total*(progress/100)).toFixed(1) + " MB";
-        if(progress >= 100){
-          clearInterval(interval);
-          pct.textContent = "100%";
-          mb.textContent  = total + " MB";
-          setTimeout(()=>{
-            bar.style.background = "linear-gradient(90deg,var(--green),var(--green2))";
-            toast("✓ LomaShares.apk downloaded! Enable 'Install unknown apps' in Settings to install.");
-          }, 400);
-        }
-      }, 120);
-    }
-
-    document.getElementById("btnDownload")?.addEventListener("click", handleDownload);
-    document.getElementById("stickyDownload")?.addEventListener("click", handleDownload);
-
-    /* ── READ MORE ── */
-    window.expandAbout = function(){
-      const btn = document.getElementById("readMoreBtn");
-      const text = document.getElementById("aboutText");
-      const extra = `<br><br>
-        Whether you're a first-time investor or a seasoned earner, LomaShares has a plan for you. 
-        Our team operates 7 days a week to ensure your daily income is processed without fail. 
-        <b>Join 50,000+ Nigerians</b> already growing their wealth on LomaShares.<br><br>
-        🏅 <b>VIP Investor Program</b> — Unlock premium perks as you level up.<br>
-        🎁 <b>Gift Codes & Bonuses</b> — Regular giveaways for active users.<br>
-        📊 <b>Real-Time Portfolio</b> — Track every naira, every second.
-      `;
-      text.insertAdjacentHTML("beforeend", extra);
-      btn.style.display = "none";
-    };
-
-    /* ── INSTALL PROMPT on iOS Safari hint ── */
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-    if(isIOS && isSafari){
-      // Show iOS-specific install tip
-      document.getElementById("installBanner").classList.add("show");
-    }
+    /* Native PWA prompt (only fires on HTTPS with a valid manifest) */
+    window.addEventListener("beforeinstallprompt",(e)=>{
+      e.preventDefault();
+      const dp=e;
+      document.getElementById("btnInstall")?.addEventListener("click",()=>{
+        dp.prompt();
+      },{once:true});
+      document.getElementById("sInstall")?.addEventListener("click",()=>{
+        dp.prompt();
+      },{once:true});
+    });
 
   })();
   </script>
