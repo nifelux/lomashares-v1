@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <link rel="stylesheet" href="assets/css/syles.css"/>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/supabase.js" defer></script>
   <script src="assets/js/auth.js" defer></script>
@@ -928,7 +928,7 @@
         const { data: refs } = await window.sb
           .from("profiles")
           .select("id")
-          .eq("referred_by", profile.referral_code);
+          .eq("referred_by", uid);
 
         const refIds = (refs||[]).map(r=>r.id);
 
@@ -936,7 +936,7 @@
         if(refIds.length){
           const { data: invs } = await window.sb
             .from("investments")
-            .select("user_id")
+            .select("user_id, status")
             .in("user_id", refIds)
             .in("status",["active","completed"]);
           const uniqueInvestors = new Set((invs||[]).map(i=>i.user_id));
@@ -1022,23 +1022,24 @@
         document.getElementById("shareWhatsapp")?.addEventListener("click",()=>{ window.open(`https://wa.me/?text=${encodeURIComponent("Join LomaShares and start earning daily! Use my referral link: "+refLink)}`,"_blank"); });
         document.getElementById("shareTelegram")?.addEventListener("click",()=>{ window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Join LomaShares and earn daily returns! 💰")}`,"_blank"); });
 
-        // Fetch referred users
+        // Fetch referred users — match team.html: use userId not refCode
         const { data: referred } = await window.sb
           .from("profiles")
           .select("id, full_name, created_at")
-          .eq("referred_by", refCode);
+          .eq("referred_by", uid)
+          .order("created_at", { ascending: false });
 
         const refIds = (referred||[]).map(r=>r.id);
 
-        // Find which ones have invested
+        // Find which referred users have an active investment (matches team.html logic)
         let investedSet = new Set();
         if(refIds.length){
           const { data: invs } = await window.sb
             .from("investments")
-            .select("user_id")
+            .select("user_id, amount, status")
             .in("user_id", refIds)
-            .in("status",["active","completed"]);
-          (invs||[]).forEach(i=>investedSet.add(i.user_id));
+            .in("status", ["active", "completed"]);
+          (invs||[]).forEach(i => investedSet.add(i.user_id));
         }
 
         const investedCount = investedSet.size;
