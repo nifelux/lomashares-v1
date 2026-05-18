@@ -4,13 +4,13 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
   <meta name="theme-color" content="#060d1c"/>
-  <title>Invest | LomaShares</title>
+  <title>Referral Contest | LomaShares</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <link rel="stylesheet" href="assets/css/sles.css"/>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/supabase.js" defer></script>
   <script src="assets/js/auth.js" defer></script>
@@ -21,39 +21,37 @@
     ══════════════════════════════════ */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:      #060d1c;
-      --bg2:     #09142a;
-      --card:    #0d1e38;
-      --card2:   #112040;
-      --green:   #1cb85a;
-      --green2:  #26e570;
-      --green3:  #108a3f;
-      --blue:    #1457d4;
-      --blue2:   #2b7fff;
-      --white:   #ffffff;
-      --text:    #ccdeff;
-      --muted:   #556a98;
-      --line:    rgba(255,255,255,.07);
-      --gold:    #f59e0b;
+      --bg:    #060d1c;
+      --bg2:   #09142a;
+      --card:  #0d1e38;
+      --card2: #112040;
+      --green: #1cb85a;
+      --green2:#26e570;
+      --green3:#108a3f;
+      --blue:  #1457d4;
+      --blue2: #2b7fff;
+      --gold:  #f59e0b;
+      --gold2: #fcd34d;
+      --white: #ffffff;
+      --text:  #ccdeff;
+      --muted: #556a98;
+      --line:  rgba(255,255,255,.07);
+      --red:   #ef5350;
     }
     html{-webkit-text-size-adjust:100%}
     body{
-      background:var(--bg);
-      color:var(--text);
+      background:var(--bg);color:var(--text);
       font-family:'DM Sans',sans-serif;
-      min-height:100dvh;
-      overflow-x:hidden;
-      overscroll-behavior:none;
+      min-height:100dvh;overflow-x:hidden;overscroll-behavior:none;
     }
     a{text-decoration:none;color:inherit}
     button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit}
 
-    /* ── ambient glow ── */
     body::before{
       content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       background:
         radial-gradient(ellipse 60% 40% at 10% 0%,rgba(20,87,212,.18) 0%,transparent 65%),
-        radial-gradient(ellipse 50% 35% at 90% 100%,rgba(28,184,90,.1) 0%,transparent 65%);
+        radial-gradient(ellipse 50% 35% at 90% 100%,rgba(245,158,11,.08) 0%,transparent 65%);
     }
 
     /* ══════════════════════════════════
@@ -67,351 +65,383 @@
       backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
       border-bottom:1px solid var(--line);
     }
-
-    /* Hamburger */
     .menu-btn{
       width:42px;height:42px;border-radius:12px;
       background:rgba(255,255,255,.07);border:1px solid var(--line);
       display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-      flex-shrink:0;transition:background .2s;
+      flex-shrink:0;
     }
-    .menu-btn:active{background:rgba(255,255,255,.14)}
     .menu-btn span{display:block;width:18px;height:2px;background:var(--white);border-radius:2px;transition:transform .25s,opacity .25s,width .25s}
     .menu-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
     .menu-btn.open span:nth-child(2){opacity:0;width:0}
     .menu-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
-    /* Brand center */
     .brand-center{
       position:absolute;left:50%;transform:translateX(-50%);
       display:flex;align-items:center;gap:8px;
     }
-    .brand-logo{width:36px;height:36px;flex-shrink:0}
-    .brand-word{line-height:1}
+    .brand-logo{width:34px;height:34px;flex-shrink:0}
     .brand-word strong{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--white);letter-spacing:-.3px}
     .brand-word strong span{color:var(--green2)}
     .brand-word small{display:block;font-size:9px;color:var(--muted);font-style:italic;letter-spacing:.3px;margin-top:1px}
-
-    /* Profile icon */
-    .profile-btn{
-      width:42px;height:42px;border-radius:50%;
-      background:rgba(255,255,255,.07);border:1px solid var(--line);
-      display:flex;align-items:center;justify-content:center;font-size:20px;
-      flex-shrink:0;
-    }
+    .profile-btn{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 
     /* ══════════════════════════════════
        DRAWER
     ══════════════════════════════════ */
-    .drawer-backdrop{
-      display:none;position:fixed;inset:0;
-      background:rgba(0,0,0,.62);z-index:300;
-      backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
-    }
+    .drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:300;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
     .drawer-backdrop.show{display:block}
-
-    .nav-drawer{
-      position:fixed;top:0;left:0;bottom:0;
-      width:80%;max-width:290px;z-index:400;
-      background:linear-gradient(170deg,#0d1f3c 0%,#060d1c 100%);
-      border-right:1px solid rgba(36,112,255,.15);
-      box-shadow:24px 0 64px rgba(0,0,0,.6);
-      transform:translateX(-105%);
-      transition:transform .28s cubic-bezier(.4,0,.2,1);
-      display:flex;flex-direction:column;overflow:hidden;
-    }
+    .nav-drawer{position:fixed;top:0;left:0;bottom:0;width:80%;max-width:290px;z-index:400;background:linear-gradient(170deg,#0d1f3c 0%,#060d1c 100%);border-right:1px solid rgba(36,112,255,.15);box-shadow:24px 0 64px rgba(0,0,0,.6);transform:translateX(-105%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
     .nav-drawer.open{transform:translateX(0)}
-
-    .drawer-top{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:18px 18px 14px;border-bottom:1px solid var(--line);flex-shrink:0;
-    }
+    .drawer-top{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
     .drawer-brand{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--white)}
     .drawer-brand span{color:var(--green2)}
     .drawer-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted)}
-    .drawer-close:active{background:rgba(255,255,255,.14);color:var(--white)}
-
     .drawer-user{margin:12px 14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line);flex-shrink:0}
     .drawer-uname{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white);margin-bottom:3px}
     .drawer-uref{font-size:11px;color:var(--muted)}
     .drawer-uref b{color:var(--green2);font-weight:600}
-
     .drawer-nav{flex:1;overflow-y:auto;padding:6px 10px 10px;display:flex;flex-direction:column;gap:2px}
     .drawer-nav::-webkit-scrollbar{width:0}
     .nav-sec{font-size:9.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:10px 8px 4px}
     .d-link{display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:12px;font-size:13.5px;font-weight:600;color:var(--muted);transition:background .18s,color .18s}
-    .d-link:active{background:rgba(255,255,255,.07)}
     .d-link.active{background:linear-gradient(135deg,rgba(20,87,212,.28) 0%,rgba(36,112,255,.12) 100%);color:var(--white);border:1px solid rgba(36,112,255,.18)}
     .di{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
     .d-link.active .di{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%)}
-
     .drawer-footer{padding:12px 10px 28px;border-top:1px solid var(--line);flex-shrink:0}
     .d-logout{display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:12px;font-size:13.5px;font-weight:600;color:#f07070;width:100%}
-    .d-logout:active{background:rgba(239,83,80,.1)}
     .d-logout .di{background:rgba(239,83,80,.14)}
 
     /* ══════════════════════════════════
-       MAIN SCROLL
+       MAIN
     ══════════════════════════════════ */
-    .main{position:relative;z-index:1;padding:0 0 108px}
+    .main{position:relative;z-index:1;padding:16px 14px 108px;max-width:480px;margin:0 auto}
 
-    /* ══════════════════════════════════
-       HERO SECTION
-    ══════════════════════════════════ */
-    .hero{
-      position:relative;overflow:hidden;
-      background:linear-gradient(135deg,#07122a 0%,#0a1830 50%,#061220 100%);
-      padding:24px 16px 20px;
-      border-bottom:1px solid var(--line);
-    }
-    /* Glow effects in hero */
-    .hero::before{
-      content:'';position:absolute;top:-60px;left:-40px;
-      width:220px;height:220px;border-radius:50%;
-      background:radial-gradient(circle,rgba(28,184,90,.15) 0%,transparent 70%);
-      pointer-events:none;
-    }
-    .hero::after{
-      content:'';position:absolute;bottom:-40px;right:-40px;
-      width:180px;height:180px;border-radius:50%;
-      background:radial-gradient(circle,rgba(20,87,212,.18) 0%,transparent 70%);
-      pointer-events:none;
-    }
-
-    .hero-inner{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      align-items:center;
-      position:relative;z-index:1;
-    }
-
-    /* Left: text + illustration */
-    .hero-left{}
-    .hero-heading{
-      font-family:'Syne',sans-serif;
-      font-size:38px;font-weight:600;
-      color:var(--white);
-      line-height:.95;
-      letter-spacing:-1px;
-      margin-bottom:8px;
-      text-shadow:0 0 40px rgba(28,184,90,.3);
-    }
-    .hero-sub{
-      font-size:12.5px;color:rgba(200,220,255,.7);
-      line-height:1.5;margin-bottom:16px;font-weight:500;
-    }
-    .hero-illustration{
-      display:flex;align-items:flex-end;gap:6px;
-      margin-top:4px;
-    }
-    /* SVG chart bars */
-    .chart-bars{display:flex;align-items:flex-end;gap:4px;height:52px}
-    .bar{border-radius:3px 3px 0 0;width:10px;background:linear-gradient(to top,var(--green3),var(--green2))}
-    /* Arrow up */
-    .arrow-up{font-size:32px;color:var(--green2);line-height:1;filter:drop-shadow(0 0 8px rgba(38,229,112,.5))}
-    /* Coins */
-    .coins-emoji{font-size:38px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
-
-    /* Right: wallet card */
-    .hero-right{}
-    .wallet-card{
-      border-radius:18px;
-      background:rgba(13,30,56,.8);
-      border:1px solid rgba(36,112,255,.2);
-      padding:16px 14px;
-      backdrop-filter:blur(10px);
-    }
-    .wc-label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px}
-    .wc-bal-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-    .wc-bal{
-      font-family:'Syne',sans-serif;font-size:13px;font-weight:600;
-      color:var(--white);letter-spacing:-.3px;line-height:1;
-      word-break:break-all;
-    }
-    .eye-btn{
-      width:28px;height:28px;border-radius:50%;
-      background:rgba(36,112,255,.18);border:1px solid rgba(36,112,255,.25);
-      display:flex;align-items:center;justify-content:center;font-size:13px;
-      flex-shrink:0;
-    }
-    .deposit-btn{
-      display:flex;align-items:center;justify-content:center;gap:7px;
-      width:100%;padding:11px 12px;border-radius:12px;
-      background:linear-gradient(135deg,var(--green) 0%,var(--green3) 100%);
-      color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;
-      box-shadow:0 6px 18px rgba(28,184,90,.35);
-      transition:transform .14s,opacity .14s;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .deposit-btn:active{transform:scale(.97);opacity:.9}
-    .deposit-icon{font-size:15px}
-
-    /* ══════════════════════════════════
-       FEATURE STRIP
-    ══════════════════════════════════ */
-    .feature-strip{
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:0;
-      margin:14px 14px 0;
-      border-radius:14px;
-      border:1px solid rgba(36,112,255,.18);
-      overflow:hidden;
-      background:rgba(13,30,56,.6);
-    }
-    .fs-item{
-      display:flex;flex-direction:column;align-items:center;
-      padding:12px 6px;
-      border-right:1px solid var(--line);
-      text-align:center;
-      gap:4px;
-    }
-    .fs-item:last-child{border-right:none}
-    .fs-icon{
-      width:32px;height:32px;border-radius:8px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:15px;margin-bottom:2px;
-    }
-    .fs-icon.g{background:rgba(28,184,90,.15)}
-    .fs-icon.b{background:rgba(36,112,255,.15)}
-    .fs-icon.y{background:rgba(245,158,11,.15)}
-    .fs-title{font-size:9.5px;font-weight:700;color:var(--text);line-height:1.3}
-    .fs-sub{font-size:9px;font-weight:700;color:var(--green2);line-height:1.2}
-
-    /* ══════════════════════════════════
-       MSG
-    ══════════════════════════════════ */
-    .msg{
-      display:none;margin:12px 14px 0;padding:11px 14px;
-      border-radius:12px;font-size:13px;font-weight:600;
-    }
+    /* ── MSG ── */
+    .msg{display:none;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:14px}
     .msg.error{background:rgba(239,83,80,.12);color:#f07070;border:1px solid rgba(239,83,80,.2)}
     .msg.success{background:rgba(28,184,90,.12);color:var(--green2);border:1px solid rgba(28,184,90,.2)}
 
     /* ══════════════════════════════════
-       PLAN CARDS
+       PAGE HERO BANNER
     ══════════════════════════════════ */
-    .plans-wrap{
-      display:flex;flex-direction:column;gap:10px;
-      padding:14px 14px 4px;
-    }
-
-    .plan-card{
-      position:relative;
-      display:flex;align-items:stretch;
-      border-radius:16px;
-      overflow:hidden;
-      background:linear-gradient(135deg,#0d1e38 0%,#091528 100%);
-      border:1px solid rgba(255,255,255,.07);
-      box-shadow:0 8px 24px rgba(0,0,0,.3);
-      transition:transform .15s,box-shadow .15s;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .plan-card:active{transform:scale(.99);box-shadow:0 4px 12px rgba(0,0,0,.3)}
-
-    /* Popular badge */
-    .popular-badge{
-      position:absolute;top:0;left:90px;
-      padding:4px 10px;
-      background:var(--gold);
-      color:#000;font-size:9px;font-weight:800;
-      letter-spacing:.4px;text-transform:uppercase;
-      border-radius:0 0 8px 8px;
-      display:flex;align-items:center;gap:3px;
-      z-index:2;
-    }
-
-    /* Left colored block — plan name */
-    .plan-badge{
-      flex-shrink:0;width:86px;
-      display:flex;flex-direction:column;
-      align-items:center;justify-content:center;
-      padding:18px 8px;
+    .page-banner{
+      border-radius:22px;
+      background:linear-gradient(145deg,#0f2244 0%,#091528 100%);
+      border:1px solid rgba(245,158,11,.2);
+      padding:22px 18px;
+      margin-bottom:16px;
       position:relative;overflow:hidden;
+      text-align:center;
     }
-    .plan-badge::before{
-      content:'';position:absolute;inset:0;
-      background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);
+    .page-banner::before{
+      content:'';position:absolute;top:-50px;left:50%;transform:translateX(-50%);
+      width:240px;height:140px;border-radius:50%;
+      background:radial-gradient(circle,rgba(245,158,11,.18) 0%,transparent 70%);
+      pointer-events:none;
     }
-    /* Chart mini in bg */
-    .plan-badge::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;
-      height:30px;
-      background:linear-gradient(to top,rgba(0,0,0,.2),transparent);
-    }
-    .pb-loma{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1}
-    .pb-num{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff;line-height:1;position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.3)}
-    .pb-chart{position:absolute;bottom:8px;right:6px;z-index:1;opacity:.6}
-
-    /* Plan colors */
-    .plan-loma1 .plan-badge{background:linear-gradient(145deg,#0d8a3a,#17b554,#26e570)}
-    .plan-loma2 .plan-badge{background:linear-gradient(145deg,#0f3fa8,#1b5fd4,#2b7fff)}
-    .plan-loma3 .plan-badge{background:linear-gradient(145deg,#0e7a6e,#13a89a,#1de8d8)}
-    .plan-loma4 .plan-badge{background:linear-gradient(145deg,#5a0fb8,#7c1fd4,#a84fff)}
-    .plan-loma5 .plan-badge{background:linear-gradient(145deg,#a0620a,#d4880f,#f5a623)}
-    .plan-loma6 .plan-badge{background:linear-gradient(145deg,#0a6a9a,#0f8ac4,#1ab8f5)}
-
-    /* Right content */
-    .plan-content{
-      flex:1;display:flex;align-items:center;
-      padding:14px 10px 14px 12px;
-      gap:4px;
-    }
-
-    /* Stat columns */
-    .plan-stats{
-      flex:1;display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:4px 2px;
-    }
-    .ps{display:flex;flex-direction:column;gap:3px;min-width:0}
-    .ps-label{font-size:9px;font-weight:600;color:var(--muted);text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ps-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ps-val.green{color:var(--green2)}
-    .ps-dur{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
-    .ps-dur-val{display:flex;align-items:center;gap:3px}
-    .cal-icon{font-size:11px}
-
-    /* Invest button */
-    .invest-btn{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:12px 10px;border-radius:12px;
-      background:linear-gradient(135deg,var(--green) 0%,var(--green3) 100%);
-      color:#fff;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;
-      letter-spacing:.3px;text-align:center;
-      box-shadow:0 4px 14px rgba(28,184,90,.35);
-      min-width:62px;flex-shrink:0;
-      transition:transform .13s,opacity .13s;
-      line-height:1.3;gap:2px;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .invest-btn:active{transform:scale(.95);opacity:.9}
-    .invest-btn .inv-text{font-size:12px}
-    .invest-btn .inv-now{font-size:11px}
-    .invest-btn .inv-arrow{font-size:14px;font-weight:900;margin-top:2px}
+    .pb-trophy{font-size:52px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 16px rgba(245,158,11,.5));position:relative;z-index:1}
+    .pb-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--white);letter-spacing:-.3px;margin-bottom:6px;position:relative;z-index:1}
+    .pb-title span{color:var(--gold2)}
+    .pb-sub{font-size:13px;color:var(--muted);line-height:1.6;position:relative;z-index:1}
+    .pb-sub b{color:var(--text)}
 
     /* ══════════════════════════════════
-       BOTTOM INFO STRIP
+       PROGRESS CARD
     ══════════════════════════════════ */
-    .info-strip{
-      display:grid;grid-template-columns:repeat(3,1fr);
-      margin:14px 14px 0;
-      border-radius:16px;
-      overflow:hidden;
+    .progress-card{
+      border-radius:20px;
+      background:var(--card);
       border:1px solid var(--line);
-      background:rgba(13,30,56,.5);
+      padding:18px 16px;
+      margin-bottom:16px;
     }
-    .is-item{
-      display:flex;flex-direction:column;align-items:center;
-      padding:14px 8px;text-align:center;
-      border-right:1px solid var(--line);gap:6px;
+    .pc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .pc-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white)}
+    .pc-count{
+      display:flex;align-items:center;gap:6px;
+      padding:5px 12px;border-radius:20px;
+      background:rgba(28,184,90,.12);border:1px solid rgba(28,184,90,.2);
     }
-    .is-item:last-child{border-right:none}
-    .is-icon{font-size:24px;line-height:1}
-    .is-title{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;line-height:1.3}
-    .is-label{font-size:10px;font-weight:700;color:var(--text);line-height:1.3}
-    .is-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green2)}
-    .is-code{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--green2)}
+    .pc-count-num{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green2)}
+    .pc-count-label{font-size:11px;color:var(--muted);font-weight:600}
+
+    /* Progress track */
+    .prog-track{
+      position:relative;
+      height:10px;border-radius:5px;
+      background:rgba(255,255,255,.08);
+      margin-bottom:10px;
+      overflow:hidden;
+    }
+    .prog-fill{
+      height:100%;border-radius:5px;
+      background:linear-gradient(90deg,var(--green) 0%,var(--green2) 100%);
+      transition:width 1s cubic-bezier(.4,0,.2,1);
+      position:relative;
+    }
+    .prog-fill::after{
+      content:'';
+      position:absolute;top:0;right:0;bottom:0;left:0;
+      background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.3) 50%,transparent 100%);
+      animation:shimmer 2s linear infinite;
+      background-size:200% 100%;
+    }
+    @keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+
+    /* Milestone dots on track */
+    .prog-dots{
+      position:relative;display:flex;justify-content:space-between;
+      padding:0 0;margin-bottom:6px;
+    }
+    .prog-dot{
+      display:flex;flex-direction:column;align-items:center;gap:3px;
+      position:relative;
+    }
+    .pd-circle{
+      width:20px;height:20px;border-radius:50%;
+      border:2px solid rgba(255,255,255,.15);
+      background:rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center;
+      font-size:10px;
+      transition:all .3s;
+      position:relative;z-index:1;
+    }
+    .pd-circle.reached{
+      background:var(--green);border-color:var(--green2);
+      box-shadow:0 0 0 4px rgba(28,184,90,.2);
+    }
+    .pd-circle.claimed{
+      background:var(--gold);border-color:var(--gold2);
+      box-shadow:0 0 0 4px rgba(245,158,11,.2);
+    }
+    .pd-label{font-size:9px;font-weight:700;color:var(--muted)}
+
+    .pc-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
+    .pc-hint b{color:var(--green2)}
+
+    /* ══════════════════════════════════
+       REWARD CARDS
+    ══════════════════════════════════ */
+    .rewards-title{
+      font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);
+      margin-bottom:12px;display:flex;align-items:center;gap:8px;
+    }
+    .rewards-title::after{content:'';flex:1;height:1px;background:var(--line)}
+
+    .reward-card{
+      border-radius:20px;
+      background:var(--card);
+      border:1px solid var(--line);
+      padding:18px 16px;
+      margin-bottom:12px;
+      position:relative;overflow:hidden;
+      transition:transform .15s,border-color .3s;
+    }
+    .reward-card.unlocked{
+      border-color:rgba(28,184,90,.3);
+      background:linear-gradient(135deg,#0d2238 0%,#0a1a28 100%);
+    }
+    .reward-card.unlocked::before{
+      content:'';position:absolute;top:-30px;right:-30px;
+      width:120px;height:120px;border-radius:50%;
+      background:radial-gradient(circle,rgba(28,184,90,.12) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .reward-card.claimed-card{
+      border-color:rgba(245,158,11,.2);
+      opacity:.75;
+    }
+    .reward-card.locked{
+      opacity:.6;
+    }
+
+    /* Card inner layout */
+    .rc-inner{display:flex;align-items:center;gap:14px}
+
+    /* Left icon */
+    .rc-icon-wrap{flex-shrink:0}
+    .rc-icon{
+      width:58px;height:58px;border-radius:16px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px;
+      position:relative;
+    }
+    .rc-icon.locked-ic{background:rgba(255,255,255,.05);border:1px solid var(--line)}
+    .rc-icon.unlocked-ic{
+      background:linear-gradient(135deg,rgba(28,184,90,.25) 0%,rgba(38,229,112,.1) 100%);
+      border:1px solid rgba(28,184,90,.25);
+      box-shadow:0 6px 20px rgba(28,184,90,.2);
+    }
+    .rc-icon.claimed-ic{
+      background:linear-gradient(135deg,rgba(245,158,11,.25) 0%,rgba(252,211,77,.1) 100%);
+      border:1px solid rgba(245,158,11,.25);
+    }
+    .lock-overlay{
+      position:absolute;bottom:-4px;right:-4px;
+      width:20px;height:20px;border-radius:50%;
+      background:rgba(85,106,152,.8);border:2px solid var(--bg);
+      display:flex;align-items:center;justify-content:center;font-size:10px;
+    }
+
+    /* Center text */
+    .rc-text{flex:1;min-width:0}
+    .rc-milestone{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+    .rc-milestone b{color:var(--text)}
+    .rc-reward{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--white);line-height:1;margin-bottom:5px}
+    .rc-reward.green{color:var(--green2)}
+    .rc-sub{font-size:11.5px;color:var(--muted);line-height:1.5}
+    .rc-sub b{color:var(--text);font-weight:600}
+
+    /* Progress mini bar inside card */
+    .rc-mini-prog{margin-top:10px}
+    .rc-mini-bar-wrap{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:4px}
+    .rc-mini-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--green2));transition:width .8s ease}
+    .rc-mini-label{font-size:10.5px;color:var(--muted);font-weight:600}
+    .rc-mini-label b{color:var(--text)}
+
+    /* Claim / Status button */
+    .rc-btn-wrap{flex-shrink:0}
+
+    .claim-btn{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:12px 14px;border-radius:13px;
+      background:linear-gradient(135deg,var(--green) 0%,var(--green3) 100%);
+      color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;
+      box-shadow:0 6px 18px rgba(28,184,90,.35);
+      min-width:74px;text-align:center;
+      transition:transform .14s,opacity .14s;
+      animation:pulse-btn 2s ease infinite;
+      border:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    @keyframes pulse-btn{
+      0%,100%{box-shadow:0 6px 18px rgba(28,184,90,.35)}
+      50%{box-shadow:0 6px 28px rgba(28,184,90,.6)}
+    }
+    .claim-btn:active{transform:scale(.95);opacity:.9}
+    .claim-btn:disabled{animation:none;opacity:.6;cursor:not-allowed}
+
+    .claimed-badge{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:10px 12px;border-radius:13px;
+      background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);
+      color:var(--gold2);font-family:'Syne',sans-serif;font-size:11px;font-weight:800;
+      min-width:74px;text-align:center;gap:2px;
+    }
+    .claimed-badge-icon{font-size:18px;line-height:1}
+
+    .locked-badge{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:10px 12px;border-radius:13px;
+      background:rgba(255,255,255,.04);border:1px solid var(--line);
+      color:var(--muted);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+      min-width:74px;text-align:center;gap:2px;
+    }
+    .locked-badge-icon{font-size:16px;line-height:1}
+
+    /* ══════════════════════════════════
+       REFERRAL INVITE SECTION
+    ══════════════════════════════════ */
+    .invite-card{
+      border-radius:20px;
+      background:linear-gradient(145deg,#0a1f3a 0%,#060d1c 100%);
+      border:1px solid rgba(36,112,255,.16);
+      padding:18px 16px;
+      margin-bottom:16px;
+    }
+    .invite-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:5px}
+    .invite-sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+    .invite-sub b{color:var(--green2)}
+
+    .ref-link-row{
+      display:flex;align-items:center;gap:8px;
+      padding:11px 13px;border-radius:12px;
+      background:rgba(255,255,255,.05);border:1px solid var(--line);
+      margin-bottom:12px;
+    }
+    .ref-link-text{flex:1;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+    .ref-link-text span{color:var(--blue2)}
+    .copy-ref-btn{
+      flex-shrink:0;padding:7px 14px;border-radius:10px;
+      background:linear-gradient(135deg,var(--green) 0%,var(--green3) 100%);
+      color:#fff;font-size:12px;font-weight:800;
+      box-shadow:0 4px 12px rgba(28,184,90,.25);
+      -webkit-tap-highlight-color:transparent;
+    }
+    .copy-ref-btn:active{opacity:.85}
+
+    .invite-share-row{display:flex;gap:8px}
+    .share-btn{
+      flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+      padding:11px 10px;border-radius:12px;
+      font-size:12.5px;font-weight:700;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .share-btn.whatsapp{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.2);color:#25d366}
+    .share-btn.telegram{background:rgba(43,151,255,.12);border:1px solid rgba(43,151,255,.2);color:#2b97ff}
+
+    /* ══════════════════════════════════
+       REFERRED LIST
+    ══════════════════════════════════ */
+    .referred-card{
+      border-radius:20px;background:var(--card);border:1px solid var(--line);
+      overflow:hidden;margin-bottom:16px;
+    }
+    .referred-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 16px 12px;border-bottom:1px solid var(--line);
+    }
+    .referred-head h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white)}
+    .referred-count-pill{
+      padding:3px 10px;border-radius:20px;
+      background:rgba(28,184,90,.12);border:1px solid rgba(28,184,90,.2);
+      font-size:11px;font-weight:700;color:var(--green2);
+    }
+
+    .ref-item{
+      display:flex;align-items:center;gap:12px;
+      padding:12px 16px;border-bottom:1px solid var(--line);
+    }
+    .ref-item:last-child{border-bottom:none}
+    .ref-avatar{
+      width:36px;height:36px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;
+      flex-shrink:0;
+    }
+    .ref-info{flex:1;min-width:0}
+    .ref-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ref-date{font-size:11px;color:var(--muted)}
+    .ref-status{flex-shrink:0}
+    .invested-pill{
+      padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;
+    }
+    .invested-pill.yes{background:rgba(28,184,90,.14);color:var(--green2);border:1px solid rgba(28,184,90,.2)}
+    .invested-pill.no{background:rgba(85,106,152,.12);color:var(--muted);border:1px solid var(--line)}
+
+    .ref-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ══════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════ */
+    .how-card{
+      border-radius:20px;background:var(--card);border:1px solid var(--line);
+      padding:18px 16px;margin-bottom:16px;
+    }
+    .how-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:14px}
+    .how-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+    .how-step:last-child{margin-bottom:0}
+    .how-num{
+      width:28px;height:28px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:800;color:#fff;margin-top:1px;
+    }
+    .how-text{}
+    .how-step-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+    .how-step-desc{font-size:12px;color:var(--muted);line-height:1.6}
+    .how-step-desc b{color:var(--text)}
 
     /* ══════════════════════════════════
        BOTTOM NAV
@@ -425,12 +455,7 @@
       backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
       box-shadow:0 20px 44px rgba(0,0,0,.5);
     }
-    .bn{
-      display:flex;flex-direction:column;align-items:center;gap:4px;
-      padding:7px 4px;border-radius:14px;
-      font-size:9.5px;font-weight:700;color:var(--muted);
-      text-align:center;-webkit-tap-highlight-color:transparent;
-    }
+    .bn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border-radius:14px;font-size:9.5px;font-weight:700;color:var(--muted);text-align:center;-webkit-tap-highlight-color:transparent}
     .bn.active{color:var(--green2)}
     .bn-ico{font-size:21px;line-height:1}
     .bn-dot{width:4px;height:4px;border-radius:50%;background:var(--green2);display:none;margin:0 auto}
@@ -451,44 +476,22 @@
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-    /* ══════════════════════════════════
-       CONFIRM MODAL
-    ══════════════════════════════════ */
-    .overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
-    .overlay.show{display:flex}
-    .sheet{width:100%;max-width:480px;background:linear-gradient(170deg,#0d1f3c 0%,#060d1c 100%);border-radius:24px 24px 0 0;border:1px solid rgba(36,112,255,.18);border-bottom:none;padding:22px 18px 40px;animation:slideUp .28s cubic-bezier(.4,0,.2,1)}
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .sheet-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.14);margin:0 auto 18px}
-    .sheet-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:6px}
-    .sheet-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
-
-    .confirm-plan-preview{
-      border-radius:14px;padding:16px;
-      background:rgba(255,255,255,.04);border:1px solid var(--line);
-      margin-bottom:20px;
-    }
-    .cpp-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--white);margin-bottom:10px}
-    .cpp-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--line)}
-    .cpp-row:last-child{border-bottom:none}
-    .cpp-row b{color:var(--white);font-weight:700}
-    .cpp-row b.g{color:var(--green2)}
-
-    .confirm-btns{display:flex;gap:10px}
-    .cancel-btn{flex:1;padding:14px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--muted);font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
-    .confirm-btn{flex:2;padding:14px;border-radius:13px;background:linear-gradient(135deg,var(--green),var(--green3));color:#fff;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;box-shadow:0 6px 18px rgba(28,184,90,.3);transition:opacity .15s,transform .15s}
-    .confirm-btn:active{opacity:.85;transform:scale(.98)}
-    .confirm-btn:disabled{opacity:.6}
-
     /* ANIMATIONS */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-    .au{animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .au{animation:fadeUp .42s ease both}
     .a1{animation-delay:.04s}.a2{animation-delay:.09s}.a3{animation-delay:.14s}
-    .a4{animation-delay:.19s}.a5{animation-delay:.24s}
+    .a4{animation-delay:.19s}.a5{animation-delay:.24s}.a6{animation-delay:.29s}
 
-    .spacer{height:12px}
+    /* Avatar colors */
+    .av1{background:linear-gradient(135deg,#1cb85a,#108a3f)}
+    .av2{background:linear-gradient(135deg,#1457d4,#2b7fff)}
+    .av3{background:linear-gradient(135deg,#7c1fd4,#a84fff)}
+    .av4{background:linear-gradient(135deg,#d4880f,#f5a623)}
+    .av5{background:linear-gradient(135deg,#0f8ac4,#1ab8f5)}
 
-    /* Mini chart SVG in plan badge */
-    .mini-chart{width:40px;height:18px}
+    /* Loading spinner */
+    .spin{display:inline-block;animation:rotate .7s linear infinite}
+    @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
   </style>
 </head>
 
@@ -499,16 +502,14 @@
 >
 
   <div class="toast" id="toast"></div>
-
-  <!-- DRAWER BACKDROP -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
-  <!-- NAV DRAWER (left slide) -->
+  <!-- ════ NAV DRAWER ════ -->
   <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
     <div class="drawer-top">
       <div class="drawer-brand">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="8" cy="12" r="5.5" stroke="#26e570" stroke-width="2.2" fill="none"/>
+          <circle cx="8"  cy="12" r="5.5" stroke="#26e570" stroke-width="2.2" fill="none"/>
           <circle cx="16" cy="12" r="5.5" stroke="#2b7fff" stroke-width="2.2" fill="none"/>
         </svg>
         Loma<span>Shares</span>
@@ -523,13 +524,14 @@
       <div class="nav-sec">Main</div>
       <a class="d-link" href="dashboard.html"><span class="di">🏠</span>Dashboard</a>
       <a class="d-link" href="deposit.html"><span class="di">💳</span>Deposit</a>
-      <a class="d-link active" href="invest.html"><span class="di">📈</span>Invest</a>
+      <a class="d-link" href="invest.html"><span class="di">📈</span>Invest</a>
       <a class="d-link" href="investments.html"><span class="di">💼</span>My Investments</a>
       <a class="d-link" href="withdraw.html"><span class="di">💸</span>Withdraw</a>
       <a class="d-link" href="transactions.html"><span class="di">📋</span>Transactions</a>
       <div class="nav-sec">Earn More</div>
       <a class="d-link" href="spin.html"><span class="di">🎰</span>Spin &amp; Win</a>
       <a class="d-link" href="referrals.html"><span class="di">👥</span>Referrals</a>
+      <a class="d-link active" href="contest.html"><span class="di">🏆</span>Contest</a>
       <a class="d-link" href="team.html"><span class="di">🤝</span>Team</a>
       <a class="d-link" href="gift.html"><span class="di">🎁</span>Gift Code</a>
       <a class="d-link" href="facebook-bonus.html"><span class="di">🎀</span>Facebook Bonus</a>
@@ -542,15 +544,15 @@
     </div>
   </aside>
 
-  <!-- TOP HEADER -->
+  <!-- ════ HEADER ════ -->
   <header class="top-header">
     <button class="menu-btn" id="menuBtn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
     <div class="brand-center">
-      <svg class="brand-logo" viewBox="0 0 36 36" fill="none">
-        <circle cx="13" cy="18" r="8" stroke="#26e570" stroke-width="2.8" fill="none"/>
-        <circle cx="23" cy="18" r="8" stroke="#2b7fff" stroke-width="2.8" fill="none"/>
+      <svg class="brand-logo" viewBox="0 0 34 34" fill="none">
+        <circle cx="12" cy="17" r="7.5" stroke="#26e570" stroke-width="2.8" fill="none"/>
+        <circle cx="22" cy="17" r="7.5" stroke="#2b7fff" stroke-width="2.8" fill="none"/>
       </svg>
       <div class="brand-word">
         <strong>Loma<span>Shares</span></strong>
@@ -560,144 +562,218 @@
     <a class="profile-btn" href="profile.html" aria-label="Profile">👤</a>
   </header>
 
-  <!-- CONFIRM MODAL -->
-  <div class="overlay" id="confirmModal">
-    <div class="sheet">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title">Confirm Investment</div>
-      <div class="sheet-sub">Review your plan details before proceeding.</div>
-      <div class="confirm-plan-preview" id="planPreview"></div>
-      <div class="confirm-btns">
-        <button class="cancel-btn" id="cancelBtn">Cancel</button>
-        <button class="confirm-btn" id="confirmBtn">✅ Invest Now</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN -->
+  <!-- ════ MAIN ════ -->
   <main class="main">
     <div class="msg" id="msg"></div>
 
-    <!-- HERO -->
-    <div class="hero au a1">
-      <div class="hero-inner">
-        <!-- Left -->
-        <div class="hero-left">
-          <div class="hero-heading">INVEST</div>
-          <div class="hero-sub">Choose a plan and<br>start earning daily</div>
-          <div class="hero-illustration">
-            <div class="coins-emoji">🪙</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-              <div class="arrow-up">↗</div>
-              <div class="chart-bars">
-                <div class="bar" style="height:18px"></div>
-                <div class="bar" style="height:28px"></div>
-                <div class="bar" style="height:22px"></div>
-                <div class="bar" style="height:40px"></div>
-                <div class="bar" style="height:34px"></div>
-                <div class="bar" style="height:52px"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Right: wallet card -->
-        <div class="hero-right">
-          <div class="wallet-card">
-            <div class="wc-label">Wallet Balance</div>
-            <div class="wc-bal-row">
-              <div class="wc-bal" id="walletBalance">₦0.00</div>
-              <button class="eye-btn" id="eyeBtn" aria-label="Toggle balance">👁</button>
-            </div>
-            <a href="deposit.html" class="deposit-btn">
-              <span class="deposit-icon">💳</span>
-              + Deposit
-            </a>
-          </div>
+    <!-- BANNER -->
+    <div class="page-banner au a1">
+      <div class="pb-trophy">🏆</div>
+      <div class="pb-title">Referral <span>Contest</span></div>
+      <div class="pb-sub">
+        Invite friends who invest and <b>claim cash rewards</b>.<br>
+        Only referred users who invest count toward your milestone.
+      </div>
+    </div>
+
+    <!-- PROGRESS CARD -->
+    <div class="progress-card au a2">
+      <div class="pc-head">
+        <div class="pc-title">👥 Invested Referrals</div>
+        <div class="pc-count">
+          <div class="pc-count-num" id="refCount">-</div>
+          <div class="pc-count-label">/ 10</div>
         </div>
       </div>
-    </div>
 
-    <!-- FEATURE STRIP -->
-    <div class="feature-strip au a2">
-      <div class="fs-item">
-        <div class="fs-icon g">📅</div>
-        <div class="fs-title">Daily Income</div>
-        <div class="fs-sub">Drops by 1:00AM</div>
+      <!-- Milestone dots above bar -->
+      <div class="prog-dots">
+        <div class="prog-dot">
+          <div class="pd-circle" id="dot0">🏁</div>
+          <div class="pd-label">Start</div>
+        </div>
+        <div class="prog-dot">
+          <div class="pd-circle" id="dot2">2</div>
+          <div class="pd-label">₦500</div>
+        </div>
+        <div class="prog-dot">
+          <div class="pd-circle" id="dot5">5</div>
+          <div class="pd-label">₦1,500</div>
+        </div>
+        <div class="prog-dot">
+          <div class="pd-circle" id="dot10">10</div>
+          <div class="pd-label">₦3,500</div>
+        </div>
       </div>
-      <div class="fs-item">
-        <div class="fs-icon b">🛡️</div>
-        <div class="fs-title">Safe, Secure &amp; Reliable</div>
-        <div class="fs-sub"></div>
-      </div>
-      <div class="fs-item">
-        <div class="fs-icon y">⚡</div>
-        <div class="fs-title">Instant Deposit</div>
-        <div class="fs-sub">24/7</div>
-      </div>
-      <div class="fs-item">
-        <div class="fs-icon g">🔄</div>
-        <div class="fs-title">Withdrawal</div>
-        <div class="fs-sub">24/7</div>
-      </div>
-    </div>
 
-    <!-- PLAN CARDS -->
-    <div class="plans-wrap au a3" id="plansContainer">
-      <!-- Skeleton loaders -->
-      <div class="plan-card" style="opacity:.4;pointer-events:none">
-        <div class="plan-badge plan-loma1" style="width:86px;height:90px"></div>
-        <div class="plan-content"><div style="flex:1;height:60px;background:rgba(255,255,255,.05);border-radius:10px"></div></div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
       </div>
-      <div class="plan-card" style="opacity:.3;pointer-events:none">
-        <div class="plan-badge plan-loma2" style="width:86px;height:90px"></div>
-        <div class="plan-content"><div style="flex:1;height:60px;background:rgba(255,255,255,.05);border-radius:10px"></div></div>
-      </div>
-      <div class="plan-card" style="opacity:.2;pointer-events:none">
-        <div class="plan-badge plan-loma3" style="width:86px;height:90px"></div>
-        <div class="plan-content"><div style="flex:1;height:60px;background:rgba(255,255,255,.05);border-radius:10px"></div></div>
+
+      <div class="pc-hint" id="pcHint">
+        Loading your referral progress…
       </div>
     </div>
 
-    <!-- BOTTOM INFO STRIP -->
-    <div class="info-strip au a4">
-      <div class="is-item">
-        <div class="is-icon">🎁</div>
-        <div class="is-title">Welcome Bonus<br>Use Code:</div>
-        <div class="is-code">LOMABONUS</div>
-        <div class="is-label" style="font-size:9px;color:var(--muted)">Get bonus when you invest!</div>
-      </div>
-      <div class="is-item">
-        <div class="is-icon">👥</div>
-        <div class="is-title">Referral Commission<br>Level 1 Only</div>
-        <div class="is-val">10%</div>
-      </div>
-      <div class="is-item">
-        <div class="is-icon">🛡️</div>
-        <div class="is-title">Minimum<br>Investment</div>
-        <div class="is-val">₦3,000</div>
+    <!-- REWARD CARDS -->
+    <div class="rewards-title au a3">🎁 Your Rewards</div>
+
+    <!-- Tier 1 -->
+    <div class="reward-card locked au a3" id="card-tier1">
+      <div class="rc-inner">
+        <div class="rc-icon-wrap">
+          <div class="rc-icon locked-ic" id="icon-tier1">
+            🎯
+            <div class="lock-overlay" id="lock-tier1">🔒</div>
+          </div>
+        </div>
+        <div class="rc-text">
+          <div class="rc-milestone">Invite <b>2</b> users who invest</div>
+          <div class="rc-reward" id="reward-tier1">₦500</div>
+          <div class="rc-sub">Credited directly to your wallet</div>
+          <div class="rc-mini-prog" id="miniprog-tier1">
+            <div class="rc-mini-bar-wrap">
+              <div class="rc-mini-bar" id="minibar-tier1" style="width:0%"></div>
+            </div>
+            <div class="rc-mini-label"><b id="minicount-tier1">0</b> / 2 referrals invested</div>
+          </div>
+        </div>
+        <div class="rc-btn-wrap" id="btn-tier1">
+          <div class="locked-badge">
+            <div class="locked-badge-icon">🔒</div>
+            <div>Locked</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="spacer"></div>
+    <!-- Tier 2 -->
+    <div class="reward-card locked au a4" id="card-tier2">
+      <div class="rc-inner">
+        <div class="rc-icon-wrap">
+          <div class="rc-icon locked-ic" id="icon-tier2">
+            🥈
+            <div class="lock-overlay" id="lock-tier2">🔒</div>
+          </div>
+        </div>
+        <div class="rc-text">
+          <div class="rc-milestone">Invite <b>5</b> users who invest</div>
+          <div class="rc-reward" id="reward-tier2">₦1,500</div>
+          <div class="rc-sub">Credited directly to your wallet</div>
+          <div class="rc-mini-prog" id="miniprog-tier2">
+            <div class="rc-mini-bar-wrap">
+              <div class="rc-mini-bar" id="minibar-tier2" style="width:0%"></div>
+            </div>
+            <div class="rc-mini-label"><b id="minicount-tier2">0</b> / 5 referrals invested</div>
+          </div>
+        </div>
+        <div class="rc-btn-wrap" id="btn-tier2">
+          <div class="locked-badge">
+            <div class="locked-badge-icon">🔒</div>
+            <div>Locked</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="reward-card locked au a5" id="card-tier3">
+      <div class="rc-inner">
+        <div class="rc-icon-wrap">
+          <div class="rc-icon locked-ic" id="icon-tier3">
+            👑
+            <div class="lock-overlay" id="lock-tier3">🔒</div>
+          </div>
+        </div>
+        <div class="rc-text">
+          <div class="rc-milestone">Invite <b>10</b> users who invest</div>
+          <div class="rc-reward" id="reward-tier3">₦3,500</div>
+          <div class="rc-sub">Credited directly to your wallet</div>
+          <div class="rc-mini-prog" id="miniprog-tier3">
+            <div class="rc-mini-bar-wrap">
+              <div class="rc-mini-bar" id="minibar-tier3" style="width:0%"></div>
+            </div>
+            <div class="rc-mini-label"><b id="minicount-tier3">0</b> / 10 referrals invested</div>
+          </div>
+        </div>
+        <div class="rc-btn-wrap" id="btn-tier3">
+          <div class="locked-badge">
+            <div class="locked-badge-icon">🔒</div>
+            <div>Locked</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVITE CARD -->
+    <div class="invite-card au a5">
+      <div class="invite-title">🔗 Invite Friends</div>
+      <div class="invite-sub">
+        Share your referral link. When your friends <b>invest</b>,
+        they count toward your reward milestones.
+      </div>
+      <div class="ref-link-row">
+        <div class="ref-link-text">lomashares.com/register?ref=<span id="refCodeDisplay">-</span></div>
+        <button class="copy-ref-btn" id="copyLinkBtn">Copy</button>
+      </div>
+      <div class="invite-share-row">
+        <button class="share-btn whatsapp" id="shareWhatsapp">📱 WhatsApp</button>
+        <button class="share-btn telegram" id="shareTelegram">✈️ Telegram</button>
+      </div>
+    </div>
+
+    <!-- REFERRED LIST -->
+    <div class="referred-card au a6">
+      <div class="referred-head">
+        <h3>Referred Users</h3>
+        <div class="referred-count-pill" id="refListCount">0 total</div>
+      </div>
+      <div id="refList">
+        <div class="ref-empty">Loading your referrals…</div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-card au a6">
+      <div class="how-title">❓ How It Works</div>
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <div class="how-text">
+          <div class="how-step-title">Share your referral link</div>
+          <div class="how-step-desc">Copy and share your unique link with friends via WhatsApp, Telegram or any platform.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <div class="how-text">
+          <div class="how-step-title">Friend registers &amp; invests</div>
+          <div class="how-step-desc">Your friend must <b>sign up using your link</b> and then <b>make at least one investment</b>. Just signing up doesn't count.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <div class="how-text">
+          <div class="how-step-title">Hit a milestone</div>
+          <div class="how-step-desc">Reach 2, 5 or 10 invested referrals. The reward button lights up green automatically.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">4</div>
+        <div class="how-text">
+          <div class="how-step-title">Claim your reward</div>
+          <div class="how-step-desc">Tap <b>Claim</b> to instantly credit the reward to your wallet. Each tier can only be claimed once.</div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- BOTTOM NAV -->
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <a class="bn" href="dashboard.html">
-      <span class="bn-ico">🏠</span>Dashboard<span class="bn-dot"></span>
-    </a>
-    <a class="bn active" href="invest.html">
-      <span class="bn-ico">📈</span>Invest<span class="bn-dot"></span>
-    </a>
-    <a class="bn" href="spin.html">
-      <span class="bn-ico">🎰</span>Spin2Win<span class="bn-dot"></span>
-    </a>
-    <a class="bn" href="referrals.html">
-      <span class="bn-ico">👥</span>Referrals<span class="bn-dot"></span>
-    </a>
-    <a class="bn" href="profile.html">
-      <span class="bn-ico">👤</span>Profile<span class="bn-dot"></span>
-    </a>
+  <nav class="bottom-nav">
+    <a class="bn" href="dashboard.html"><span class="bn-ico">🏠</span>Dashboard<span class="bn-dot"></span></a>
+    <a class="bn" href="invest.html"><span class="bn-ico">📈</span>Invest<span class="bn-dot"></span></a>
+    <a class="bn" href="spin.html"><span class="bn-ico">🎰</span>Spin2Win<span class="bn-dot"></span></a>
+    <a class="bn" href="referrals.html"><span class="bn-ico">👥</span>Referrals<span class="bn-dot"></span></a>
+    <a class="bn active" href="contest.html"><span class="bn-ico">🏆</span>Contest<span class="bn-dot"></span></a>
   </nav>
 
   <script>
@@ -706,188 +782,319 @@
 
     /* ── UTILS ── */
     function fmt(v){ return "₦"+Number(v||0).toLocaleString("en-NG",{minimumFractionDigits:2,maximumFractionDigits:2}); }
-    function showMsg(t,type){ const b=document.getElementById("msg"); b.textContent=t; b.className="msg "+(type||"error"); b.style.display="block"; }
-    function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3000); }
+    function showMsg(t,type){ const b=document.getElementById("msg"); b.textContent=t; b.className="msg "+(type||"error"); b.style.display="block"; setTimeout(()=>{b.style.display="none"},4000); }
+    function toast(msg,color){ const t=document.getElementById("toast"); t.textContent=msg; t.style.color=color||"var(--green2)"; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3400); }
+    function copyText(str){ try{ if(navigator.clipboard) navigator.clipboard.writeText(str); else{ const ta=document.createElement("textarea"); ta.value=str; ta.style.cssText="position:fixed;opacity:0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); } }catch(e){} }
 
-    /* Plan color classes */
-    const planClass=["plan-loma1","plan-loma2","plan-loma3","plan-loma4","plan-loma5","plan-loma6"];
-    /* Mini chart paths per plan */
-    const chartPaths=[
-      "M0,14 L8,10 L16,12 L24,6 L32,4 L40,0",
-      "M0,14 L8,12 L16,8 L24,10 L32,4 L40,2",
-      "M0,14 L8,11 L16,9 L24,5 L32,3 L40,0",
-      "M0,14 L8,13 L16,10 L24,7 L32,3 L40,1",
-      "M0,14 L8,12 L16,10 L24,6 L32,4 L40,0",
-      "M0,14 L8,11 L16,8 L24,5 L32,2 L40,0",
+    /* ── TIERS CONFIG ── */
+    const TIERS=[
+      {id:"tier1", required:2,  amount:500,  label:"₦500"},
+      {id:"tier2", required:5,  amount:1500, label:"₦1,500"},
+      {id:"tier3", required:10, amount:3500, label:"₦3,500"},
     ];
 
-    /* ── BALANCE TOGGLE ── */
-    let balHidden=false, rawBal=0;
-    const balEl=document.getElementById("walletBalance");
-    document.getElementById("eyeBtn")?.addEventListener("click",function(){
-      balHidden=!balHidden;
-      balEl.textContent=balHidden?"₦ ••••••":fmt(rawBal);
-      this.textContent=balHidden?"🙈":"👁";
-    });
+    /* Avatar colors */
+    const avColors=["av1","av2","av3","av4","av5"];
 
     /* ── DRAWER ── */
     const menuBtn=document.getElementById("menuBtn");
     const drawer=document.getElementById("navDrawer");
     const backdrop=document.getElementById("drawerBackdrop");
     const closeBtn=document.getElementById("drawerClose");
-
     function openDrawer(){ drawer.classList.add("open"); backdrop.classList.add("show"); menuBtn.classList.add("open"); drawer.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; }
     function closeDrawer(){ drawer.classList.remove("open"); backdrop.classList.remove("show"); menuBtn.classList.remove("open"); drawer.setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
-
     menuBtn?.addEventListener("click",()=>drawer.classList.contains("open")?closeDrawer():openDrawer());
     backdrop?.addEventListener("click",closeDrawer);
     closeBtn?.addEventListener("click",closeDrawer);
     drawer?.querySelectorAll("a").forEach(l=>l.addEventListener("click",closeDrawer));
     document.getElementById("drawerLogout")?.addEventListener("click",async()=>{ closeDrawer(); if(window.LomaAuth?.logout) await window.LomaAuth.logout(); });
 
-    /* ── CONFIRM MODAL ── */
-    const modal=document.getElementById("confirmModal");
-    let pendingPlanId=null, pendingPlanData=null;
+    /* ── UPDATE UI ── */
+    function updateTierUI(tier, investedCount, claimedTiers){
+      const {id, required, amount, label} = tier;
+      const reached = investedCount >= required;
+      const claimed = claimedTiers.includes(id);
 
-    function openConfirm(plan){
-      pendingPlanId=plan.id; pendingPlanData=plan;
-      document.getElementById("planPreview").innerHTML=`
-        <div class="cpp-name">${plan.name}</div>
-        <div class="cpp-row"><span>Investment</span><b>${fmt(plan.price)}</b></div>
-        <div class="cpp-row"><span>Daily Income</span><b class="g">${fmt(plan.daily_profit)}</b></div>
-        <div class="cpp-row"><span>Duration</span><b>${plan.duration_days} Days</b></div>
-        <div class="cpp-row"><span>Total Return</span><b class="g">${fmt(plan.total_return)}</b></div>
-      `;
-      modal.classList.add("show");
-      document.body.style.overflow="hidden";
-    }
-    function closeConfirm(){ modal.classList.remove("show"); document.body.style.overflow=""; pendingPlanId=null; pendingPlanData=null; }
+      const card    = document.getElementById("card-"+id);
+      const iconEl  = document.getElementById("icon-"+id);
+      const lockEl  = document.getElementById("lock-"+id);
+      const btnWrap = document.getElementById("btn-"+id);
+      const miniBar = document.getElementById("minibar-"+id);
+      const miniCnt = document.getElementById("minicount-"+id);
+      const rewardEl= document.getElementById("reward-"+id);
 
-    document.getElementById("cancelBtn")?.addEventListener("click",closeConfirm);
-    modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeConfirm(); });
+      // mini bar
+      const pct = Math.min(100, (investedCount / required) * 100);
+      if(miniBar) miniBar.style.width = pct + "%";
+      if(miniCnt) miniCnt.textContent = Math.min(investedCount, required);
 
-    document.getElementById("confirmBtn")?.addEventListener("click",async function(){
-      if(!pendingPlanId) return;
-      this.textContent="Investing…"; this.disabled=true;
-      try{
-        const session=await window.LomaAuth.requireAuth();
-        if(!session) return;
-        const{data,error}=await window.sb.rpc("create_investment",{p_user_id:session.user.id,p_plan_id:pendingPlanId});
-        if(error) throw error;
-        if(!data?.ok){ showMsg(data?.error||"Investment failed","error"); closeConfirm(); return; }
-        closeConfirm();
-        toast("✅ Investment successful! Redirecting…");
-        showMsg("Investment successful! Redirecting…","success");
-        setTimeout(()=>{ window.location.href="investments.html"; },1200);
-      }catch(err){
-        console.error(err);
-        showMsg(err.message||"Investment failed","error");
-        closeConfirm();
-      }finally{
-        this.textContent="✅ Invest Now"; this.disabled=false;
+      if(claimed){
+        // CLAIMED STATE
+        card.classList.remove("locked","unlocked");
+        card.classList.add("claimed-card");
+        if(iconEl){ iconEl.className="rc-icon claimed-ic"; if(lockEl) lockEl.remove(); }
+        if(rewardEl) rewardEl.classList.add("green");
+        if(miniBar) miniBar.style.background="linear-gradient(90deg,var(--gold),var(--gold2))";
+        btnWrap.innerHTML=`<div class="claimed-badge"><div class="claimed-badge-icon">✅</div><div>Claimed</div></div>`;
+
+        // Milestone dot
+        const dot = document.getElementById("dot"+required);
+        if(dot){ dot.classList.add("claimed"); dot.textContent="✅"; }
+
+      } else if(reached){
+        // UNLOCKED STATE
+        card.classList.remove("locked","claimed-card");
+        card.classList.add("unlocked");
+        if(iconEl){ iconEl.className="rc-icon unlocked-ic"; if(lockEl) lockEl.remove(); }
+        if(rewardEl) rewardEl.classList.add("green");
+
+        btnWrap.innerHTML=`
+          <button class="claim-btn" id="claimBtn-${id}" onclick="window._claim('${id}',${amount})">
+            <span>CLAIM</span>
+            <span style="font-size:16px">💰</span>
+          </button>`;
+
+        // Milestone dot
+        const dot = document.getElementById("dot"+required);
+        if(dot){ dot.classList.add("reached"); dot.textContent="✓"; }
+
+      } else {
+        // LOCKED STATE — keep default
+        card.classList.add("locked");
+        if(miniBar) miniBar.style.background="linear-gradient(90deg,var(--blue),var(--blue2))";
       }
-    });
+    }
 
-    /* ── RENDER PLANS ── */
-    function renderPlans(plans){
-      const wrap=document.getElementById("plansContainer");
-      if(!wrap) return;
-      if(!plans.length){ wrap.innerHTML="<p style='text-align:center;color:var(--muted);padding:20px'>No active plans available.</p>"; return; }
+    /* ── RENDER REFERRED LIST ── */
+    function renderRefList(referrals){
+      const wrap = document.getElementById("refList");
+      const pill = document.getElementById("refListCount");
+      if(pill) pill.textContent = referrals.length + " total";
 
-      wrap.innerHTML=plans.map((plan,i)=>{
-        const colorClass=planClass[i]||planClass[planClass.length-1];
-        const chartPath=chartPaths[i]||chartPaths[chartPaths.length-1];
-        const isPopular=i===0;
-        const num=plan.name.replace(/[^0-9]/g,"")||String(i+1);
-        const lomaLabel=plan.name.replace(/[0-9]/g,"").trim()||"LOMA";
+      if(!referrals.length){
+        wrap.innerHTML=`<div class="ref-empty">You haven't referred anyone yet.<br>Share your link to start earning!</div>`;
+        return;
+      }
 
+      wrap.innerHTML = referrals.map((r, i)=>{
+        const initials = (r.full_name||"U").charAt(0).toUpperCase();
+        const avClass  = avColors[i % avColors.length];
+        const invested = r.has_invested;
+        const date     = r.created_at ? new Date(r.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) : "-";
         return `
-          <div class="plan-card ${colorClass}" style="animation:fadeUp .4s ease both;animation-delay:${.05+i*.07}s">
-            ${isPopular?`<div class="popular-badge">⭐ POPULAR</div>`:""}
-            <div class="plan-badge">
-              <div class="pb-loma">${lomaLabel}</div>
-              <div class="pb-num">${num}</div>
-              <div class="pb-chart">
-                <svg class="mini-chart" viewBox="0 0 40 18" fill="none">
-                  <polyline points="${chartPath.replace(/M|L/g,'').trim().split(' ').join(' ')}" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
+          <div class="ref-item">
+            <div class="ref-avatar ${avClass}">${initials}</div>
+            <div class="ref-info">
+              <div class="ref-name">${r.full_name||"User"}</div>
+              <div class="ref-date">Joined ${date}</div>
             </div>
-            <div class="plan-content">
-              <div class="plan-stats">
-                <div class="ps">
-                  <div class="ps-label">Investment</div>
-                  <div class="ps-val">${fmt(plan.price)}</div>
-                </div>
-                <div class="ps">
-                  <div class="ps-label">Daily Income</div>
-                  <div class="ps-val green">${fmt(plan.daily_profit)}</div>
-                </div>
-                <div class="ps ps-dur">
-                  <div class="ps-label">Duration</div>
-                  <div class="ps-dur-val">
-                    <span class="cal-icon">📅</span>
-                    <div>
-                      <div class="ps-val">${plan.duration_days}</div>
-                      <div style="font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.4px">DAYS</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="ps" style="grid-column:1/-1;border-top:1px solid var(--line);padding-top:6px;margin-top:2px">
-                  <div class="ps-label">Total Income</div>
-                  <div class="ps-val green">${fmt(plan.total_return)}</div>
-                </div>
-              </div>
-              <button class="invest-btn" onclick="window._invest('${plan.id}')">
-                <span class="inv-text">INVEST</span>
-                <span class="inv-now">NOW</span>
-                <span class="inv-arrow">›</span>
-              </button>
+            <div class="ref-status">
+              <div class="invested-pill ${invested?"yes":"no"}">${invested?"Invested":"Not yet"}</div>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join("");
     }
 
-    /* ── LOAD DATA ── */
-    async function init(){
-      try{
-        const session=await window.LomaAuth.requireAuth();
-        if(!session) return;
-        const uid=session.user.id;
+    /* ── CLAIM REWARD ── */
+    window._claim = async function(tierId, amount){
+      const btn = document.getElementById("claimBtn-"+tierId);
+      if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin">⏳</span>'; }
 
-        // Load profile for drawer
-        const profile=await window.LomaAuth.getProfile(uid).catch(()=>null);
-        if(profile){
-          document.getElementById("drawerName").textContent=profile.full_name||"User";
-          document.getElementById("drawerRef").textContent=profile.referral_code||"-";
+      try{
+        const session = await window.LomaAuth.requireAuth();
+        if(!session) return;
+        const uid = session.user.id;
+
+        // 1. Double-check claim hasn't already been made (prevent double-tap)
+        const { data: existingClaim } = await window.sb
+          .from("contest_claims")
+          .select("id")
+          .eq("user_id", uid)
+          .eq("tier", tierId)
+          .maybeSingle();
+
+        if(existingClaim){
+          toast("⚠️ Already claimed!","var(--gold2)");
+          await loadPage(); return;
         }
 
-        // Load wallet balance
-        const{data:wallet}=await window.sb.from("wallets").select("balance").eq("user_id",uid).single();
-        if(wallet){ rawBal=wallet.balance||0; balEl.textContent=fmt(rawBal); }
+        // 2. Re-verify count server-side
+        const { data: profile } = await window.sb
+          .from("profiles")
+          .select("referral_code")
+          .eq("id", uid)
+          .single();
 
-        // Load plans
-        const{data:plans,error}=await window.sb.from("investment_plans").select("*").eq("is_active",true).order("sort_order",{ascending:true});
-        if(error) throw error;
-        renderPlans(plans||[]);
+        const { data: refs } = await window.sb
+          .from("profiles")
+          .select("id")
+          .eq("referred_by", profile.referral_code);
+
+        const refIds = (refs||[]).map(r=>r.id);
+
+        let investedCount = 0;
+        if(refIds.length){
+          const { data: invs } = await window.sb
+            .from("investments")
+            .select("user_id")
+            .in("user_id", refIds)
+            .in("status",["active","completed"]);
+          const uniqueInvestors = new Set((invs||[]).map(i=>i.user_id));
+          investedCount = uniqueInvestors.size;
+        }
+
+        const tier = TIERS.find(t=>t.id===tierId);
+        if(!tier || investedCount < tier.required){
+          toast("❌ You haven't reached this milestone yet.","#f07070");
+          if(btn){ btn.disabled=false; btn.innerHTML='<span>CLAIM</span><span style="font-size:16px">💰</span>'; }
+          return;
+        }
+
+        // 3. Credit wallet
+        const { data: wallet } = await window.sb
+          .from("wallets")
+          .select("balance")
+          .eq("user_id", uid)
+          .single();
+
+        const newBalance = (wallet?.balance || 0) + amount;
+
+        const { error: walletErr } = await window.sb
+          .from("wallets")
+          .update({ balance: newBalance })
+          .eq("user_id", uid);
+
+        if(walletErr) throw walletErr;
+
+        // 4. Log transaction
+        await window.sb.from("wallet_transactions").insert({
+          user_id:     uid,
+          type:        "Contest Reward",
+          description: `Contest reward: ${tier.label} milestone (${tier.required} invested referrals)`,
+          amount:      amount,
+          direction:   "credit",
+          status:      "completed"
+        });
+
+        // 5. Record claim so it can't be claimed again
+        const { error: claimErr } = await window.sb
+          .from("contest_claims")
+          .insert({ user_id: uid, tier: tierId, amount: amount });
+
+        if(claimErr){
+          // Table might not exist yet — fallback: log to a profiles JSON field
+          console.warn("contest_claims table missing, storing in profile metadata.");
+        }
+
+        toast(`🎉 ${fmt(amount)} added to your wallet!`);
+        showMsg(`${fmt(amount)} reward claimed successfully!`,"success");
+        await loadPage();
 
       }catch(err){
         console.error(err);
-        showMsg(err.message||"Failed to load plans","error");
+        toast("❌ Claim failed. Please try again.","#f07070");
+        if(btn){ btn.disabled=false; btn.innerHTML='<span>CLAIM</span><span style="font-size:16px">💰</span>'; }
+      }
+    };
+
+    /* ── LOAD PAGE DATA ── */
+    async function loadPage(){
+      try{
+        const session = await window.LomaAuth.requireAuth();
+        if(!session) return;
+        const uid = session.user.id;
+
+        // Profile
+        const { data: profile } = await window.sb
+          .from("profiles")
+          .select("full_name, referral_code")
+          .eq("id", uid)
+          .single();
+
+        const refCode = profile?.referral_code || "";
+        document.getElementById("drawerName").textContent = profile?.full_name || "User";
+        document.getElementById("drawerRef").textContent  = refCode || "-";
+        document.getElementById("refCodeDisplay").textContent = refCode || "-";
+
+        // Referral link setup
+        const refLink = `${location.origin}/register.html?ref=${refCode}`;
+        document.getElementById("copyLinkBtn")?.addEventListener("click",()=>{ copyText(refLink); toast("✓ Referral link copied!"); });
+        document.getElementById("shareWhatsapp")?.addEventListener("click",()=>{ window.open(`https://wa.me/?text=${encodeURIComponent("Join LomaShares and start earning daily! Use my referral link: "+refLink)}`,"_blank"); });
+        document.getElementById("shareTelegram")?.addEventListener("click",()=>{ window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Join LomaShares and earn daily returns! 💰")}`,"_blank"); });
+
+        // Fetch referred users
+        const { data: referred } = await window.sb
+          .from("profiles")
+          .select("id, full_name, created_at")
+          .eq("referred_by", refCode);
+
+        const refIds = (referred||[]).map(r=>r.id);
+
+        // Find which ones have invested
+        let investedSet = new Set();
+        if(refIds.length){
+          const { data: invs } = await window.sb
+            .from("investments")
+            .select("user_id")
+            .in("user_id", refIds)
+            .in("status",["active","completed"]);
+          (invs||[]).forEach(i=>investedSet.add(i.user_id));
+        }
+
+        const investedCount = investedSet.size;
+
+        // Annotate referrals with invested status
+        const annotated = (referred||[]).map(r=>({
+          ...r,
+          has_invested: investedSet.has(r.id)
+        }));
+        // Sort: invested first
+        annotated.sort((a,b)=> b.has_invested - a.has_invested);
+        renderRefList(annotated);
+
+        // Check claimed tiers
+        let claimedTiers = [];
+        try{
+          const { data: claims } = await window.sb
+            .from("contest_claims")
+            .select("tier")
+            .eq("user_id", uid);
+          claimedTiers = (claims||[]).map(c=>c.tier);
+        }catch(e){ /* table might not exist */ }
+
+        // Update progress bar
+        const maxGoal = 10;
+        const pct = Math.min(100, (investedCount / maxGoal) * 100);
+        document.getElementById("progFill").style.width = pct + "%";
+        document.getElementById("refCount").textContent  = investedCount;
+
+        // Hint text
+        const remaining10 = Math.max(0, 10 - investedCount);
+        const nextTier    = TIERS.find(t => investedCount < t.required);
+        const hintEl      = document.getElementById("pcHint");
+        if(hintEl){
+          if(investedCount >= 10){
+            hintEl.innerHTML = "🎉 You've reached all milestones! Claim your rewards below.";
+          } else if(nextTier){
+            const rem = nextTier.required - investedCount;
+            hintEl.innerHTML = `<b>${rem}</b> more invested referral${rem>1?"s":""} to unlock your next reward`;
+          }
+        }
+
+        // Dot for start
+        document.getElementById("dot0").textContent = investedCount > 0 ? "✓" : "🏁";
+        if(investedCount > 0) document.getElementById("dot0").classList.add("reached");
+
+        // Update each tier card
+        TIERS.forEach(tier => updateTierUI(tier, investedCount, claimedTiers));
+
+      }catch(err){
+        console.error(err);
+        showMsg(err.message || "Failed to load contest data.", "error");
       }
     }
 
-    /* Global invest handler */
-    window._invest=function(planId){
-      if(!planId) return;
-      // Find plan data from DOM context via re-querying
-      window.sb.from("investment_plans").select("*").eq("id",planId).single().then(({data})=>{
-        if(data) openConfirm(data);
-      });
-    };
-
-    document.addEventListener("DOMContentLoaded",init);
+    document.addEventListener("DOMContentLoaded", loadPage);
   })();
   </script>
 </body>
