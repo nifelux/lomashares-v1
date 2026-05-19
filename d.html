@@ -898,104 +898,122 @@
     /* ── CLAIM REWARD ── */
     window._claim = async function(tierId, amount){
       const btn = document.getElementById("claimBtn-"+tierId);
-      if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin">⏳</span>'; }
+      if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin">⏳</span> Claiming…'; }
 
       try{
         const session = await window.LomaAuth.requireAuth();
         if(!session) return;
         const uid = session.user.id;
 
-        // 1. Double-check claim hasn't already been made (prevent double-tap)
-        const { data: existingClaim } = await window.sb
-          .from("contest_claims")
-          .select("id")
-          .eq("user_id", uid)
-          .eq("tier", tierId)
-          .maybeSingle();
-
-        if(existingClaim){
-          toast("⚠️ Already claimed!","var(--gold2)");
-          await loadPage(); return;
-        }
-
-        // 2. Re-verify count server-side
-        const { data: profile } = await window.sb
-          .from("profiles")
-          .select("referral_code")
-          .eq("id", uid)
-          .single();
-
+        // 1. Verify milestone is reached first
         const { data: refs } = await window.sb
-          .from("profiles")
-          .select("id")
-          .eq("referred_by", uid);
+          .from("profiles").select("id").eq("referred_by", uid);
 
         const refIds = (refs||[]).map(r=>r.id);
-
         let investedCount = 0;
         if(refIds.length){
           const { data: invs } = await window.sb
-            .from("investments")
-            .select("user_id, status")
-            .in("user_id", refIds)
-            .in("status",["active","completed"]);
-          const uniqueInvestors = new Set((invs||[]).map(i=>i.user_id));
-          investedCount = uniqueInvestors.size;
+            .from("investments").select("user_id")
+            .in("user_id", refIds).in("status",["active","completed"]);
+          investedCount = new Set((invs||[]).map(i=>i.user_id)).size;
         }
 
         const tier = TIERS.find(t=>t.id===tierId);
         if(!tier || investedCount < tier.required){
-          toast("❌ You haven't reached this milestone yet.","#f07070");
+          toast("❌ Milestone not reached yet.","#f07070");
           if(btn){ btn.disabled=false; btn.innerHTML='<span>CLAIM</span><span style="font-size:16px">💰</span>'; }
           return;
         }
 
-        // 3. Credit wallet
-        const { data: wallet } = await window.sb
-          .from("wallets")
-          .select("balance")
-          .eq("user_id", uid)
-          .single();
-
-        const newBalance = (wallet?.balance || 0) + amount;
-
-        const { error: walletErr } = await window.sb
-          .from("wallets")
-          .update({ balance: newBalance })
-          .eq("user_id", uid);
-
-        if(walletErr) throw walletErr;
-
-        // 4. Log transaction
-        await window.sb.from("wallet_transactions").insert({
-          user_id:     uid,
-          type:        "Contest Reward",
-          description: `Contest reward: ${tier.label} milestone (${tier.required} invested referrals)`,
-          amount:      amount,
-          direction:   "credit",
-          status:      "completed"
+        // 2. Use RPC to atomically: check claim, credit wallet, log transaction, record claim
+        const { data, error } = await window.sb.rpc("claim_contest_reward", {
+          p_user_id: uid,
+          p_tier:    tierId,
+          p_amount:  amount
         });
 
-        // 5. Record claim so it can't be claimed again
-        const { error: claimErr } = await window.sb
-          .from("contest_claims")
-          .insert({ user_id: uid, tier: tierId, amount: amount });
+        if(error) throw error;
 
-        if(claimErr){
-          // Table might not exist yet — fallback: log to a profiles JSON field
-          console.warn("contest_claims table missing, storing in profile metadata.");
+        if(!data?.ok){
+          const errMsg = data?.error || "Claim failed";
+          if(errMsg.toLowerCase().includes("already")){
+            toast("⚠️ Already claimed!","var(--gold2)");
+          } else {
+            toast("❌ " + errMsg, "#f07070");
+            showMsg(errMsg, "error");
+          }
+          await loadPage();
+          return;
         }
 
-        toast(`🎉 ${fmt(amount)} added to your wallet!`);
-        showMsg(`${fmt(amount)} reward claimed successfully!`,"success");
+        // 3. Success
+        toast("🎉 " + fmt(amount) + " added to your wallet!");
+        showMsg(fmt(amount) + " reward claimed and credited to your wallet!","success");
         await loadPage();
 
       }catch(err){
-        console.error(err);
-        toast("❌ Claim failed. Please try again.","#f07070");
+        console.error("Claim error:", err);
+        // If RPC doesn't exist yet, fall back to direct writes
+        if(err.message && err.message.includes("claim_contest_reward")){
+          await _claimDirect(tierId, amount, uid_fallback);
+          return;
+        }
+        toast("❌ " + (err.message||"Claim failed."),"#f07070");
+        showMsg(err.message||"Claim failed. Please try again.","error");
         if(btn){ btn.disabled=false; btn.innerHTML='<span>CLAIM</span><span style="font-size:16px">💰</span>'; }
       }
     };
+
+    /* Fallback if RPC not created yet — direct writes */
+    async function _claimDirect(tierId, amount, uid){
+      const btn = document.getElementById("claimBtn-"+tierId);
+      try{
+        if(!uid){
+          const session = await window.LomaAuth.requireAuth();
+          uid = session?.user?.id;
+        }
+        if(!uid) return;
+
+        const tier = TIERS.find(t=>t.id===tierId);
+
+        // Check already claimed
+        const { data: ex } = await window.sb.from("contest_claims")
+          .select("tier").eq("user_id",uid).eq("tier",tierId).maybeSingle();
+        if(ex){ toast("⚠️ Already claimed!","var(--gold2)"); await loadPage(); return; }
+
+        // Get current balance
+        const { data: w, error: wErr } = await window.sb
+          .from("wallets").select("balance").eq("user_id",uid).single();
+        if(wErr) throw wErr;
+
+        // Update balance
+        const { error: upErr } = await window.sb.from("wallets")
+          .update({ balance: (w.balance||0) + amount }).eq("user_id",uid);
+        if(upErr) throw upErr;
+
+        // Log transaction
+        const { error: txErr } = await window.sb.from("wallet_transactions").insert({
+          user_id: uid, type: "Contest Reward",
+          description: "Contest reward: " + (tier?.label||tierId) + " milestone",
+          amount: amount, direction: "credit", status: "completed"
+        });
+        if(txErr) throw txErr;
+
+        // Record claim
+        const { error: cErr } = await window.sb.from("contest_claims")
+          .insert({ user_id: uid, tier: tierId, amount: amount });
+        if(cErr) throw cErr;
+
+        toast("🎉 " + fmt(amount) + " added to your wallet!");
+        showMsg(fmt(amount) + " reward claimed successfully!","success");
+        await loadPage();
+      }catch(err2){
+        console.error("Fallback claim error:", err2);
+        toast("❌ " + (err2.message||"Claim failed."),"#f07070");
+        showMsg(err2.message||"Claim failed.","error");
+        if(btn){ btn.disabled=false; btn.innerHTML='<span>CLAIM</span><span style="font-size:16px">💰</span>'; }
+      }
+    }
 
     /* ── LOAD PAGE DATA ── */
     async function loadPage(){
