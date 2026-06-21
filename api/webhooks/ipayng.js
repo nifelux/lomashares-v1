@@ -18,7 +18,10 @@
  *       d. awards spin(s) for deposit and referral if applicable
  *  6. Return 200
  */
-
+// Allow GET for iPayNG URL validation ping
+if (req.method === 'GET') {
+  return res.status(200).json({ ok: true, service: 'LomaShares webhook' });
+}
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 
