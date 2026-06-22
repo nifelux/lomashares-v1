@@ -606,4 +606,183 @@
           allAccounts = d.accounts || [];
           activeAcct  = allAccounts[0] || { bank_name: d.bank_name, account_number: d.account_number, account_name: d.account_name };
 
-  
+          buildBankTabs();
+          renderAccount(activeAcct);
+
+          document.getElementById("tam").textContent = "₦" + selectedAmt.toLocaleString();
+          document.getElementById("tr").textContent  = d.reference;
+
+          document.getElementById("step1").style.display = "none";
+          document.getElementById("step2").classList.add("show");
+
+          startClock(30 * 60);
+
+        } catch (e) {
+          console.error(e);
+          alert("Network error. Try again.");
+          ctabtn.disabled = false;
+          ctabtn.textContent = "Continue to payment";
+        }
+      });
+    }
+  });
+
+  /* ── Bank tabs ── */
+  function buildBankTabs() {
+    var wrap = document.getElementById("bankTabs");
+    wrap.innerHTML = "";
+    allAccounts.forEach(function (acct, i) {
+      var btn = document.createElement("button");
+      btn.className = "bank-tab" + (i === 0 ? " on" : "");
+      btn.textContent = acct.bank_name;
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".bank-tab").forEach(function (b) { b.classList.remove("on"); });
+        btn.classList.add("on");
+        activeAcct = acct;
+        renderAccount(acct);
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function renderAccount(acct) {
+    document.getElementById("tb").textContent = acct.bank_name      || "—";
+    document.getElementById("ta").textContent = acct.account_number || "—";
+    document.getElementById("tn").textContent = acct.account_name   || "—";
+  }
+
+  /* ── Step 2 → Step 3 ── */
+  window.showStep3 = function () {
+    document.getElementById("step2").classList.remove("show");
+    document.getElementById("step3").classList.add("show");
+    // Pre-select the bank they were viewing
+    if (activeAcct) {
+      var sel = document.getElementById("fromBank");
+      // try to match
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === activeAcct.bank_name) {
+          sel.selectedIndex = i; break;
+        }
+      }
+    }
+    startPoll(currentRef);
+  };
+
+  /* ── Submit session ID ── */
+  window.submitPayment = async function () {
+    var sessionId = document.getElementById("sessionId").value.trim();
+    var fromBank  = document.getElementById("fromBank").value;
+    var box       = document.getElementById("sbox");
+    var btn       = document.getElementById("submitBtn");
+
+    if (!fromBank) {
+      box.className = "failed";
+      box.textContent = "⚠️ Please select the bank you transferred from.";
+      return;
+    }
+    if (!sessionId) {
+      box.className = "failed";
+      box.textContent = "⚠️ Please enter your Session ID / Transaction Reference.";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Submitting…";
+    box.className = "pending";
+    box.textContent = "⏳ Submitting payment to iPayNG…";
+
+    try {
+      var res = await fetch("/api/submit-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reference:      currentRef,
+          session_id:     sessionId,
+          bank_name:      activeAcct ? activeAcct.bank_name : fromBank,
+          account_number: activeAcct ? activeAcct.account_number : "",
+          amount:         selectedAmt
+        })
+      });
+      var d = await res.json();
+
+      if (!d.ok) {
+        box.className = "failed";
+        box.textContent = "❌ " + (d.error || "Submission failed. Check your Session ID and try again.");
+        btn.disabled = false;
+        btn.textContent = "Confirm Payment";
+        return;
+      }
+
+      box.className = "pending";
+      box.textContent = "✅ Submitted! Waiting for iPayNG to verify your payment…";
+      btn.disabled = true;
+      btn.textContent = "Waiting for confirmation…";
+
+    } catch (e) {
+      console.error(e);
+      box.className = "failed";
+      box.textContent = "❌ Network error. Try again.";
+      btn.disabled = false;
+      btn.textContent = "Confirm Payment";
+    }
+  };
+
+  /* ── Poll deposit status ── */
+  function startPoll(ref) {
+    pollT = setInterval(async function () {
+      try {
+        var res = await fetch("/api/deposit-status?reference=" + ref);
+        var d   = await res.json();
+        if (d.status === "completed") {
+          clearInterval(pollT); clearInterval(clockT);
+          var box = document.getElementById("sbox");
+          box.className = "success";
+          box.textContent = "✅ Payment confirmed! Your wallet has been credited. Redirecting…";
+          setTimeout(function () { location.href = "/dashboard.html"; }, 2500);
+        }
+        if (d.status === "failed") {
+          clearInterval(pollT);
+          var box = document.getElementById("sbox");
+          box.className = "failed";
+          box.textContent = "❌ Payment verification failed. Please contact support.";
+        }
+      } catch (e) { console.warn("poll err", e); }
+    }, 5000);
+  }
+
+  /* ── Countdown ── */
+  function startClock(secs) {
+    var el = document.getElementById("tclock");
+    clockT = setInterval(function () {
+      secs--;
+      var m = String(Math.floor(secs / 60)).padStart(2, "0");
+      var s = String(secs % 60).padStart(2, "0");
+      el.textContent = m + ":" + s;
+      if (secs <= 0) {
+        clearInterval(clockT);
+        el.textContent = "EXPIRED";
+      }
+    }, 1000);
+  }
+
+  /* ── Copy ── */
+  window.cpEl = function (id) {
+    var text = document.getElementById(id).textContent.trim();
+    navigator.clipboard.writeText(text).then(function () {
+      var b = document.querySelector('[onclick="cpEl(\'' + id + '\')"]');
+      var o = b.textContent; b.textContent = "✓";
+      setTimeout(function () { b.textContent = o; }, 1500);
+    });
+  };
+
+  /* ── Init ── */
+  document.addEventListener("DOMContentLoaded", function () {
+    initChips();
+    loadBalance();
+  });
+
+})();
+</script>
+
+</body>
+</html>
