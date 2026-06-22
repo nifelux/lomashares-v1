@@ -4,23 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Funds — LomaShares</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="assets/js/supabase.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f0f2f8;
-      --card: #ffffff;
-      --accent: #2d1060;
-      --accent-light: #ede8f7;
-      --accent-mid: #5a3fa0;
-      --text: #0d0d1a;
-      --muted: #7a7a9a;
-      --border: #e4e4f0;
-      --display: 'Syne', sans-serif;
-      --body: 'DM Sans', sans-serif;
-      --r: 20px;
-      --rs: 12px;
+      --bg:       #f0f2f8;
+      --card:     #ffffff;
+      --accent:   #2d1060;
+      --accent-l: #ede8f7;
+      --accent-m: #5a3fa0;
+      --text:     #0d0d1a;
+      --muted:    #7a7a9a;
+      --border:   #e4e4f0;
+      --display:  'Syne', sans-serif;
+      --body:     'DM Sans', sans-serif;
+      --r:        20px;
+      --rs:       12px;
     }
 
     html, body {
@@ -36,8 +45,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 20px 20px 12px;
-      background: var(--bg);
+      padding: 20px 20px 14px;
     }
     .back-btn {
       width: 40px; height: 40px;
@@ -47,17 +55,19 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       box-shadow: 0 1px 6px rgba(0,0,0,.09);
-      font-size: 20px;
+      font-size: 22px;
       color: var(--text);
       flex-shrink: 0;
       text-decoration: none;
       line-height: 1;
+      font-family: var(--body);
     }
     .topbar-text h1 {
       font-family: var(--display);
       font-size: 20px;
       font-weight: 700;
       line-height: 1.2;
+      color: var(--text);
     }
     .topbar-text p { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
@@ -102,24 +112,21 @@
       gap: 3px;
       line-height: 1;
     }
-    .hero-currency {
+    .hero-cur {
       font-family: var(--display);
       font-size: 26px;
       font-weight: 600;
       color: rgba(255,255,255,.65);
-      padding-bottom: 2px;
     }
-    .hero-number {
+    .hero-num {
       font-family: var(--display);
       font-size: 48px;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -.02em;
-      /* prevent browser autofill blue box */
-      background: transparent !important;
-      -webkit-appearance: none;
+      line-height: 1;
     }
-    .hero-balance-pill {
+    .hero-pill {
       margin-top: 18px;
       display: inline-flex;
       align-items: center;
@@ -143,7 +150,7 @@
       padding: 20px 16px 10px;
     }
 
-    /* ── Amount chips ── */
+    /* ── Chips ── */
     .chips {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -161,7 +168,6 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    .chip:active { transform: scale(.96); }
     .chip.on {
       background: var(--accent);
       border-color: var(--accent);
@@ -173,7 +179,6 @@
       font-size: 15px;
       font-weight: 700;
       color: var(--text);
-      line-height: 1.2;
     }
     .chip.on .chip-val { color: #fff; }
     .chip-plan {
@@ -198,7 +203,7 @@
     }
     .pm-icon {
       width: 44px; height: 44px;
-      background: var(--accent-light);
+      background: var(--accent-l);
       border-radius: 11px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
@@ -209,6 +214,7 @@
       font-family: var(--display);
       font-size: 15px;
       font-weight: 700;
+      color: var(--text);
     }
     .pm-text span { font-size: 12px; color: var(--muted); }
     .pm-radio {
@@ -244,26 +250,6 @@
     .cta:active { transform: scale(.98); }
     .cta:disabled { opacity: .35; cursor: not-allowed; }
 
-    /* ── Info box ── */
-    .info {
-      margin: 16px 16px 0;
-      background: var(--accent-light);
-      border-radius: var(--rs);
-      padding: 15px;
-    }
-    .info-head {
-      display: flex; align-items: center; gap: 7px;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 10px;
-    }
-    .info ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .info ul li {
-      font-size: 13px; color: var(--accent-mid);
-      padding-left: 14px; position: relative; line-height: 1.45;
-    }
-    .info ul li::before { content: '•'; position: absolute; left: 0; }
-
     /* ── Transfer panel ── */
     #tpanel {
       display: none;
@@ -277,29 +263,34 @@
     .tp-title {
       font-family: var(--display);
       font-size: 16px; font-weight: 700;
+      color: var(--text);
       margin-bottom: 4px;
     }
-    .tp-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .tp-sub {
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 16px; line-height: 1.5;
+    }
     .trow {
       display: flex; justify-content: space-between; align-items: center;
       padding: 11px 0; border-bottom: 1px solid var(--border);
     }
     .trow:last-of-type { border-bottom: none; }
     .tlabel { font-size: 12px; color: var(--muted); }
-    .tval { font-family: var(--display); font-size: 14px; font-weight: 700; }
+    .tval {
+      font-family: var(--display);
+      font-size: 14px; font-weight: 700; color: var(--text);
+    }
     .cpbtn {
-      background: var(--accent-light); color: var(--accent);
+      background: var(--accent-l); color: var(--accent);
       border: none; border-radius: 7px;
       padding: 5px 10px; font-size: 11px; font-weight: 700;
       cursor: pointer; margin-left: 7px;
     }
     .timer-pill {
-      margin-top: 14px; background: var(--accent-light);
+      margin-top: 14px; background: var(--accent-l);
       border-radius: 30px; padding: 10px 16px;
       text-align: center; font-size: 13px; font-weight: 600; color: var(--accent);
     }
-
-    /* ── Status ── */
     #sbox {
       margin-top: 12px; padding: 13px 15px;
       border-radius: var(--rs); font-size: 13px;
@@ -309,14 +300,36 @@
     #sbox.success { display:block; background:#e8f5e9; color:#1b5e20; }
     #sbox.failed  { display:block; background:#fdecea; color:#b71c1c; }
 
-    /* bottom spacing */
-    .spacer { height: 32px; }
+    /* ── Info box ── */
+    .info {
+      margin: 16px 16px 32px;
+      background: var(--accent-l);
+      border-radius: var(--rs);
+      padding: 15px;
+    }
+    .info-head {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
+    }
+    .info ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .info ul li {
+      font-size: 13px; color: var(--accent-m);
+      padding-left: 14px; position: relative; line-height: 1.45;
+    }
+    .info ul li::before { content: '•'; position: absolute; left: 0; }
   </style>
 </head>
-<body>
+
+<body
+  data-page="user"
+  data-supabase-url="https://yrrjadpzaesqxvclflwt.supabase.co"
+  data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
+>
 
 <div class="topbar">
-  <a class="back-btn" href="javascript:history.back()">‹</a>
+  <a class="back-btn" href="dashboard.html">&#8249;</a>
   <div class="topbar-text">
     <h1>Add Funds</h1>
     <p>Recharge your wallet</p>
@@ -326,11 +339,11 @@
 <div class="hero">
   <div class="hero-eyebrow">You're depositing</div>
   <div class="hero-amount-row">
-    <span class="hero-currency">₦</span>
-    <span class="hero-number" id="hamount">0</span>
+    <span class="hero-cur">₦</span>
+    <span class="hero-num" id="hamount">0</span>
   </div>
-  <div class="hero-balance-pill">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+  <div class="hero-pill">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <rect x="2" y="5" width="20" height="14" rx="2"/>
       <line x1="2" y1="10" x2="22" y2="10"/>
     </svg>
@@ -340,12 +353,30 @@
 
 <div class="slabel">Quick Amounts</div>
 <div class="chips">
-  <div class="chip" data-v="3000"   onclick="pick(this)"><span class="chip-val">₦3,000</span><span class="chip-plan">LOMA1</span></div>
-  <div class="chip" data-v="6000"   onclick="pick(this)"><span class="chip-val">₦6,000</span><span class="chip-plan">LOMA2</span></div>
-  <div class="chip" data-v="15000"  onclick="pick(this)"><span class="chip-val">₦15,000</span><span class="chip-plan">LOMA3</span></div>
-  <div class="chip" data-v="30000"  onclick="pick(this)"><span class="chip-val">₦30,000</span><span class="chip-plan">LOMA4</span></div>
-  <div class="chip" data-v="70000"  onclick="pick(this)"><span class="chip-val">₦70,000</span><span class="chip-plan">LOMA5</span></div>
-  <div class="chip" data-v="150000" onclick="pick(this)"><span class="chip-val">₦150,000</span><span class="chip-plan">LOMA6</span></div>
+  <div class="chip" data-v="3000">
+    <span class="chip-val">₦3,000</span>
+    <span class="chip-plan">LOMA1</span>
+  </div>
+  <div class="chip" data-v="6000">
+    <span class="chip-val">₦6,000</span>
+    <span class="chip-plan">LOMA2</span>
+  </div>
+  <div class="chip" data-v="15000">
+    <span class="chip-val">₦15,000</span>
+    <span class="chip-plan">LOMA3</span>
+  </div>
+  <div class="chip" data-v="30000">
+    <span class="chip-val">₦30,000</span>
+    <span class="chip-plan">LOMA4</span>
+  </div>
+  <div class="chip" data-v="70000">
+    <span class="chip-val">₦70,000</span>
+    <span class="chip-plan">LOMA5</span>
+  </div>
+  <div class="chip" data-v="150000">
+    <span class="chip-val">₦150,000</span>
+    <span class="chip-plan">LOMA6</span>
+  </div>
 </div>
 
 <div class="slabel">Payment Method</div>
@@ -365,25 +396,40 @@
 </div>
 
 <div class="cta-wrap">
-  <button class="cta" id="ctabtn" onclick="go()" disabled>Continue to payment</button>
+  <button class="cta" id="ctabtn" disabled>Continue to payment</button>
 </div>
 
 <div id="tpanel">
   <div class="tp-title">Transfer Details</div>
   <p class="tp-sub">Send the exact amount to the account below. Do not close this page.</p>
-  <div class="trow"><span class="tlabel">Bank</span><span class="tval" id="tb">—</span></div>
+  <div class="trow">
+    <span class="tlabel">Bank</span>
+    <span class="tval" id="tb">—</span>
+  </div>
   <div class="trow">
     <span class="tlabel">Account Number</span>
-    <span><span class="tval" id="ta">—</span><button class="cpbtn" onclick="cp('ta')">COPY</button></span>
+    <span>
+      <span class="tval" id="ta">—</span>
+      <button class="cpbtn" onclick="cpEl('ta')">COPY</button>
+    </span>
   </div>
-  <div class="trow"><span class="tlabel">Account Name</span><span class="tval" id="tn">—</span></div>
+  <div class="trow">
+    <span class="tlabel">Account Name</span>
+    <span class="tval" id="tn">—</span>
+  </div>
   <div class="trow">
     <span class="tlabel">Amount</span>
-    <span><span class="tval" id="tam">—</span><button class="cpbtn" onclick="cp('tam')">COPY</button></span>
+    <span>
+      <span class="tval" id="tam">—</span>
+      <button class="cpbtn" onclick="cpEl('tam')">COPY</button>
+    </span>
   </div>
   <div class="trow">
     <span class="tlabel">Reference</span>
-    <span><span class="tval" id="tr" style="font-size:11px">—</span><button class="cpbtn" onclick="cp('tr')">COPY</button></span>
+    <span>
+      <span class="tval" id="tr" style="font-size:11px">—</span>
+      <button class="cpbtn" onclick="cpEl('tr')">COPY</button>
+    </span>
   </div>
   <div class="timer-pill">⏳ Expires in: <span id="tclock">30:00</span></div>
   <div id="sbox"></div>
@@ -406,119 +452,174 @@
   </ul>
 </div>
 
-<div class="spacer"></div>
+<script>
+  (function () {
+    "use strict";
 
-<script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    var selectedAmt = 0;
+    var pollT = null;
+    var clockT = null;
 
-  const sb = createClient(
-    "https://yrrjadpzaesqxvclflwt.supabase.co",
-    window.__SUPABASE_ANON_KEY__ || ""
-  );
-
-  let amt = 0, pollT, clockT;
-
-  // Load balance
-  (async () => {
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) { location.href = "/login.html"; return; }
-    const { data } = await sb.from("wallets").select("balance").eq("user_id", user.id).single();
-    document.getElementById("wbal").textContent = "₦" + Number(data?.balance || 0).toLocaleString();
-  })();
-
-  window.pick = function(el) {
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
-    el.classList.add("on");
-    amt = Number(el.dataset.v);
-    document.getElementById("hamount").textContent = amt.toLocaleString();
-    document.getElementById("ctabtn").disabled = false;
-  };
-
-  window.go = async function() {
-    const btn = document.getElementById("ctabtn");
-    btn.disabled = true;
-    btn.textContent = "Generating transfer details…";
-
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) { location.href = "/login.html"; return; }
-    const { data: prof } = await sb.from("profiles").select("full_name").eq("id", user.id).single();
-
-    try {
-      const r = await fetch("/api/initiate-deposit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: user.id, amount: amt, email: user.email, full_name: prof?.full_name || "" })
-      });
-      const d = await r.json();
-
-      if (!d.ok) {
-        alert(d.error || "Could not start payment. Try again.");
-        btn.disabled = false; btn.textContent = "Continue to payment"; return;
-      }
-
-      document.getElementById("tb").textContent  = d.bank_name || "—";
-      document.getElementById("ta").textContent  = d.account_number || "—";
-      document.getElementById("tn").textContent  = d.account_name || "LomaShares";
-      document.getElementById("tam").textContent = "₦" + amt.toLocaleString();
-      document.getElementById("tr").textContent  = d.reference;
-      document.getElementById("tpanel").classList.add("show");
-      btn.textContent = "Waiting for transfer…";
-      startClock(30 * 60);
-      startPoll(d.reference);
-    } catch(e) {
-      console.error(e);
-      alert("Network error. Try again.");
-      btn.disabled = false; btn.textContent = "Continue to payment";
+    /* ── Wait for supabase.js to init window.sb ── */
+    function waitForSb(cb) {
+      if (window.sb) { cb(); return; }
+      var t = setInterval(function () {
+        if (window.sb) { clearInterval(t); cb(); }
+      }, 50);
     }
-  };
 
-  function startPoll(ref) {
-    const box = document.getElementById("sbox");
-    box.className = "pending";
-    box.textContent = "⏳ Waiting for payment confirmation…";
-    pollT = setInterval(async () => {
-      try {
-        const r = await fetch("/api/deposit-status?reference=" + ref);
-        const d = await r.json();
-        if (d.status === "completed") {
-          clearInterval(pollT); clearInterval(clockT);
-          box.className = "success";
-          box.textContent = "✅ Payment confirmed! Redirecting…";
-          setTimeout(() => location.href = "/dashboard.html", 2500);
+    /* ── Load wallet balance ── */
+    function loadBalance() {
+      waitForSb(async function () {
+        try {
+          var session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+          var userId = session.user.id;
+          var res = await window.sb.from("wallets").select("balance").eq("user_id", userId).single();
+          if (res.data) {
+            document.getElementById("wbal").textContent =
+              "₦" + Number(res.data.balance || 0).toLocaleString();
+          }
+        } catch (e) { console.error("balance load error", e); }
+      });
+    }
+
+    /* ── Chip click ── */
+    function initChips() {
+      var chips = document.querySelectorAll(".chip");
+      chips.forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          chips.forEach(function (c) { c.classList.remove("on"); });
+          chip.classList.add("on");
+          selectedAmt = Number(chip.getAttribute("data-v"));
+          document.getElementById("hamount").textContent = selectedAmt.toLocaleString();
+          document.getElementById("ctabtn").disabled = false;
+        });
+      });
+    }
+
+    /* ── CTA click ── */
+    function initCTA() {
+      document.getElementById("ctabtn").addEventListener("click", async function () {
+        if (!selectedAmt) return;
+        var btn = document.getElementById("ctabtn");
+        btn.disabled = true;
+        btn.textContent = "Generating transfer details…";
+
+        try {
+          var session = await window.LomaAuth.requireAuth();
+          if (!session) return;
+          var userId = session.user.id;
+          var email  = session.user.email;
+
+          var profRes = await window.sb.from("profiles").select("full_name").eq("id", userId).single();
+          var fullName = (profRes.data && profRes.data.full_name) || "";
+
+          var res = await fetch("/api/initiate-deposit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: userId,
+              amount: selectedAmt,
+              email: email,
+              full_name: fullName
+            })
+          });
+          var d = await res.json();
+
+          if (!d.ok) {
+            alert(d.error || "Could not start payment. Try again.");
+            btn.disabled = false;
+            btn.textContent = "Continue to payment";
+            return;
+          }
+
+          document.getElementById("tb").textContent  = d.bank_name || "—";
+          document.getElementById("ta").textContent  = d.account_number || "—";
+          document.getElementById("tn").textContent  = d.account_name || "LomaShares";
+          document.getElementById("tam").textContent = "₦" + selectedAmt.toLocaleString();
+          document.getElementById("tr").textContent  = d.reference;
+          document.getElementById("tpanel").classList.add("show");
+          btn.textContent = "Waiting for transfer…";
+
+          startClock(30 * 60);
+          startPoll(d.reference);
+
+        } catch (e) {
+          console.error(e);
+          alert("Network error. Try again.");
+          btn.disabled = false;
+          btn.textContent = "Continue to payment";
         }
-        if (d.status === "failed") {
-          clearInterval(pollT);
+      });
+    }
+
+    /* ── Poll deposit status ── */
+    function startPoll(ref) {
+      var box = document.getElementById("sbox");
+      box.className = "pending";
+      box.textContent = "⏳ Waiting for payment confirmation…";
+
+      pollT = setInterval(async function () {
+        try {
+          var res = await fetch("/api/deposit-status?reference=" + ref);
+          var d   = await res.json();
+          if (d.status === "completed") {
+            clearInterval(pollT); clearInterval(clockT);
+            box.className = "success";
+            box.textContent = "✅ Payment confirmed! Redirecting…";
+            setTimeout(function () { location.href = "/dashboard.html"; }, 2500);
+          }
+          if (d.status === "failed") {
+            clearInterval(pollT);
+            box.className = "failed";
+            box.textContent = "❌ Payment failed or expired. Try again.";
+            var btn = document.getElementById("ctabtn");
+            btn.disabled = false;
+            btn.textContent = "Continue to payment";
+          }
+        } catch (e) { console.warn("poll error", e); }
+      }, 5000);
+    }
+
+    /* ── Countdown ── */
+    function startClock(secs) {
+      var el = document.getElementById("tclock");
+      clockT = setInterval(function () {
+        secs--;
+        var m = String(Math.floor(secs / 60)).padStart(2, "0");
+        var s = String(secs % 60).padStart(2, "0");
+        el.textContent = m + ":" + s;
+        if (secs <= 0) {
+          clearInterval(clockT); clearInterval(pollT);
+          el.textContent = "EXPIRED";
+          var box = document.getElementById("sbox");
           box.className = "failed";
-          box.textContent = "❌ Payment failed or expired. Try again.";
-          const btn = document.getElementById("ctabtn");
-          btn.disabled = false; btn.textContent = "Continue to payment";
+          box.textContent = "⏰ Time expired. Please start a new deposit.";
         }
-      } catch(e) { console.warn(e); }
-    }, 5000);
-  }
+      }, 1000);
+    }
 
-  function startClock(s) {
-    const el = document.getElementById("tclock");
-    clockT = setInterval(() => {
-      s--;
-      el.textContent = String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
-      if (s <= 0) {
-        clearInterval(clockT); clearInterval(pollT);
-        el.textContent = "EXPIRED";
-        const box = document.getElementById("sbox");
-        box.className = "failed";
-        box.textContent = "⏰ Time expired. Please start a new deposit.";
-      }
-    }, 1000);
-  }
+    /* ── Copy ── */
+    window.cpEl = function (id) {
+      var text = document.getElementById(id).textContent.trim();
+      navigator.clipboard.writeText(text).then(function () {
+        var b = document.querySelector('[onclick="cpEl(\'' + id + '\')"]');
+        var o = b.textContent;
+        b.textContent = "✓";
+        setTimeout(function () { b.textContent = o; }, 1500);
+      });
+    };
 
-  window.cp = function(id) {
-    navigator.clipboard.writeText(document.getElementById(id).textContent.trim()).then(() => {
-      const b = document.querySelector(`[onclick="cp('${id}')"]`);
-      const o = b.textContent; b.textContent = "✓";
-      setTimeout(() => b.textContent = o, 1500);
+    /* ── Init ── */
+    document.addEventListener("DOMContentLoaded", function () {
+      initChips();
+      initCTA();
+      loadBalance();
     });
-  };
+
+  })();
 </script>
+
 </body>
 </html>
