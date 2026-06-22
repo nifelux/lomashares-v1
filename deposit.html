@@ -3,311 +3,683 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deposit — LomaShares</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <title>Add Funds — LomaShares</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Deposit-specific overrides ───────────────────────────── */
-    .plan-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 20px 0;
-    }
-    .plan-card {
-      background: #0f1f3a;
-      border: 2px solid transparent;
-      border-radius: 12px;
-      padding: 14px;
-      cursor: pointer;
-      transition: border-color .2s, transform .15s;
-    }
-    .plan-card:hover { transform: translateY(-2px); }
-    .plan-card.selected { border-color: #f0a500; }
-    .plan-card .plan-name { font-family: 'Syne', sans-serif; font-weight: 700; color: #f0a500; font-size: 15px; }
-    .plan-card .plan-amount { font-size: 13px; color: #c8d4e8; margin-top: 4px; }
-    .plan-card .plan-return { font-size: 11px; color: #68c36a; margin-top: 2px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Payment info box */
-    #payment-box {
-      background: #0a1628;
-      border: 1px solid #1e3a5f;
-      border-radius: 14px;
-      padding: 20px;
-      margin-top: 20px;
-      display: none;
+    :root {
+      --bg: #f0f2f8;
+      --card-bg: #ffffff;
+      --hero-bg: linear-gradient(145deg, #1a0a3c 0%, #2d1060 60%, #3b1a7a 100%);
+      --accent: #2d1060;
+      --accent-light: #ede8f7;
+      --accent-mid: #5a3fa0;
+      --text-primary: #0d0d1a;
+      --text-muted: #7a7a9a;
+      --text-white: #ffffff;
+      --border: #e4e4f0;
+      --green: #1aab5f;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 20px;
+      --radius-sm: 12px;
     }
-    #payment-box.visible { display: block; }
-    .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e3a5f; }
-    .pay-row:last-child { border-bottom: none; }
-    .pay-label { color: #8098b8; font-size: 13px; }
-    .pay-value { color: #fff; font-size: 14px; font-weight: 600; }
-    .copy-btn {
-      background: #f0a500;
-      color: #0a1628;
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px 10px;
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .back-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--card-bg);
       border: none;
-      border-radius: 6px;
-      padding: 4px 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+    .topbar-title h1 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .topbar-title p {
       font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* ── Hero card ── */
+    .hero-card {
+      margin: 10px 20px 0;
+      background: var(--hero-bg);
+      border-radius: var(--radius);
+      padding: 28px 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: 40px;
+      width: 100px; height: 100px;
+      background: rgba(255,255,255,.04);
+      border-radius: 50%;
+    }
+    .hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .hero-amount {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .hero-amount .currency {
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 6px;
+      opacity: .7;
+    }
+    .hero-amount .amount-val {
+      font-size: 46px;
+    }
+    .hero-balance {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.12);
+      border-radius: 30px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,.9);
+      letter-spacing: .05em;
+    }
+    .hero-balance svg { opacity: .8; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 22px 20px 10px;
+    }
+
+    /* ── Quick amounts grid ── */
+    .amounts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 20px;
+    }
+    .amount-chip {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 8px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all .18s ease;
+      user-select: none;
+    }
+    .amount-chip:hover { border-color: var(--accent-mid); }
+    .amount-chip.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(45,16,96,.3);
+    }
+    /* Plan sub-info inside chip */
+    .amount-chip .chip-sub {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 400;
+      margin-top: 3px;
+      opacity: .6;
+    }
+    .amount-chip.selected .chip-sub { opacity: .75; }
+
+    /* ── Payment method ── */
+    .payment-method {
+      margin: 20px 20px 0;
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 2px solid var(--border);
+    }
+    .method-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-light);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .method-text { flex: 1; }
+    .method-text strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .method-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .method-radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .method-radio::after {
+      content: '';
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ── CTA button ── */
+    .cta-wrap { padding: 20px 20px 0; }
+    .cta-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s, transform .12s;
+      letter-spacing: .02em;
+    }
+    .cta-btn:hover { opacity: .9; }
+    .cta-btn:active { transform: scale(.98); }
+    .cta-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ── Info box ── */
+    .info-box {
+      margin: 16px 20px 0;
+      background: var(--accent-light);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .info-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .info-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .info-box ul li {
+      font-size: 13px;
+      color: var(--accent-mid);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .info-box ul li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent-mid);
+    }
+
+    /* ── Bank transfer details panel ── */
+    #transfer-panel {
+      display: none;
+      margin: 16px 20px 0;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1.5px solid var(--border);
+    }
+    #transfer-panel.visible { display: block; }
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .transfer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .transfer-row:last-of-type { border-bottom: none; }
+    .transfer-label { font-size: 12px; color: var(--text-muted); }
+    .transfer-value {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .copy-btn {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      padding: 5px 11px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       margin-left: 8px;
+      transition: background .15s;
     }
-    .timer-row { text-align: center; margin: 12px 0; color: #f0a500; font-weight: 600; font-size: 14px; }
+    .copy-btn:hover { background: #d8ccf5; }
+    .timer-bar {
+      margin-top: 14px;
+      background: var(--accent-light);
+      border-radius: 30px;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
 
-    /* Status polling box */
+    /* ── Status box ── */
     #status-box {
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 12px;
+      margin: 12px 0 0;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
       text-align: center;
       display: none;
     }
-    #status-box.pending  { background: #1a2f1a; color: #68c36a; display: block; }
-    #status-box.success  { background: #0d2b0d; color: #4eff4e; display: block; }
-    #status-box.failed   { background: #2b0d0d; color: #ff6b6b; display: block; }
+    #status-box.pending  { display: block; background: #e8f5e9; color: #2e7d32; }
+    #status-box.success  { display: block; background: #e8f5e9; color: #1b5e20; }
+    #status-box.failed   { display: block; background: #fdecea; color: #b71c1c; }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0 20px;
+      z-index: 20;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; font-size: 10px; color: var(--text-muted);
+      text-decoration: none; font-weight: 500;
+      cursor: pointer;
+    }
+    .nav-item svg { opacity: .5; }
+    .nav-item.active { color: var(--accent); }
+    .nav-item.active svg { opacity: 1; }
+    .nav-fab {
+      width: 52px; height: 52px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: -22px;
+      box-shadow: 0 4px 20px rgba(45,16,96,.4);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-<!-- ── Hamburger nav (same as other pages) ───────────────────── -->
-<div id="nav-placeholder"></div>
-
-<main class="page-content">
-  <div class="page-header">
-    <h1 class="page-title">Make a Deposit</h1>
-    <p class="page-subtitle">Choose your investment plan and pay via bank transfer</p>
+<!-- Top bar -->
+<div class="topbar">
+  <button class="back-btn" onclick="history.back()">‹</button>
+  <div class="topbar-title">
+    <h1>Add Funds</h1>
+    <p>Recharge your wallet</p>
   </div>
+</div>
 
-  <!-- Step 1: Choose plan -->
-  <section id="step-plan">
-    <h3 style="color:#c8d4e8; font-size:14px; margin-bottom:8px;">SELECT PLAN</h3>
-    <div class="plan-grid">
-      <div class="plan-card" data-amount="3000" data-plan="LOMA1" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA1</div>
-        <div class="plan-amount">₦3,000</div>
-        <div class="plan-return">₦500/day × 10 days = ₦5,000</div>
-      </div>
-      <div class="plan-card" data-amount="6000" data-plan="LOMA2" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA2</div>
-        <div class="plan-amount">₦6,000</div>
-        <div class="plan-return">₦600/day × 30 days = ₦18,000</div>
-      </div>
-      <div class="plan-card" data-amount="15000" data-plan="LOMA3" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA3</div>
-        <div class="plan-amount">₦15,000</div>
-        <div class="plan-return">₦1,500/day × 30 days = ₦45,000</div>
-      </div>
-      <div class="plan-card" data-amount="30000" data-plan="LOMA4" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA4</div>
-        <div class="plan-amount">₦30,000</div>
-        <div class="plan-return">₦3,000/day × 30 days = ₦90,000</div>
-      </div>
-      <div class="plan-card" data-amount="70000" data-plan="LOMA5" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA5</div>
-        <div class="plan-amount">₦70,000</div>
-        <div class="plan-return">₦7,000/day × 30 days = ₦210,000</div>
-      </div>
-      <div class="plan-card" data-amount="150000" data-plan="LOMA6" onclick="selectPlan(this)">
-        <div class="plan-name">LOMA6</div>
-        <div class="plan-amount">₦150,000</div>
-        <div class="plan-return">₦15,000/day × 30 days = ₦450,000</div>
-      </div>
-    </div>
-
-    <button id="proceed-btn" class="btn-primary" onclick="initiateDeposit()" disabled>
-      Proceed to Payment
-    </button>
-  </section>
-
-  <!-- Step 2: Bank transfer details -->
-  <div id="payment-box">
-    <h3 style="color:#f0a500; font-family:'Syne',sans-serif; margin:0 0 14px;">Transfer Details</h3>
-    <p style="color:#8098b8; font-size:13px; margin:0 0 16px;">
-      Transfer the exact amount below to complete your deposit. Do <strong style="color:#fff;">NOT</strong> close this page.
-    </p>
-
-    <div class="pay-row">
-      <span class="pay-label">Bank</span>
-      <span class="pay-value" id="bank-name">—</span>
-    </div>
-    <div class="pay-row">
-      <span class="pay-label">Account Number</span>
-      <span>
-        <span class="pay-value" id="acct-number">—</span>
-        <button class="copy-btn" onclick="copyText('acct-number')">COPY</button>
-      </span>
-    </div>
-    <div class="pay-row">
-      <span class="pay-label">Account Name</span>
-      <span class="pay-value" id="acct-name">—</span>
-    </div>
-    <div class="pay-row">
-      <span class="pay-label">Amount</span>
-      <span>
-        <span class="pay-value" id="pay-amount">—</span>
-        <button class="copy-btn" onclick="copyText('pay-amount')">COPY</button>
-      </span>
-    </div>
-    <div class="pay-row">
-      <span class="pay-label">Reference</span>
-      <span>
-        <span class="pay-value" id="pay-ref" style="font-size:11px;">—</span>
-        <button class="copy-btn" onclick="copyText('pay-ref')">COPY</button>
-      </span>
-    </div>
-
-    <div class="timer-row">⏳ Expires in: <span id="timer">30:00</span></div>
-
-    <div id="status-box">
-      <span id="status-msg">Waiting for payment confirmation…</span>
-    </div>
+<!-- Hero card -->
+<div class="hero-card">
+  <div class="hero-label">You're depositing</div>
+  <div class="hero-amount">
+    <span class="currency">₦</span>
+    <span class="amount-val" id="hero-amount-val">0</span>
   </div>
-</main>
+  <div class="hero-balance">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+    </svg>
+    BALANCE: <span id="wallet-balance">₦0</span>
+  </div>
+</div>
+
+<!-- Quick amounts -->
+<div class="section-label">Quick Amounts</div>
+<div class="amounts-grid">
+  <div class="amount-chip" data-amount="3000" onclick="selectAmount(this)">
+    ₦3,000
+    <span class="chip-sub">LOMA1</span>
+  </div>
+  <div class="amount-chip" data-amount="6000" onclick="selectAmount(this)">
+    ₦6,000
+    <span class="chip-sub">LOMA2</span>
+  </div>
+  <div class="amount-chip" data-amount="15000" onclick="selectAmount(this)">
+    ₦15,000
+    <span class="chip-sub">LOMA3</span>
+  </div>
+  <div class="amount-chip" data-amount="30000" onclick="selectAmount(this)">
+    ₦30,000
+    <span class="chip-sub">LOMA4</span>
+  </div>
+  <div class="amount-chip" data-amount="70000" onclick="selectAmount(this)">
+    ₦70,000
+    <span class="chip-sub">LOMA5</span>
+  </div>
+  <div class="amount-chip" data-amount="150000" onclick="selectAmount(this)">
+    ₦150,000
+    <span class="chip-sub">LOMA6</span>
+  </div>
+</div>
+
+<!-- Payment method -->
+<div class="section-label">Payment Method</div>
+<div class="payment-method">
+  <div class="method-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d1060" stroke-width="2">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <line x1="2" y1="10" x2="22" y2="10"/>
+      <line x1="6" y1="15" x2="10" y2="15"/>
+    </svg>
+  </div>
+  <div class="method-text">
+    <strong>Bank transfer</strong>
+    <span>1–30 mins</span>
+  </div>
+  <div class="method-radio"></div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <button class="cta-btn" id="cta-btn" onclick="initiateDeposit()" disabled>
+    Continue to payment
+  </button>
+</div>
+
+<!-- Transfer details (shown after initiation) -->
+<div id="transfer-panel">
+  <div class="panel-title">Transfer Details</div>
+  <p class="panel-subtitle">Send the exact amount to the account below. Do not close this page until confirmed.</p>
+  <div class="transfer-row">
+    <span class="transfer-label">Bank</span>
+    <span class="transfer-value" id="t-bank">—</span>
+  </div>
+  <div class="transfer-row">
+    <span class="transfer-label">Account Number</span>
+    <span>
+      <span class="transfer-value" id="t-acct">—</span>
+      <button class="copy-btn" onclick="copyEl('t-acct')">COPY</button>
+    </span>
+  </div>
+  <div class="transfer-row">
+    <span class="transfer-label">Account Name</span>
+    <span class="transfer-value" id="t-name">—</span>
+  </div>
+  <div class="transfer-row">
+    <span class="transfer-label">Amount</span>
+    <span>
+      <span class="transfer-value" id="t-amount">—</span>
+      <button class="copy-btn" onclick="copyEl('t-amount')">COPY</button>
+    </span>
+  </div>
+  <div class="transfer-row">
+    <span class="transfer-label">Reference</span>
+    <span>
+      <span class="transfer-value" id="t-ref" style="font-size:11px">—</span>
+      <button class="copy-btn" onclick="copyEl('t-ref')">COPY</button>
+    </span>
+  </div>
+  <div class="timer-bar">⏳ Expires in: <span id="timer">30:00</span></div>
+  <div id="status-box"></div>
+</div>
+
+<!-- Info box -->
+<div class="info-box">
+  <div class="info-box-header">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    Important Information
+  </div>
+  <ul>
+    <li>Minimum top-up: ₦3,000</li>
+    <li>Funds reflect within 1–30 mins after verification</li>
+    <li>Payment channels are available 24/7</li>
+    <li>Keep your transaction receipt for support</li>
+  </ul>
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="dashboard.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </a>
+  <a class="nav-item" href="invest.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    My Stocks
+  </a>
+  <div class="nav-fab" onclick="location.href='deposit.html'">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </div>
+  <a class="nav-item" href="referral.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Team
+  </a>
+  <a class="nav-item" href="profile.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+</nav>
 
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-  const SUPABASE_URL = "https://yrrjadpzaesqxvclflwt.supabase.co";
-  const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY__ || "";
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_URL     = "https://yrrjadpzaesqxvclflwt.supabase.co";
+  const SUPABASE_ANON    = window.__SUPABASE_ANON_KEY__ || "";
+  const supabase         = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  let selectedAmount = null;
-  let selectedPlan   = null;
-  let pollingInterval = null;
-  let timerInterval   = null;
-  let currentReference = null;
+  let selectedAmount = 0;
+  let pollingInterval, timerInterval;
 
-  // ── Plan selection ─────────────────────────────────────────────────────────
-  window.selectPlan = function(el) {
-    document.querySelectorAll(".plan-card").forEach(c => c.classList.remove("selected"));
+  // Load wallet balance
+  async function loadBalance() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { location.href = "/login.html"; return; }
+    const { data } = await supabase.from("wallets").select("balance").eq("user_id", user.id).single();
+    document.getElementById("wallet-balance").textContent =
+      "₦" + (data?.balance || 0).toLocaleString();
+  }
+  loadBalance();
+
+  // Amount selection
+  window.selectAmount = function(el) {
+    document.querySelectorAll(".amount-chip").forEach(c => c.classList.remove("selected"));
     el.classList.add("selected");
     selectedAmount = Number(el.dataset.amount);
-    selectedPlan   = el.dataset.plan;
-    document.getElementById("proceed-btn").disabled = false;
+    document.getElementById("hero-amount-val").textContent = selectedAmount.toLocaleString();
+    document.getElementById("cta-btn").disabled = false;
   };
 
-  // ── Initiate deposit ───────────────────────────────────────────────────────
+  // Initiate deposit
   window.initiateDeposit = async function() {
-    const btn = document.getElementById("proceed-btn");
+    const btn = document.getElementById("cta-btn");
     btn.disabled = true;
-    btn.textContent = "Generating payment…";
+    btn.textContent = "Generating transfer details…";
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { location.href = "/login.html"; return; }
 
     const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name, email")
-      .eq("id", user.id)
-      .single();
+      .from("profiles").select("full_name").eq("id", user.id).single();
 
     try {
-      const res = await fetch("/api/initiate-deposit", {
+      const res  = await fetch("/api/initiate-deposit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id:   user.id,
-          amount:    selectedAmount,
-          email:     user.email,
-          full_name: profile?.full_name || "",
-        }),
+          user_id: user.id, amount: selectedAmount,
+          email: user.email, full_name: profile?.full_name || ""
+        })
       });
-
       const data = await res.json();
 
       if (!data.ok) {
-        alert(data.error || "Could not initiate deposit. Try again.");
+        alert(data.error || "Could not start payment. Try again.");
         btn.disabled = false;
-        btn.textContent = "Proceed to Payment";
+        btn.textContent = "Continue to payment";
         return;
       }
 
-      // Show bank transfer details
-      currentReference = data.reference;
-      document.getElementById("bank-name").textContent   = data.bank_name || "—";
-      document.getElementById("acct-number").textContent = data.account_number || "—";
-      document.getElementById("acct-name").textContent   = data.account_name || "—";
-      document.getElementById("pay-amount").textContent  = `₦${selectedAmount.toLocaleString()}`;
-      document.getElementById("pay-ref").textContent     = data.reference;
+      // Show transfer details
+      document.getElementById("t-bank").textContent   = data.bank_name    || "—";
+      document.getElementById("t-acct").textContent   = data.account_number || "—";
+      document.getElementById("t-name").textContent   = data.account_name  || "LomaShares";
+      document.getElementById("t-amount").textContent = "₦" + selectedAmount.toLocaleString();
+      document.getElementById("t-ref").textContent    = data.reference;
+      document.getElementById("transfer-panel").classList.add("visible");
 
-      document.getElementById("payment-box").classList.add("visible");
-      document.getElementById("step-plan").style.opacity = "0.4";
-      document.getElementById("step-plan").style.pointerEvents = "none";
-
-      // Start countdown timer (30 minutes)
+      btn.textContent = "Waiting for transfer…";
       startTimer(30 * 60);
-
-      // Start polling deposit status
       startPolling(data.reference);
 
     } catch (err) {
       console.error(err);
       alert("Network error. Please try again.");
       btn.disabled = false;
-      btn.textContent = "Proceed to Payment";
+      btn.textContent = "Continue to payment";
     }
   };
 
-  // ── Poll for deposit confirmation ──────────────────────────────────────────
+  // Polling
   function startPolling(reference) {
-    const statusBox = document.getElementById("status-box");
-    const statusMsg = document.getElementById("status-msg");
-    statusBox.className = "pending";
-    statusMsg.textContent = "⏳ Waiting for payment confirmation…";
+    const box = document.getElementById("status-box");
+    box.className = "pending";
+    box.textContent = "⏳ Waiting for payment confirmation…";
 
     pollingInterval = setInterval(async () => {
       try {
         const res  = await fetch(`/api/deposit-status?reference=${reference}`);
         const data = await res.json();
-
         if (data.status === "completed") {
-          clearInterval(pollingInterval);
-          clearInterval(timerInterval);
-          statusBox.className = "success";
-          statusMsg.textContent = "✅ Payment confirmed! Your wallet has been credited.";
-          setTimeout(() => { location.href = "/dashboard.html"; }, 3000);
+          clearInterval(pollingInterval); clearInterval(timerInterval);
+          box.className = "success";
+          box.textContent = "✅ Payment confirmed! Redirecting to dashboard…";
+          setTimeout(() => { location.href = "/dashboard.html"; }, 2500);
         }
-
         if (data.status === "failed") {
           clearInterval(pollingInterval);
-          statusBox.className = "failed";
-          statusMsg.textContent = "❌ Payment failed or expired. Please try again.";
+          box.className = "failed";
+          box.textContent = "❌ Payment failed or expired. Please try again.";
+          document.getElementById("cta-btn").disabled = false;
+          document.getElementById("cta-btn").textContent = "Continue to payment";
         }
-      } catch (e) {
-        console.warn("Polling error:", e);
-      }
-    }, 5000); // poll every 5 seconds
+      } catch(e) { console.warn("Poll err:", e); }
+    }, 5000);
   }
 
-  // ── Countdown timer ────────────────────────────────────────────────────────
-  function startTimer(seconds) {
+  // Countdown
+  function startTimer(secs) {
     const el = document.getElementById("timer");
-    let remaining = seconds;
-
+    let rem = secs;
     timerInterval = setInterval(() => {
-      remaining--;
-      const m = String(Math.floor(remaining / 60)).padStart(2, "0");
-      const s = String(remaining % 60).padStart(2, "0");
+      rem--;
+      const m = String(Math.floor(rem / 60)).padStart(2,"0");
+      const s = String(rem % 60).padStart(2,"0");
       el.textContent = `${m}:${s}`;
-
-      if (remaining <= 0) {
-        clearInterval(timerInterval);
-        clearInterval(pollingInterval);
+      if (rem <= 0) {
+        clearInterval(timerInterval); clearInterval(pollingInterval);
         el.textContent = "EXPIRED";
-        const statusBox = document.getElementById("status-box");
-        const statusMsg = document.getElementById("status-msg");
-        statusBox.className = "failed";
-        statusMsg.textContent = "⏰ Payment window expired. Please start a new deposit.";
+        const box = document.getElementById("status-box");
+        box.className = "failed";
+        box.textContent = "⏰ Time expired. Please start a new deposit.";
       }
     }, 1000);
   }
 
-  // ── Copy to clipboard ──────────────────────────────────────────────────────
-  window.copyText = function(id) {
-    const text = document.getElementById(id).textContent;
+  // Copy
+  window.copyEl = function(id) {
+    const text = document.getElementById(id).textContent.trim();
     navigator.clipboard.writeText(text).then(() => {
-      const btn = document.querySelector(`[onclick="copyText('${id}')"]`);
+      const btn = document.querySelector(`[onclick="copyEl('${id}')"]`);
       const orig = btn.textContent;
       btn.textContent = "✓";
       setTimeout(() => btn.textContent = orig, 1500);
