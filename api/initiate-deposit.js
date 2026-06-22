@@ -1,90 +1,85 @@
 /**
- * LomaShares — Initiate iPayNG Deposit
+ * LomaShares — Initiate Deposit (iPayNG Auto-Manual)
  * POST /api/initiate-deposit
  *
- * Called by deposit.html after user submits amount.
- * Returns bank transfer details (account number, bank, reference).
- * Wallet is NEVER credited here — only via webhook.
+ * Flow:
+ *  1. Validate amount
+ *  2. Generate unique reference
+ *  3. Save pending deposit to Supabase
+ *  4. Return your fixed bank account details to the frontend
+ *
+ * No API call to iPayNG here — user transfers manually,
+ * then submits session ID via /api/submit-payment.
  */
 
-import { createClient } from "@supabase/supabase-js";
-import crypto from "crypto";
+const crypto = require("crypto");
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+// ── Your iPayNG merchant bank accounts ───────────────────────────────────────
+// Add ALL your supported bank accounts here.
+// Users pick whichever bank they prefer to transfer from.
+const BANK_ACCOUNTS = [
+  {
+    bank_name: "PALMPAY",
+    account_number: process.env.IPAYNG_PALMPAY_ACCT   || "YOUR_PALMPAY_NUMBER",
+    account_name:   process.env.IPAYNG_ACCOUNT_NAME    || "LomaShares",
+  },
+  {
+    bank_name: "OPAY",
+    account_number: process.env.IPAYNG_OPAY_ACCT       || "YOUR_OPAY_NUMBER",
+    account_name:   process.env.IPAYNG_ACCOUNT_NAME    || "LomaShares",
+  },
+  {
+    bank_name: "MONNIFY",
+    account_number: process.env.IPAYNG_MONNIFY_ACCT    || "YOUR_MONNIFY_NUMBER",
+    account_name:   process.env.IPAYNG_ACCOUNT_NAME    || "LomaShares",
+  },
+  {
+    bank_name: "GTBANK-GAPP",
+    account_number: process.env.IPAYNG_GTBANK_ACCT     || "YOUR_GTBANK_NUMBER",
+    account_name:   process.env.IPAYNG_ACCOUNT_NAME    || "LomaShares",
+  },
+];
+
 function generateReference(userId) {
-  const ts = Date.now().toString(36).toUpperCase();
+  const ts   = Date.now().toString(36).toUpperCase();
   const rand = crypto.randomBytes(4).toString("hex").toUpperCase();
-  const uid = userId.replace(/-/g, "").slice(0, 6).toUpperCase();
+  const uid  = userId.replace(/-/g, "").slice(0, 6).toUpperCase();
   return `LOMA-${uid}-${ts}-${rand}`;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { user_id, amount } = req.body;
+  const { user_id, amount, email, full_name } = req.body;
 
-  // ── Validate ───────────────────────────────────────────────────────────────
   if (!user_id || !amount) {
     return res.status(400).json({ error: "user_id and amount are required" });
   }
 
-  const numAmount = Number(amount);
+  const numAmount    = Number(amount);
   const VALID_AMOUNTS = [3000, 6000, 15000, 30000, 70000, 150000];
 
   if (!VALID_AMOUNTS.includes(numAmount)) {
-    return res.status(400).json({
-      error: "Invalid amount. Must match a LomaShares investment plan.",
-    });
+    return res.status(400).json({ error: "Invalid amount." });
   }
 
-  // ── Generate unique reference ──────────────────────────────────────────────
   const reference = generateReference(user_id);
 
-  // ── Call iPayNG to create a payment link / virtual account ────────────────
-  let ipayData;
-  try {
-    const ipayRes = await fetch("https://api.ipayng.com/v1/payment/initiate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.IPAYNG_SECRET_KEY}`,
-      },
-      body: JSON.stringify({
-        amount: numAmount,
-        currency: "NGN",
-        reference,
-        customer_email: req.body.email || "",
-        customer_name: req.body.full_name || "",
-        description: `LomaShares Deposit - ${reference}`,
-        callback_url: `${process.env.SITE_URL}/deposit-success.html`,
-        webhook_url: `${process.env.SITE_URL}/api/webhooks/ipayng`,
-      }),
-    });
-
-    ipayData = await ipayRes.json();
-
-    if (!ipayRes.ok || !ipayData?.data) {
-      console.error("[initiate-deposit] iPayNG error:", ipayData);
-      return res.status(502).json({ error: "Payment provider error. Try again." });
-    }
-  } catch (err) {
-    console.error("[initiate-deposit] fetch error:", err);
-    return res.status(502).json({ error: "Could not reach payment provider." });
-  }
-
-  // ── Save pending deposit to Supabase ──────────────────────────────────────
+  // Save pending deposit
   const { error: dbErr } = await supabase.from("deposits").insert({
     user_id,
-    amount: numAmount,
+    amount:     numAmount,
     reference,
-    status: "pending",
-    provider: "ipayng",
+    status:     "pending",
+    provider:   "ipayng",
     created_at: new Date().toISOString(),
   });
 
@@ -93,15 +88,15 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Failed to create deposit record." });
   }
 
-  // ── Return payment info to frontend ───────────────────────────────────────
+  // Return fixed bank accounts + reference
   return res.status(200).json({
-    ok: true,
+    ok:        true,
     reference,
-    payment_url: ipayData.data?.payment_url || null,
-    bank_name: ipayData.data?.bank_name || null,
-    account_number: ipayData.data?.account_number || null,
-    account_name: ipayData.data?.account_name || "LomaShares Payments",
-    expires_at: ipayData.data?.expires_at || null,
-    amount: numAmount,
+    amount:    numAmount,
+    accounts:  BANK_ACCOUNTS,
+    // Convenience: first account as default
+    bank_name:      BANK_ACCOUNTS[0].bank_name,
+    account_number: BANK_ACCOUNTS[0].account_number,
+    account_name:   BANK_ACCOUNTS[0].account_name,
   });
-}
+};
