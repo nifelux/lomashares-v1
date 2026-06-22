@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/stles.css" />
+  <link rel="stylesheet" href="assets/css/syles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/supabase.js" defer></script>
   <script src="assets/js/auth.js" defer></script>
@@ -31,13 +31,17 @@
       --rs:       12px;
     }
 
+    /* ── Hard reset global dark styles from styles.css ── */
     html, body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'DM Sans', sans-serif !important;
+      background: #f0f2f8 !important;
+      color: #0d0d1a !important;
       min-height: 100vh;
       -webkit-text-size-adjust: 100%;
     }
+
+    /* Kill the dark radial blobs from styles.css */
+    body::before, body::after { display: none !important; }
 
     /* ── Topbar ── */
     .topbar {
@@ -45,6 +49,9 @@
       align-items: center;
       gap: 14px;
       padding: 20px 20px 14px;
+      background: #f0f2f8;
+      position: relative;
+      z-index: 2;
     }
     .back-btn {
       width: 40px; height: 40px;
