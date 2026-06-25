@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/syles.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/supabase.js" defer></script>
   <script src="assets/js/auth.js" defer></script>
@@ -27,11 +27,9 @@
       --muted:    #7a7a9a;
       --border:   #e4e4f0;
       --green:    #1aab5f;
-      --r:        20px;
-      --rs:       12px;
     }
 
-    /* ── Hard reset global dark styles from styles.css ── */
+    /* ── Hard reset global dark styles ── */
     html, body {
       font-family: 'DM Sans', sans-serif !important;
       background: #f0f2f8 !important;
@@ -39,38 +37,25 @@
       min-height: 100vh;
       -webkit-text-size-adjust: 100%;
     }
-
-    /* Kill the dark radial blobs from styles.css */
     body::before, body::after { display: none !important; }
 
     /* ── Topbar ── */
     .topbar {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      display: flex; align-items: center; gap: 14px;
       padding: 20px 20px 14px;
-      background: #f0f2f8;
-      position: relative;
-      z-index: 2;
+      background: #f0f2f8; position: relative; z-index: 2;
     }
     .back-btn {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--card);
-      border: none;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--card); border: none;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 1px 6px rgba(0,0,0,.09);
-      font-size: 22px;
-      color: var(--text);
-      flex-shrink: 0;
-      text-decoration: none;
-      line-height: 1;
+      cursor: pointer; box-shadow: 0 1px 6px rgba(0,0,0,.09);
+      font-size: 22px; color: var(--text);
+      flex-shrink: 0; text-decoration: none; line-height: 1;
     }
     .topbar-text h1 {
       font-family: 'Syne', sans-serif;
-      font-size: 20px; font-weight: 700;
-      line-height: 1.2; color: var(--text);
+      font-size: 20px; font-weight: 700; color: var(--text);
     }
     .topbar-text p { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
@@ -78,279 +63,132 @@
     .hero {
       margin: 0 16px 4px;
       background: linear-gradient(145deg, #1a0a3c 0%, #2d1060 55%, #3d1a80 100%);
-      border-radius: var(--r);
-      padding: 26px 22px 22px;
-      position: relative;
-      overflow: hidden;
+      border-radius: 20px; padding: 26px 22px 22px;
+      position: relative; overflow: hidden;
     }
     .hero::before {
       content: ''; position: absolute;
-      top: -50px; right: -50px;
-      width: 180px; height: 180px;
-      background: rgba(255,255,255,.05);
-      border-radius: 50%; pointer-events: none;
-    }
-    .hero::after {
-      content: ''; position: absolute;
-      bottom: -40px; left: 30px;
-      width: 120px; height: 120px;
-      background: rgba(255,255,255,.04);
-      border-radius: 50%; pointer-events: none;
+      top: -50px; right: -50px; width: 180px; height: 180px;
+      background: rgba(255,255,255,.05); border-radius: 50%; pointer-events: none;
     }
     .hero-eyebrow {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: .13em; text-transform: uppercase;
-      color: rgba(255,255,255,.5); margin-bottom: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: .13em;
+      text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 10px;
     }
-    .hero-amount-row {
-      display: flex; align-items: baseline;
-      gap: 3px; line-height: 1;
-    }
-    .hero-cur {
-      font-family: 'Syne', sans-serif;
-      font-size: 26px; font-weight: 600;
-      color: rgba(255,255,255,.65);
-    }
-    .hero-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 48px; font-weight: 800;
-      color: #fff; letter-spacing: -.02em; line-height: 1;
-    }
+    .hero-amount-row { display: flex; align-items: baseline; gap: 3px; line-height: 1; }
+    .hero-cur { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 600; color: rgba(255,255,255,.65); }
+    .hero-num { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: #fff; letter-spacing: -.02em; }
     .hero-pill {
-      margin-top: 18px;
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(255,255,255,.13);
-      border-radius: 30px; padding: 7px 14px;
-      font-size: 12px; font-weight: 600;
-      color: rgba(255,255,255,.88); letter-spacing: .06em;
+      margin-top: 18px; display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.13); border-radius: 30px; padding: 7px 14px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.88); letter-spacing: .06em;
     }
+
+    /* ── Method badge ── */
+    .method-badge {
+      margin: 12px 16px 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 30px;
+      font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    }
+    .method-badge.paystack { background: #e8f5e9; color: #1aab5f; }
+    .method-badge.manual   { background: #fff3e0; color: #e65100; }
+    .method-badge.ipayng   { background: var(--accent-l); color: var(--accent); }
 
     /* ── Section label ── */
     .slabel {
-      font-size: 11px; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--muted); padding: 20px 16px 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted); padding: 20px 16px 10px;
     }
 
     /* ── Chips ── */
-    .chips {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px; padding: 0 16px;
-    }
+    .chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; }
     .chip {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: var(--rs);
-      padding: 15px 6px 13px;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 12px; padding: 15px 6px 13px;
       text-align: center; cursor: pointer;
-      transition: border-color .15s, background .15s, box-shadow .15s;
-      user-select: none;
+      transition: all .15s; user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    .chip.on {
-      background: var(--accent);
-      border-color: var(--accent);
-      box-shadow: 0 4px 18px rgba(45,16,96,.28);
-    }
-    .chip-val {
-      display: block;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px; font-weight: 700; color: var(--text);
-    }
+    .chip.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 4px 18px rgba(45,16,96,.28); }
+    .chip-val { display: block; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); }
     .chip.on .chip-val { color: #fff; }
-    .chip-plan {
-      display: block; font-size: 10px;
-      font-weight: 500; color: var(--muted); margin-top: 3px;
-    }
+    .chip-plan { display: block; font-size: 10px; font-weight: 500; color: var(--muted); margin-top: 3px; }
     .chip.on .chip-plan { color: rgba(255,255,255,.7); }
 
-    /* ── Payment method ── */
+    /* ── Payment method row ── */
     .pay-method {
-      margin: 8px 16px 0;
-      background: var(--card);
-      border-radius: var(--rs); padding: 15px;
+      margin: 8px 16px 0; background: var(--card);
+      border-radius: 12px; padding: 15px;
       display: flex; align-items: center; gap: 13px;
       border: 2px solid var(--border);
     }
     .pm-icon {
-      width: 44px; height: 44px;
-      background: var(--accent-l); border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      width: 44px; height: 44px; background: var(--accent-l);
+      border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .pm-text { flex: 1; }
-    .pm-text strong {
-      display: block; font-family: 'Syne', sans-serif;
-      font-size: 15px; font-weight: 700; color: var(--text);
-    }
+    .pm-text strong { display: block; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); }
     .pm-text span { font-size: 12px; color: var(--muted); }
-    .pm-radio {
-      width: 20px; height: 20px;
-      border-radius: 50%; border: 2.5px solid var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .pm-radio::after {
-      content: ''; width: 10px; height: 10px;
-      background: var(--accent); border-radius: 50%;
-    }
+    .pm-radio { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pm-radio::after { content: ''; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
 
     /* ── CTA ── */
     .cta-wrap { padding: 18px 16px 0; }
     .cta {
-      width: 100%; padding: 17px;
-      background: var(--accent); color: #fff;
+      width: 100%; padding: 17px; background: var(--accent); color: #fff;
       border: none; border-radius: 50px;
-      font-family: 'Syne', sans-serif;
-      font-size: 16px; font-weight: 700;
-      cursor: pointer;
-      transition: opacity .15s, transform .12s;
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: opacity .15s, transform .12s;
       -webkit-tap-highlight-color: transparent;
     }
     .cta:active { transform: scale(.98); }
     .cta:disabled { opacity: .35; cursor: not-allowed; }
 
-    /* ── STEP 2: Bank transfer details ── */
-    #step2 { display: none; margin: 16px 16px 0; }
-    #step2.show { display: block; }
-
-    .bank-tabs {
-      display: flex; gap: 8px;
-      overflow-x: auto; padding-bottom: 4px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
-    }
-    .bank-tabs::-webkit-scrollbar { display: none; }
-    .bank-tab {
-      flex-shrink: 0;
-      padding: 7px 14px;
-      border-radius: 30px;
-      border: 2px solid var(--border);
-      background: var(--card);
-      font-size: 12px; font-weight: 700;
-      color: var(--muted); cursor: pointer;
-      transition: all .15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .bank-tab.on {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
+    /* ── Manual transfer card ── */
     .transfer-card {
-      background: var(--card);
-      border-radius: var(--r); padding: 20px;
-      border: 1.5px solid var(--border);
+      margin: 16px 16px 0; background: var(--card);
+      border-radius: 20px; padding: 20px;
+      border: 1.5px solid var(--border); display: none;
     }
-    .tc-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px; font-weight: 700;
-      color: var(--text); margin-bottom: 4px;
-    }
-    .tc-sub {
-      font-size: 12px; color: var(--muted);
-      margin-bottom: 16px; line-height: 1.5;
-    }
-    .trow {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 11px 0; border-bottom: 1px solid var(--border);
-    }
+    .transfer-card.show { display: block; }
+    .tc-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .tc-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .trow { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--border); }
     .trow:last-of-type { border-bottom: none; }
     .tlabel { font-size: 12px; color: var(--muted); }
-    .tval {
-      font-family: 'Syne', sans-serif;
-      font-size: 14px; font-weight: 700; color: var(--text);
-    }
+    .tval { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
+    .tval.narration { font-size: 13px; color: var(--accent); letter-spacing: .05em; }
     .cpbtn {
       background: var(--accent-l); color: var(--accent);
       border: none; border-radius: 7px;
       padding: 5px 10px; font-size: 11px; font-weight: 700;
       cursor: pointer; margin-left: 7px;
     }
-    .timer-pill {
+    .narration-box {
       margin-top: 14px; background: var(--accent-l);
-      border-radius: 30px; padding: 10px 16px;
-      text-align: center; font-size: 13px;
-      font-weight: 600; color: var(--accent);
+      border-radius: 12px; padding: 14px 16px; text-align: center;
     }
-
-    /* ── STEP 3: Submit session ID ── */
-    #step3 { display: none; margin: 16px 16px 0; }
-    #step3.show { display: block; }
-
-    .step3-card {
-      background: var(--card);
-      border-radius: var(--r); padding: 20px;
-      border: 1.5px solid var(--border);
-    }
-    .step3-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px; font-weight: 700;
-      color: var(--text); margin-bottom: 6px;
-    }
-    .step3-sub {
-      font-size: 12px; color: var(--muted);
-      line-height: 1.6; margin-bottom: 16px;
-    }
-    .field-label {
-      font-size: 12px; font-weight: 600;
-      color: var(--muted); margin-bottom: 6px;
-      display: block;
-    }
-    .field-input {
-      width: 100%; padding: 13px 14px;
-      border: 2px solid var(--border);
-      border-radius: var(--rs);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px; color: var(--text);
-      background: var(--bg);
-      outline: none; margin-bottom: 14px;
-      transition: border-color .15s;
-    }
-    .field-input:focus { border-color: var(--accent); }
-
-    .bank-select {
-      width: 100%; padding: 13px 14px;
-      border: 2px solid var(--border);
-      border-radius: var(--rs);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px; color: var(--text);
-      background: var(--bg);
-      outline: none; margin-bottom: 14px;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .bank-select:focus { border-color: var(--accent); }
+    .narration-label { font-size: 11px; font-weight: 700; color: var(--accent-m); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    .narration-code { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: .08em; }
+    .narration-hint { font-size: 11px; color: var(--muted); margin-top: 5px; line-height: 1.4; }
 
     /* ── Status box ── */
-    #sbox {
+    .sbox {
       margin-top: 12px; padding: 13px 15px;
-      border-radius: var(--rs); font-size: 13px;
+      border-radius: 12px; font-size: 13px;
       font-weight: 600; text-align: center; display: none;
     }
-    #sbox.pending { display:block; background:#e8f5e9; color:#2e7d32; }
-    #sbox.success { display:block; background:#e8f5e9; color:#1b5e20; }
-    #sbox.failed  { display:block; background:#fdecea; color:#b71c1c; }
+    .sbox.pending { display:block; background:#e8f5e9; color:#2e7d32; }
+    .sbox.success { display:block; background:#e8f5e9; color:#1b5e20; }
+    .sbox.failed  { display:block; background:#fdecea; color:#b71c1c; }
+    .sbox.info    { display:block; background:var(--accent-l); color:var(--accent); }
 
     /* ── Info box ── */
-    .info {
-      margin: 16px 16px 32px;
-      background: var(--accent-l);
-      border-radius: var(--rs); padding: 15px;
-    }
-    .info-head {
-      display: flex; align-items: center; gap: 7px;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 10px;
-    }
+    .info { margin: 16px 16px 32px; background: var(--accent-l); border-radius: 12px; padding: 15px; }
+    .info-head { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
     .info ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .info ul li {
-      font-size: 13px; color: var(--accent-m);
-      padding-left: 14px; position: relative; line-height: 1.45;
-    }
+    .info ul li { font-size: 13px; color: var(--accent-m); padding-left: 14px; position: relative; line-height: 1.45; }
     .info ul li::before { content: '•'; position: absolute; left: 0; }
   </style>
 </head>
@@ -386,131 +224,86 @@
   </div>
 </div>
 
-<!-- STEP 1: Choose amount -->
-<div id="step1">
-  <div class="slabel">Quick Amounts</div>
-  <div class="chips">
-    <div class="chip" data-v="3000"><span class="chip-val">₦3,000</span><span class="chip-plan">LOMA1</span></div>
-    <div class="chip" data-v="6000"><span class="chip-val">₦6,000</span><span class="chip-plan">LOMA2</span></div>
-    <div class="chip" data-v="15000"><span class="chip-val">₦15,000</span><span class="chip-plan">LOMA3</span></div>
-    <div class="chip" data-v="30000"><span class="chip-val">₦30,000</span><span class="chip-plan">LOMA4</span></div>
-    <div class="chip" data-v="70000"><span class="chip-val">₦70,000</span><span class="chip-plan">LOMA5</span></div>
-    <div class="chip" data-v="150000"><span class="chip-val">₦150,000</span><span class="chip-plan">LOMA6</span></div>
+<!-- Active method badge -->
+<div id="methodBadge" class="method-badge" style="display:none"></div>
+
+<!-- Amount chips -->
+<div class="slabel">Quick Amounts</div>
+<div class="chips">
+  <div class="chip" data-v="3000"><span class="chip-val">₦3,000</span><span class="chip-plan">LOMA1</span></div>
+  <div class="chip" data-v="6000"><span class="chip-val">₦6,000</span><span class="chip-plan">LOMA2</span></div>
+  <div class="chip" data-v="15000"><span class="chip-val">₦15,000</span><span class="chip-plan">LOMA3</span></div>
+  <div class="chip" data-v="30000"><span class="chip-val">₦30,000</span><span class="chip-plan">LOMA4</span></div>
+  <div class="chip" data-v="70000"><span class="chip-val">₦70,000</span><span class="chip-plan">LOMA5</span></div>
+  <div class="chip" data-v="150000"><span class="chip-val">₦150,000</span><span class="chip-plan">LOMA6</span></div>
+</div>
+
+<!-- Payment method -->
+<div class="slabel">Payment Method</div>
+<div class="pay-method">
+  <div class="pm-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d1060" stroke-width="2">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <line x1="2" y1="10" x2="22" y2="10"/>
+      <line x1="6" y1="15" x2="10" y2="15"/>
+    </svg>
+  </div>
+  <div class="pm-text">
+    <strong id="pmName">Bank Transfer</strong>
+    <span id="pmSub">Loading…</span>
+  </div>
+  <div class="pm-radio"></div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <button class="cta" id="ctabtn" disabled>Continue to payment</button>
+</div>
+
+<!-- Manual transfer card (shown after initiation) -->
+<div class="transfer-card" id="manualCard">
+  <div class="tc-title">Transfer Details</div>
+  <p class="tc-sub">Send the <strong>exact amount</strong> to the account below and use the narration code as your transfer description.</p>
+  <div class="trow">
+    <span class="tlabel">Bank</span>
+    <span class="tval">OPay</span>
+  </div>
+  <div class="trow">
+    <span class="tlabel">Account Number</span>
+    <span>
+      <span class="tval" id="man-acct">6556493720</span>
+      <button class="cpbtn" onclick="cpEl('man-acct')">COPY</button>
+    </span>
+  </div>
+  <div class="trow">
+    <span class="tlabel">Account Name</span>
+    <span class="tval">OLUWANIFEMI ABDULLAHI OLUDE</span>
+  </div>
+  <div class="trow">
+    <span class="tlabel">Amount</span>
+    <span>
+      <span class="tval" id="man-amt">—</span>
+      <button class="cpbtn" onclick="cpEl('man-amt')">COPY</button>
+    </span>
   </div>
 
-  <div class="slabel">Payment Method</div>
-  <div class="pay-method">
-    <div class="pm-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d1060" stroke-width="2">
-        <rect x="2" y="5" width="20" height="14" rx="2"/>
-        <line x1="2" y1="10" x2="22" y2="10"/>
-        <line x1="6" y1="15" x2="10" y2="15"/>
-      </svg>
-    </div>
-    <div class="pm-text">
-      <strong>Bank transfer</strong>
-      <span>1–30 mins</span>
-    </div>
-    <div class="pm-radio"></div>
+  <div class="narration-box">
+    <div class="narration-label">⚠️ Use this as your transfer narration / description</div>
+    <div class="narration-code" id="man-narration">—</div>
+    <button class="cpbtn" style="margin-top:8px;padding:7px 16px;font-size:12px" onclick="cpEl('man-narration')">COPY NARRATION</button>
+    <p class="narration-hint">You MUST include this code in your transfer description/narration, otherwise your deposit cannot be matched.</p>
   </div>
 
-  <div class="cta-wrap">
-    <button class="cta" id="ctabtn" disabled>Continue to payment</button>
+  <div class="sbox info" id="man-status" style="display:block">
+    ⏳ Your deposit is pending admin approval. This usually takes within 30 minutes.
   </div>
 </div>
 
-<!-- STEP 2: Bank transfer details -->
-<div id="step2">
-  <div class="slabel">Choose Your Bank</div>
-  <div class="bank-tabs" id="bankTabs"></div>
+<!-- Status box for Paystack -->
+<div class="sbox" id="psbox" style="margin:12px 16px 0"></div>
 
-  <div class="transfer-card">
-    <div class="tc-title">Transfer Details</div>
-    <p class="tc-sub">Send the <strong>exact</strong> amount to the account below, then come back and enter your Session ID.</p>
-    <div class="trow">
-      <span class="tlabel">Bank</span>
-      <span class="tval" id="tb">—</span>
-    </div>
-    <div class="trow">
-      <span class="tlabel">Account Number</span>
-      <span>
-        <span class="tval" id="ta">—</span>
-        <button class="cpbtn" onclick="cpEl('ta')">COPY</button>
-      </span>
-    </div>
-    <div class="trow">
-      <span class="tlabel">Account Name</span>
-      <span class="tval" id="tn">—</span>
-    </div>
-    <div class="trow">
-      <span class="tlabel">Amount</span>
-      <span>
-        <span class="tval" id="tam">—</span>
-        <button class="cpbtn" onclick="cpEl('tam')">COPY</button>
-      </span>
-    </div>
-    <div class="trow">
-      <span class="tlabel">Reference</span>
-      <span>
-        <span class="tval" id="tr" style="font-size:11px">—</span>
-        <button class="cpbtn" onclick="cpEl('tr')">COPY</button>
-      </span>
-    </div>
-    <div class="timer-pill">⏳ Expires in: <span id="tclock">30:00</span></div>
-  </div>
-
-  <div class="cta-wrap" style="padding-bottom:0">
-    <button class="cta" onclick="showStep3()" style="margin-top:0">
-      I've Made the Transfer →
-    </button>
-  </div>
-</div>
-
-<!-- STEP 3: Submit session ID -->
-<div id="step3">
-  <div class="slabel">Confirm Your Payment</div>
-  <div class="step3-card">
-    <div class="step3-title">Enter Transfer Details</div>
-    <p class="step3-sub">
-      Open your banking app, find the transfer you just made, and enter the <strong>Session ID</strong> or <strong>Transaction Reference</strong> below. This is how we verify your payment.
-    </p>
-
-    <label class="field-label">Which bank did you transfer from?</label>
-    <select class="bank-select" id="fromBank">
-      <option value="">Select your bank…</option>
-      <option value="PALMPAY">PalmPay</option>
-      <option value="OPAY">OPay</option>
-      <option value="MONNIFY">Moniepoint / Monnify</option>
-      <option value="GTBANK-GAPP">GTBank</option>
-      <option value="ACCESS">Access Bank</option>
-      <option value="UBA">UBA</option>
-      <option value="ZENITH">Zenith Bank</option>
-      <option value="FIRSTBANK">First Bank</option>
-      <option value="KUDA">Kuda Bank</option>
-      <option value="OTHER">Other Bank</option>
-    </select>
-
-    <label class="field-label">Session ID / Transaction Reference</label>
-    <input
-      class="field-input"
-      type="text"
-      id="sessionId"
-      placeholder="e.g. 250109180100744270471742"
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-    />
-
-    <div id="sbox"></div>
-
-    <button class="cta" id="submitBtn" onclick="submitPayment()">
-      Confirm Payment
-    </button>
-  </div>
-</div>
-
-<!-- Info box (always visible) -->
-<div class="info">
+<!-- Info box -->
+<div class="info" id="infoBox">
   <div class="info-head">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
       <circle cx="12" cy="12" r="10"/>
@@ -519,46 +312,118 @@
     </svg>
     Important Information
   </div>
-  <ul>
+  <ul id="infoList">
     <li>Minimum top-up: ₦3,000</li>
-    <li>Transfer the exact amount shown — no more, no less</li>
-    <li>Funds reflect within 1–30 mins after verification</li>
-    <li>Find your Session ID in your bank app transaction history</li>
+    <li>Funds reflect after payment verification</li>
     <li>Keep your transaction receipt for support</li>
   </ul>
 </div>
 
+<!-- Paystack inline script (loaded dynamically only when needed) -->
 <script>
 (function () {
   "use strict";
 
-  var selectedAmt  = 0;
-  var currentRef   = "";
-  var allAccounts  = [];
-  var activeAcct   = null;
-  var clockT       = null;
-  var pollT        = null;
+  var selectedAmt   = 0;
+  var activeMethod  = "paystack";
+  var currentRef    = "";
+  var pollT         = null;
+  var userEmail     = "";
+  var userId        = "";
 
   /* ── Wait for window.sb ── */
   function waitForSb(cb) {
     if (window.sb) { cb(); return; }
-    var t = setInterval(function () {
-      if (window.sb) { clearInterval(t); cb(); }
-    }, 50);
+    var t = setInterval(function () { if (window.sb) { clearInterval(t); cb(); } }, 50);
   }
 
-  /* ── Load balance ── */
-  function loadBalance() {
+  /* ── Init ── */
+  document.addEventListener("DOMContentLoaded", function () {
+    initChips();
     waitForSb(async function () {
-      try {
-        var session = await window.LomaAuth.requireAuth();
-        if (!session) return;
-        var res = await window.sb.from("wallets").select("balance").eq("user_id", session.user.id).single();
-        if (res.data) {
-          document.getElementById("wbal").textContent = "₦" + Number(res.data.balance || 0).toLocaleString();
-        }
-      } catch (e) { console.error(e); }
+      await loadUserAndBalance();
+      await loadDepositMethod();
     });
+
+    document.getElementById("ctabtn").addEventListener("click", handleCTA);
+  });
+
+  /* ── Load user + balance ── */
+  async function loadUserAndBalance() {
+    try {
+      var session = await window.LomaAuth.requireAuth();
+      if (!session) return;
+      userId    = session.user.id;
+      userEmail = session.user.email;
+
+      var res = await window.sb.from("wallets").select("balance").eq("user_id", userId).single();
+      if (res.data) {
+        document.getElementById("wbal").textContent = "₦" + Number(res.data.balance || 0).toLocaleString();
+      }
+    } catch (e) { console.error("auth/balance error", e); }
+  }
+
+  /* ── Load active deposit method ── */
+  async function loadDepositMethod() {
+    try {
+      var res = await fetch("/api/get-deposit-method");
+      var d   = await res.json();
+      activeMethod = d.method || "paystack";
+    } catch (e) {
+      activeMethod = "paystack";
+    }
+    applyMethod(activeMethod);
+  }
+
+  function applyMethod(method) {
+    var badge  = document.getElementById("methodBadge");
+    var pmName = document.getElementById("pmName");
+    var pmSub  = document.getElementById("pmSub");
+    var infoList = document.getElementById("infoList");
+
+    badge.style.display = "inline-flex";
+
+    if (method === "paystack") {
+      badge.className       = "method-badge paystack";
+      badge.textContent     = "✅ Paystack — Card & Bank Transfer";
+      pmName.textContent    = "Paystack";
+      pmSub.textContent     = "Card, bank transfer & USSD";
+      infoList.innerHTML    =
+        "<li>Minimum top-up: ₦3,000</li>" +
+        "<li>Instant payment via card or bank transfer</li>" +
+        "<li>Secured by Paystack</li>";
+
+      // Load Paystack script
+      if (!document.getElementById("paystackScript")) {
+        var s = document.createElement("script");
+        s.id  = "paystackScript";
+        s.src = "https://js.paystack.co/v1/inline.js";
+        document.head.appendChild(s);
+      }
+
+    } else if (method === "manual") {
+      badge.className       = "method-badge manual";
+      badge.textContent     = "🏦 Manual Bank Transfer";
+      pmName.textContent    = "Bank Transfer (Manual)";
+      pmSub.textContent     = "Transfer to OPay — approved within 30 mins";
+      infoList.innerHTML    =
+        "<li>Minimum top-up: ₦3,000</li>" +
+        "<li>Transfer exact amount to the account shown</li>" +
+        "<li>You MUST use the narration code as your transfer description</li>" +
+        "<li>Approval takes up to 30 minutes</li>" +
+        "<li>Keep your transaction receipt for support</li>";
+
+    } else if (method === "ipayng") {
+      badge.className       = "method-badge ipayng";
+      badge.textContent     = "⚡ iPayNG Auto-Manual";
+      pmName.textContent    = "iPayNG Bank Transfer";
+      pmSub.textContent     = "Transfer + submit Session ID";
+      infoList.innerHTML    =
+        "<li>Minimum top-up: ₦3,000</li>" +
+        "<li>Transfer to the shown account</li>" +
+        "<li>Submit your Session ID to confirm payment</li>" +
+        "<li>Funds reflect within 1–30 mins</li>";
+    }
   }
 
   /* ── Chips ── */
@@ -574,165 +439,110 @@
     });
   }
 
-  /* ── Step 1 → Step 2: Get bank details ── */
-  document.addEventListener("DOMContentLoaded", function () {
-    var ctabtn = document.getElementById("ctabtn");
-    if (ctabtn) {
-      ctabtn.addEventListener("click", async function () {
-        if (!selectedAmt) return;
-        ctabtn.disabled = true;
-        ctabtn.textContent = "Generating transfer details…";
-
-        try {
-          var session = await window.LomaAuth.requireAuth();
-          if (!session) return;
-
-          var profRes  = await window.sb.from("profiles").select("full_name").eq("id", session.user.id).single();
-          var fullName = (profRes.data && profRes.data.full_name) || "";
-
-          var res = await fetch("/api/initiate-deposit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id:   session.user.id,
-              amount:    selectedAmt,
-              email:     session.user.email,
-              full_name: fullName
-            })
-          });
-          var d = await res.json();
-
-          if (!d.ok) {
-            alert(d.error || "Could not start payment. Try again.");
-            ctabtn.disabled = false;
-            ctabtn.textContent = "Continue to payment";
-            return;
-          }
-
-          currentRef  = d.reference;
-          allAccounts = d.accounts || [];
-          activeAcct  = allAccounts[0] || { bank_name: d.bank_name, account_number: d.account_number, account_name: d.account_name };
-
-          buildBankTabs();
-          renderAccount(activeAcct);
-
-          document.getElementById("tam").textContent = "₦" + selectedAmt.toLocaleString();
-          document.getElementById("tr").textContent  = d.reference;
-
-          document.getElementById("step1").style.display = "none";
-          document.getElementById("step2").classList.add("show");
-
-          startClock(30 * 60);
-
-        } catch (e) {
-          console.error(e);
-          alert("Network error. Try again.");
-          ctabtn.disabled = false;
-          ctabtn.textContent = "Continue to payment";
-        }
-      });
-    }
-  });
-
-  /* ── Bank tabs ── */
-  function buildBankTabs() {
-    var wrap = document.getElementById("bankTabs");
-    wrap.innerHTML = "";
-    allAccounts.forEach(function (acct, i) {
-      var btn = document.createElement("button");
-      btn.className = "bank-tab" + (i === 0 ? " on" : "");
-      btn.textContent = acct.bank_name;
-      btn.addEventListener("click", function () {
-        document.querySelectorAll(".bank-tab").forEach(function (b) { b.classList.remove("on"); });
-        btn.classList.add("on");
-        activeAcct = acct;
-        renderAccount(acct);
-      });
-      wrap.appendChild(btn);
-    });
+  /* ── CTA handler — branches by method ── */
+  async function handleCTA() {
+    if (!selectedAmt) return;
+    if (activeMethod === "paystack") await handlePaystack();
+    else if (activeMethod === "manual") await handleManual();
+    else if (activeMethod === "ipayng") location.href = "deposit-ipayng.html";
   }
 
-  function renderAccount(acct) {
-    document.getElementById("tb").textContent = acct.bank_name      || "—";
-    document.getElementById("ta").textContent = acct.account_number || "—";
-    document.getElementById("tn").textContent = acct.account_name   || "—";
-  }
-
-  /* ── Step 2 → Step 3 ── */
-  window.showStep3 = function () {
-    document.getElementById("step2").classList.remove("show");
-    document.getElementById("step3").classList.add("show");
-    // Pre-select the bank they were viewing
-    if (activeAcct) {
-      var sel = document.getElementById("fromBank");
-      // try to match
-      for (var i = 0; i < sel.options.length; i++) {
-        if (sel.options[i].value === activeAcct.bank_name) {
-          sel.selectedIndex = i; break;
-        }
-      }
-    }
-    startPoll(currentRef);
-  };
-
-  /* ── Submit session ID ── */
-  window.submitPayment = async function () {
-    var sessionId = document.getElementById("sessionId").value.trim();
-    var fromBank  = document.getElementById("fromBank").value;
-    var box       = document.getElementById("sbox");
-    var btn       = document.getElementById("submitBtn");
-
-    if (!fromBank) {
-      box.className = "failed";
-      box.textContent = "⚠️ Please select the bank you transferred from.";
-      return;
-    }
-    if (!sessionId) {
-      box.className = "failed";
-      box.textContent = "⚠️ Please enter your Session ID / Transaction Reference.";
-      return;
-    }
-
+  /* ════════════════════════════════════════════════════════
+     PAYSTACK FLOW
+  ════════════════════════════════════════════════════════ */
+  async function handlePaystack() {
+    var btn = document.getElementById("ctabtn");
     btn.disabled = true;
-    btn.textContent = "Submitting…";
-    box.className = "pending";
-    box.textContent = "⏳ Submitting payment to iPayNG…";
+    btn.textContent = "Initialising…";
 
     try {
-      var res = await fetch("/api/submit-payment", {
-        method: "POST",
+      // Create pending deposit first to get our reference
+      var res = await fetch("/api/initiate-paystack-deposit", {
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          reference:      currentRef,
-          session_id:     sessionId,
-          bank_name:      activeAcct ? activeAcct.bank_name : fromBank,
-          account_number: activeAcct ? activeAcct.account_number : "",
-          amount:         selectedAmt
-        })
+        body:    JSON.stringify({ user_id: userId, amount: selectedAmt, email: userEmail })
       });
       var d = await res.json();
 
       if (!d.ok) {
-        box.className = "failed";
-        box.textContent = "❌ " + (d.error || "Submission failed. Check your Session ID and try again.");
+        alert(d.error || "Could not start payment.");
         btn.disabled = false;
-        btn.textContent = "Confirm Payment";
+        btn.textContent = "Continue to payment";
         return;
       }
 
-      box.className = "pending";
-      box.textContent = "✅ Submitted! Waiting for iPayNG to verify your payment…";
-      btn.disabled = true;
-      btn.textContent = "Waiting for confirmation…";
+      currentRef = d.reference;
+
+      // Open Paystack popup
+      var handler = PaystackPop.setup({
+        key:       window.__PAYSTACK_PUBLIC_KEY__ || d.public_key,
+        email:     userEmail,
+        amount:    selectedAmt * 100, // kobo
+        ref:       currentRef,
+        currency:  "NGN",
+        onSuccess: function (transaction) {
+          // Webhook will handle wallet credit — just show pending UI
+          var box = document.getElementById("psbox");
+          box.className = "sbox pending";
+          box.textContent = "⏳ Payment received. Confirming with Paystack…";
+          btn.textContent = "Confirming…";
+          startPoll(currentRef);
+        },
+        onCancel: function () {
+          btn.disabled = false;
+          btn.textContent = "Continue to payment";
+        }
+      });
+      handler.openIframe();
 
     } catch (e) {
       console.error(e);
-      box.className = "failed";
-      box.textContent = "❌ Network error. Try again.";
+      alert("Network error. Try again.");
       btn.disabled = false;
-      btn.textContent = "Confirm Payment";
+      btn.textContent = "Continue to payment";
     }
-  };
+  }
+
+  /* ════════════════════════════════════════════════════════
+     MANUAL FLOW
+  ════════════════════════════════════════════════════════ */
+  async function handleManual() {
+    var btn = document.getElementById("ctabtn");
+    btn.disabled = true;
+    btn.textContent = "Generating deposit details…";
+
+    try {
+      var res = await fetch("/api/initiate-manual-deposit", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ user_id: userId, amount: selectedAmt })
+      });
+      var d = await res.json();
+
+      if (!d.ok) {
+        alert(d.error || "Could not create deposit. Try again.");
+        btn.disabled = false;
+        btn.textContent = "Continue to payment";
+        return;
+      }
+
+      currentRef = d.reference;
+      document.getElementById("man-amt").textContent       = "₦" + selectedAmt.toLocaleString();
+      document.getElementById("man-narration").textContent = d.narration;
+      document.getElementById("manualCard").classList.add("show");
+
+      btn.textContent = "Waiting for approval…";
+
+      // Poll for admin approval
+      startPoll(currentRef);
+
+    } catch (e) {
+      console.error(e);
+      alert("Network error. Try again.");
+      btn.disabled = false;
+      btn.textContent = "Continue to payment";
+    }
+  }
 
   /* ── Poll deposit status ── */
   function startPoll(ref) {
@@ -740,36 +550,34 @@
       try {
         var res = await fetch("/api/deposit-status?reference=" + ref);
         var d   = await res.json();
+
         if (d.status === "completed") {
-          clearInterval(pollT); clearInterval(clockT);
-          var box = document.getElementById("sbox");
-          box.className = "success";
+          clearInterval(pollT);
+          var box = activeMethod === "manual"
+            ? document.getElementById("man-status")
+            : document.getElementById("psbox");
+          box.className = "sbox success";
           box.textContent = "✅ Payment confirmed! Your wallet has been credited. Redirecting…";
           setTimeout(function () { location.href = "/dashboard.html"; }, 2500);
         }
+
+        if (d.status === "rejected") {
+          clearInterval(pollT);
+          var box = document.getElementById("man-status");
+          box.className = "sbox failed";
+          box.textContent = "❌ Your deposit was rejected. Please contact support.";
+        }
+
         if (d.status === "failed") {
           clearInterval(pollT);
-          var box = document.getElementById("sbox");
-          box.className = "failed";
-          box.textContent = "❌ Payment verification failed. Please contact support.";
+          var box = document.getElementById("psbox");
+          box.className = "sbox failed";
+          box.textContent = "❌ Payment failed. Please try again.";
+          document.getElementById("ctabtn").disabled = false;
+          document.getElementById("ctabtn").textContent = "Continue to payment";
         }
       } catch (e) { console.warn("poll err", e); }
-    }, 5000);
-  }
-
-  /* ── Countdown ── */
-  function startClock(secs) {
-    var el = document.getElementById("tclock");
-    clockT = setInterval(function () {
-      secs--;
-      var m = String(Math.floor(secs / 60)).padStart(2, "0");
-      var s = String(secs % 60).padStart(2, "0");
-      el.textContent = m + ":" + s;
-      if (secs <= 0) {
-        clearInterval(clockT);
-        el.textContent = "EXPIRED";
-      }
-    }, 1000);
+    }, 6000);
   }
 
   /* ── Copy ── */
@@ -781,12 +589,6 @@
       setTimeout(function () { b.textContent = o; }, 1500);
     });
   };
-
-  /* ── Init ── */
-  document.addEventListener("DOMContentLoaded", function () {
-    initChips();
-    loadBalance();
-  });
 
 })();
 </script>
