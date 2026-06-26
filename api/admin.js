@@ -306,3 +306,130 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: err.message || "Server error" });
   }
                                }
+/**
+ * /api/admin.js
+ * All admin deposit actions in one function.
+ *
+ * Merges WITH existing admin.js — add these actions to your existing admin.js
+ * OR replace it entirely with this file if your existing admin.js only had
+ * other admin actions — just paste those handlers in the routing block below.
+ *
+ * POST ?action=set-method          → switch deposit method
+ * POST ?action=process-deposit     → approve or reject a manual deposit
+ * GET  ?action=deposits&status=XXX → list deposits for admin queue
+ */
+
+const { createClient } = require("@supabase/supabase-js");
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+async function verifyAdmin(admin_id) {
+  if (!admin_id) return false;
+  const { data } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", admin_id)
+    .single();
+  return !!data?.is_admin;
+}
+
+module.exports = async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
+
+  const action   = req.query.action;
+  const admin_id = req.body?.admin_id || req.query?.admin_id;
+
+  // All admin routes require auth
+  const isAdmin = await verifyAdmin(admin_id);
+  if (!isAdmin) return res.status(403).json({ error: "Unauthorized" });
+
+  // ── GET: list deposits ────────────────────────────────────────────────────
+  if (req.method === "GET" && action === "deposits") {
+    const status = req.query.status || "pending";
+
+    let query = supabase
+      .from("deposits")
+      .select("*, profiles(full_name, email, referral_code)")
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (status !== "all") query = query.eq("status", status);
+
+    const { data, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json({ ok: true, deposits: data || [] });
+  }
+
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  // ── POST: set deposit method ──────────────────────────────────────────────
+  if (action === "set-method") {
+    const { method } = req.body;
+    if (!["paystack", "manual", "ipayng"].includes(method)) {
+      return res.status(400).json({ error: "Invalid method" });
+    }
+
+    const { error } = await supabase
+      .from("site_settings")
+      .upsert({ key: "deposit_method", value: method, updated_at: new Date().toISOString() });
+
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json({ ok: true, method });
+  }
+
+  // ── POST: approve or reject manual deposit ────────────────────────────────
+  if (action === "process-deposit") {
+    const { deposit_id, act } = req.body; // act = "approve" | "reject"
+
+    if (!deposit_id || !["approve", "reject"].includes(act)) {
+      return res.status(400).json({ error: "deposit_id and act (approve|reject) required" });
+    }
+
+    const { data: deposit, error: fetchErr } = await supabase
+      .from("deposits")
+      .select("*")
+      .eq("id", deposit_id)
+      .single();
+
+    if (fetchErr || !deposit) return res.status(404).json({ error: "Deposit not found" });
+    if (deposit.status === "completed") return res.status(200).json({ ok: true, note: "already_completed" });
+    if (deposit.status === "rejected")  return res.status(200).json({ ok: true, note: "already_rejected" });
+
+    if (act === "reject") {
+      await supabase.from("deposits").update({
+        status: "rejected", approved_by: admin_id,
+        approved_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      }).eq("id", deposit_id);
+      return res.status(200).json({ ok: true, action: "rejected" });
+    }
+
+    // Approve → stamp first, then call RPC
+    await supabase.from("deposits").update({
+      approved_by: admin_id,
+      approved_at: new Date().toISOString(),
+      updated_at:  new Date().toISOString(),
+    }).eq("id", deposit_id);
+
+    const { data, error: rpcErr } = await supabase.rpc("process_deposit", {
+      p_reference:        deposit.reference,
+      p_amount:           deposit.amount,
+      p_provider_payload: { source: "manual_admin_approval", admin_id, deposit_id },
+    });
+
+    if (rpcErr) return res.status(500).json({ error: rpcErr.message });
+    if (!data?.ok) return res.status(200).json({ ok: true, note: data?.error });
+
+    return res.status(200).json({ ok: true, action: "approved", data });
+  }
+
+  // ── Hand off to existing admin logic ──────────────────────────────────────
+  // If you have other actions in your original admin.js, paste them here.
+  return res.status(400).json({ error: "Unknown action: " + action });
+};
+  
