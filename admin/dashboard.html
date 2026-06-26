@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — LomaShares</title>
+  <title>Admin — Vitel</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/stles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="../assets/js/supabase.js" defer></script>
   <script src="../assets/js/auth.js" defer></script>
@@ -22,140 +22,168 @@
       min-height: 100vh;
     }
     body::before, body::after { display: none !important; }
-
     a { text-decoration: none; color: inherit; }
 
-    /* ── Layout ── */
+    /* ── Topbar ── */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 20px;
-      background: rgba(5,13,31,.95);
+      padding: 16px 20px;
+      background: rgba(5,13,31,.97);
       border-bottom: 1px solid rgba(255,255,255,.07);
-      position: sticky; top: 0; z-index: 10;
+      position: sticky; top: 0; z-index: 20;
     }
     .brand { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #fff; }
     .brand span { color: #00c853; }
-    .admin-badge {
-      padding: 4px 10px; border-radius: 6px;
-      background: rgba(239,83,80,.15); color: #ef5350;
-      font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    .admin-tag { padding: 4px 10px; border-radius: 6px; background: rgba(239,83,80,.15); color: #ef5350; font-size: 11px; font-weight: 700; }
+
+    /* ── Nav tabs ── */
+    .nav-tabs {
+      display: flex; gap: 4px; padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      overflow-x: auto; scrollbar-width: none;
     }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0; padding: 8px 16px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,.4);
+      cursor: pointer; border: none; background: transparent;
+      transition: all .15s; -webkit-tap-highlight-color: transparent;
+    }
+    .nav-tab.on { background: rgba(41,121,255,.18); color: #fff; }
 
-    .main { padding: 20px 16px 80px; max-width: 600px; margin: 0 auto; }
+    /* ── Main ── */
+    .main { padding: 20px 16px 60px; max-width: 640px; margin: 0 auto; }
 
-    /* ── Section ── */
-    .section { margin-bottom: 28px; }
-    .section-title {
-      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-      color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: .1em;
+    /* ── Section title ── */
+    .stitle {
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+      color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: .1em;
       margin-bottom: 12px;
     }
 
     /* ── Card ── */
     .card {
       background: #0d1e38; border: 1px solid rgba(255,255,255,.07);
-      border-radius: 18px; padding: 20px; margin-bottom: 12px;
+      border-radius: 18px; padding: 20px; margin-bottom: 16px;
     }
 
     /* ── Method switcher ── */
-    .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .method-btn {
-      padding: 14px 8px; border-radius: 14px;
-      border: 2px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-      color: rgba(255,255,255,.5); text-align: center; cursor: pointer;
-      transition: all .2s; -webkit-tap-highlight-color: transparent;
+    .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .mcard {
+      padding: 16px 8px 14px; border-radius: 14px;
+      border: 2px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      text-align: center; cursor: pointer;
+      transition: all .18s; -webkit-tap-highlight-color: transparent;
     }
-    .method-btn .micon { font-size: 22px; display: block; margin-bottom: 6px; }
-    .method-btn:hover { border-color: rgba(255,255,255,.2); color: #fff; }
-    .method-btn.active-paystack { border-color: #00c853; background: rgba(0,200,83,.12); color: #00c853; }
-    .method-btn.active-manual   { border-color: #ff9800; background: rgba(255,152,0,.12); color: #ff9800; }
-    .method-btn.active-ipayng   { border-color: #2979ff; background: rgba(41,121,255,.12); color: #2979ff; }
+    .mcard:hover { border-color: rgba(255,255,255,.18); }
+    .mcard .mico { font-size: 24px; display: block; margin-bottom: 6px; }
+    .mcard .mlabel { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.45); }
+    .mcard.on-paystack { border-color: #00c853; background: rgba(0,200,83,.1); }
+    .mcard.on-paystack .mlabel { color: #00c853; }
+    .mcard.on-manual   { border-color: #ff9800; background: rgba(255,152,0,.1); }
+    .mcard.on-manual   .mlabel { color: #ff9800; }
+    .mcard.on-ipayng   { border-color: #2979ff; background: rgba(41,121,255,.12); }
+    .mcard.on-ipayng   .mlabel { color: #2979ff; }
 
     .method-status {
-      margin-top: 12px; padding: 10px 14px; border-radius: 10px;
+      padding: 10px 14px; border-radius: 10px;
       font-size: 13px; font-weight: 600; text-align: center;
+      transition: all .2s;
     }
-    .method-status.ok    { background: rgba(0,200,83,.1); color: #00c853; }
-    .method-status.err   { background: rgba(239,83,80,.1); color: #ef5350; }
-    .method-status.info  { background: rgba(41,121,255,.1); color: #2979ff; }
+    .ms-ok   { background: rgba(0,200,83,.1);  color: #00c853; }
+    .ms-info { background: rgba(41,121,255,.1); color: #64b5f6; }
+    .ms-err  { background: rgba(239,83,80,.1);  color: #ef9a9a; }
 
-    /* ── Deposits list ── */
-    .deposit-item {
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .stat-card { background: #0d1e38; border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 16px; text-align: center; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 4px; }
+    .stat-val.green { color: #00e676; }
+    .stat-val.orange { color: #ff9800; }
+    .stat-val.red { color: #ef5350; }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,.35); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+
+    /* ── Filter tabs ── */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .ftab {
+      flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,.1);
+      background: transparent; color: rgba(255,255,255,.35);
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: all .15s; -webkit-tap-highlight-color: transparent;
+    }
+    .ftab.on { background: rgba(41,121,255,.18); border-color: rgba(41,121,255,.35); color: #fff; }
+
+    /* ── Refresh ── */
+    .refresh {
+      float: right; padding: 5px 12px; border-radius: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.4); font-size: 12px; font-weight: 600;
+      cursor: pointer; margin-top: -2px;
+    }
+    .refresh:hover { color: #fff; }
+
+    /* ── Deposit item ── */
+    .dep-item {
       background: rgba(255,255,255,.03);
       border: 1px solid rgba(255,255,255,.06);
-      border-radius: 14px; padding: 16px;
-      margin-bottom: 10px;
+      border-radius: 14px; padding: 16px; margin-bottom: 10px;
     }
-    .deposit-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .deposit-user { font-size: 14px; font-weight: 700; color: #fff; }
-    .deposit-time { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 2px; }
-    .deposit-amount {
-      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: #00e676;
-    }
-    .deposit-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-    .meta-chip {
-      padding: 3px 10px; border-radius: 20px;
+    .dep-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .dep-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .dep-time { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 2px; }
+    .dep-amount { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #00e676; }
+    .dep-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .dchip {
+      padding: 3px 9px; border-radius: 20px;
       font-size: 11px; font-weight: 600;
-      background: rgba(255,255,255,.06); color: rgba(255,255,255,.6);
+      background: rgba(255,255,255,.06); color: rgba(255,255,255,.5);
     }
-    .narration-display {
-      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
-      color: #ff9800; letter-spacing: .06em;
-      background: rgba(255,152,0,.08); border-radius: 8px;
-      padding: 8px 12px; margin-bottom: 12px;
+    .nar-row {
       display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,152,0,.08); border-radius: 8px;
+      padding: 8px 12px; margin-bottom: 10px;
     }
-    .action-row { display: flex; gap: 10px; }
-    .btn-approve {
+    .nar-code { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #ff9800; letter-spacing: .05em; }
+    .nar-copy {
+      background: rgba(255,152,0,.15); color: #ff9800;
+      border: none; border-radius: 6px;
+      padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .act-row { display: flex; gap: 8px; }
+    .btn-ok {
       flex: 1; padding: 11px; border-radius: 10px; border: none;
       background: linear-gradient(135deg, #00c853, #00a846);
       color: #fff; font-family: 'Syne', sans-serif;
       font-size: 13px; font-weight: 700; cursor: pointer;
-      transition: opacity .15s;
     }
-    .btn-reject {
-      flex: 1; padding: 11px; border-radius: 10px; border: none;
-      background: rgba(239,83,80,.15); color: #ef5350;
-      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-      cursor: pointer; border: 1px solid rgba(239,83,80,.25);
-      transition: opacity .15s;
+    .btn-no {
+      flex: 1; padding: 11px; border-radius: 10px;
+      background: rgba(239,83,80,.12); color: #ef5350;
+      border: 1px solid rgba(239,83,80,.2);
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer;
     }
-    .btn-approve:disabled, .btn-reject:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-ok:disabled, .btn-no:disabled { opacity: .35; cursor: not-allowed; }
+    .dep-status { font-size: 12px; font-weight: 700; text-transform: uppercase; padding: 6px 0; }
 
-    .empty { text-align: center; color: rgba(255,255,255,.3); padding: 32px; font-size: 14px; }
-
-    /* ── Filter tabs ── */
-    .filter-tabs { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; }
-    .filter-tab {
-      flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
-      border: 1.5px solid rgba(255,255,255,.1);
-      background: transparent; color: rgba(255,255,255,.4);
-      font-size: 12px; font-weight: 700; cursor: pointer;
-      transition: all .15s;
-    }
-    .filter-tab.on { background: rgba(41,121,255,.2); border-color: rgba(41,121,255,.4); color: #fff; }
-
-    /* ── Refresh btn ── */
-    .refresh-btn {
-      float: right; padding: 5px 12px; border-radius: 8px;
-      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-      color: rgba(255,255,255,.5); font-size: 12px; font-weight: 600;
-      cursor: pointer; margin-top: -4px;
-    }
-    .refresh-btn:hover { color: #fff; }
+    .empty { text-align: center; color: rgba(255,255,255,.25); padding: 36px; font-size: 14px; }
 
     /* ── Toast ── */
     #toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: #0d1e38; border: 1px solid rgba(255,255,255,.12);
+      background: #122040; border: 1px solid rgba(255,255,255,.12);
       color: #fff; padding: 12px 20px; border-radius: 12px;
-      font-size: 13px; font-weight: 600; z-index: 100;
-      opacity: 0; transition: opacity .25s; pointer-events: none;
-      white-space: nowrap;
+      font-size: 13px; font-weight: 600; z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+      white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,.4);
     }
     #toast.show { opacity: 1; }
+
+    /* ── Page sections ── */
+    .page { display: none; }
+    .page.on { display: block; }
   </style>
 </head>
 
@@ -165,51 +193,88 @@
   data-supabase-anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycmphZHB6YWVzcXh2Y2xmbHd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MzExMzksImV4cCI6MjA4ODQwNzEzOX0.3rwLwVdrfjLIL9o-mFldpUgEUsbEINx1GTTMUt416g4"
 >
 
+<!-- Topbar -->
 <div class="topbar">
   <div class="brand">Loma<span>Admin</span></div>
-  <div class="admin-badge">ADMIN</div>
+  <div class="admin-tag">ADMIN</div>
+</div>
+
+<!-- Nav tabs -->
+<div class="nav-tabs">
+  <button class="nav-tab on" onclick="showPage('deposits', this)">💳 Deposits</button>
+  <button class="nav-tab" onclick="showPage('settings', this)">⚙️ Settings</button>
 </div>
 
 <div class="main">
 
-  <!-- ── Deposit Method Switcher ── -->
-  <div class="section">
-    <div class="section-title">Active Deposit Method</div>
-    <div class="card">
-      <div class="method-grid">
-        <div class="method-btn" id="btn-paystack" onclick="setMethod('paystack')">
-          <span class="micon">💳</span>
-          Paystack
-        </div>
-        <div class="method-btn" id="btn-manual" onclick="setMethod('manual')">
-          <span class="micon">🏦</span>
-          Manual
-        </div>
-        <div class="method-btn" id="btn-ipayng" onclick="setMethod('ipayng')">
-          <span class="micon">⚡</span>
-          iPayNG
-        </div>
+  <!-- ══ DEPOSITS PAGE ══ -->
+  <div class="page on" id="page-deposits">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val orange" id="stat-pending">—</div>
+        <div class="stat-label">Pending</div>
       </div>
-      <div class="method-status info" id="methodStatus">Loading current method…</div>
+      <div class="stat-card">
+        <div class="stat-val green" id="stat-approved">—</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val red" id="stat-rejected">—</div>
+        <div class="stat-label">Rejected</div>
+      </div>
     </div>
+
+    <!-- Filter -->
+    <div style="margin-bottom:4px">
+      <span class="stitle">Deposit Queue</span>
+      <button class="refresh" onclick="loadDeposits()">↻ Refresh</button>
+    </div>
+    <div class="filter-row">
+      <button class="ftab on" onclick="switchFilter(this,'pending')">Pending</button>
+      <button class="ftab" onclick="switchFilter(this,'completed')">Approved</button>
+      <button class="ftab" onclick="switchFilter(this,'rejected')">Rejected</button>
+      <button class="ftab" onclick="switchFilter(this,'all')">All</button>
+    </div>
+
+    <div id="depList"><div class="empty">Loading…</div></div>
   </div>
 
-  <!-- ── Manual Deposits Queue ── -->
-  <div class="section">
-    <div class="section-title">
-      Deposit Approvals
-      <button class="refresh-btn" onclick="loadDeposits()">↻ Refresh</button>
+  <!-- ══ SETTINGS PAGE ══ -->
+  <div class="page" id="page-settings">
+    <div class="stitle">Deposit Method</div>
+    <div class="card">
+      <div class="method-grid">
+        <div class="mcard" id="mc-paystack" onclick="setMethod('paystack')">
+          <span class="mico">💳</span>
+          <span class="mlabel">Paystack</span>
+        </div>
+        <div class="mcard" id="mc-manual" onclick="setMethod('manual')">
+          <span class="mico">🏦</span>
+          <span class="mlabel">Manual</span>
+        </div>
+        <div class="mcard" id="mc-ipayng" onclick="setMethod('ipayng')">
+          <span class="mico">⚡</span>
+          <span class="mlabel">iPayNG</span>
+        </div>
+      </div>
+      <div class="method-status ms-info" id="methodStatus">Loading…</div>
     </div>
 
-    <div class="filter-tabs">
-      <button class="filter-tab on" data-filter="pending" onclick="switchFilter(this,'pending')">Pending</button>
-      <button class="filter-tab" data-filter="completed" onclick="switchFilter(this,'completed')">Approved</button>
-      <button class="filter-tab" data-filter="rejected" onclick="switchFilter(this,'rejected')">Rejected</button>
-      <button class="filter-tab" data-filter="all" onclick="switchFilter(this,'all')">All</button>
+    <div class="stitle">Manual Account Details</div>
+    <div class="card" style="font-size:14px;line-height:2">
+      <div style="color:rgba(255,255,255,.5);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Your OPay Account</div>
+      <div><span style="color:rgba(255,255,255,.4)">Bank:</span> <strong>OPay</strong></div>
+      <div><span style="color:rgba(255,255,255,.4)">Account:</span> <strong>6556493720</strong></div>
+      <div><span style="color:rgba(255,255,255,.4)">Name:</span> <strong>OLUWANIFEMI ABDULLAHI OLUDE</strong></div>
     </div>
 
-    <div id="depositsList">
-      <div class="empty">Loading deposits…</div>
+    <div class="stitle">Webhook URLs</div>
+    <div class="card" style="font-size:12px;line-height:2;color:rgba(255,255,255,.6)">
+      <div>Paystack: <span style="color:#64b5f6">https://lomashares.name.ng/api/webhooks</span></div>
+      <div>iPayNG: <span style="color:#64b5f6">https://lomashares.name.ng/api/webhooks</span></div>
+      <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,.3)">Both providers point to the same endpoint.</div>
     </div>
   </div>
 
@@ -221,7 +286,7 @@
 (function () {
   "use strict";
 
-  var adminId      = "";
+  var adminId     = "";
   var activeFilter = "pending";
 
   function waitForSb(cb) {
@@ -232,221 +297,188 @@
   document.addEventListener("DOMContentLoaded", function () {
     waitForSb(async function () {
       try {
-        var session = await window.LomaAuth.requireAuth();
-        if (!session) return;
-        adminId = session.user.id;
+        var s = await window.LomaAuth.requireAuth();
+        if (!s) return;
+        adminId = s.user.id;
 
-        // Verify admin
-        var { data: prof } = await window.sb.from("profiles").select("is_admin").eq("id", adminId).single();
-        if (!prof?.is_admin) {
-          document.body.innerHTML = "<div style='color:#ef5350;padding:40px;text-align:center;font-family:sans-serif'>⛔ Access denied. Admins only.</div>";
+        var { data: p } = await window.sb.from("profiles").select("is_admin").eq("id", adminId).single();
+        if (!p?.is_admin) {
+          document.body.innerHTML = "<div style='color:#ef5350;padding:60px;text-align:center;font-size:16px;font-family:sans-serif'>⛔ Access denied.</div>";
           return;
         }
 
         await loadCurrentMethod();
         await loadDeposits();
-
+        await loadStats();
       } catch (e) { console.error(e); }
     });
   });
 
-  /* ── Load current method ── */
+  /* ── Page nav ── */
+  window.showPage = function (id, btn) {
+    document.querySelectorAll(".page").forEach(function (p) { p.classList.remove("on"); });
+    document.querySelectorAll(".nav-tab").forEach(function (b) { b.classList.remove("on"); });
+    document.getElementById("page-" + id).classList.add("on");
+    btn.classList.add("on");
+  };
+
+  /* ── Stats ── */
+  async function loadStats() {
+    try {
+      var statuses = ["pending", "completed", "rejected"];
+      var ids      = ["stat-pending", "stat-approved", "stat-rejected"];
+      for (var i = 0; i < statuses.length; i++) {
+        var r = await fetch("/api/admin?action=deposits&status=" + statuses[i] + "&admin_id=" + adminId);
+        var d = await r.json();
+        document.getElementById(ids[i]).textContent = (d.deposits || []).length;
+      }
+    } catch (e) { console.warn("stats err", e); }
+  }
+
+  /* ── Load method ── */
   async function loadCurrentMethod() {
     try {
-      var res = await fetch("/api/get-deposit-method");
-      var d   = await res.json();
-      highlightMethod(d.method);
-      updateMethodStatus(d.method);
+      var r = await fetch("/api/deposit?action=method");
+      var d = await r.json();
+      applyMethodUI(d.method || "paystack");
     } catch (e) { console.error(e); }
   }
 
-  function highlightMethod(method) {
-    ["paystack","manual","ipayng"].forEach(function (m) {
-      var btn = document.getElementById("btn-" + m);
-      btn.className = "method-btn" + (m === method ? " active-" + m : "");
+  function applyMethodUI(m) {
+    ["paystack","manual","ipayng"].forEach(function (x) {
+      document.getElementById("mc-" + x).className = "mcard" + (x === m ? " on-" + x : "");
     });
-  }
-
-  function updateMethodStatus(method) {
-    var el = document.getElementById("methodStatus");
-    var labels = {
+    var msgs = {
       paystack: "✅ Users are paying via Paystack (card & bank transfer)",
       manual:   "🏦 Users are transferring manually to your OPay account",
       ipayng:   "⚡ Users are using iPayNG Auto-Manual flow"
     };
-    el.textContent = labels[method] || "Unknown method";
-    el.className   = "method-status " + (method === "manual" ? "info" : "ok");
+    var el = document.getElementById("methodStatus");
+    el.textContent = msgs[m] || "Unknown";
+    el.className   = "method-status " + (m === "manual" ? "ms-info" : "ms-ok");
   }
 
   /* ── Set method ── */
-  window.setMethod = async function (method) {
+  window.setMethod = async function (m) {
     var el = document.getElementById("methodStatus");
-    el.textContent = "Switching to " + method + "…";
-    el.className   = "method-status info";
-
+    el.textContent = "Switching…"; el.className = "method-status ms-info";
     try {
-      var res = await fetch("/api/admin/set-deposit-method", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ method, admin_id: adminId })
+      var r = await fetch("/api/admin?action=set-method", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method: m, admin_id: adminId })
       });
-      var d = await res.json();
-
-      if (d.ok) {
-        highlightMethod(method);
-        updateMethodStatus(method);
-        toast("✅ Switched to " + method);
-      } else {
-        el.textContent = "❌ " + (d.error || "Failed");
-        el.className   = "method-status err";
-      }
-    } catch (e) {
-      el.textContent = "❌ Network error";
-      el.className   = "method-status err";
-    }
+      var d = await r.json();
+      if (d.ok) { applyMethodUI(m); toast("✅ Switched to " + m); }
+      else { el.textContent = "❌ " + (d.error || "Failed"); el.className = "method-status ms-err"; }
+    } catch (e) { el.textContent = "❌ Network error"; el.className = "method-status ms-err"; }
   };
 
   /* ── Filter ── */
-  window.switchFilter = function (btn, filter) {
-    document.querySelectorAll(".filter-tab").forEach(function (b) { b.classList.remove("on"); });
+  window.switchFilter = function (btn, f) {
+    document.querySelectorAll(".ftab").forEach(function (b) { b.classList.remove("on"); });
     btn.classList.add("on");
-    activeFilter = filter;
+    activeFilter = f;
     loadDeposits();
   };
 
   /* ── Load deposits ── */
   window.loadDeposits = async function () {
-    var wrap = document.getElementById("depositsList");
+    var wrap = document.getElementById("depList");
     wrap.innerHTML = "<div class='empty'>Loading…</div>";
-
     try {
-      var query = window.sb
-        .from("deposits")
-        .select("*, profiles(full_name, email, referral_code)")
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      if (activeFilter !== "all") {
-        query = query.eq("status", activeFilter);
-      }
-
-      var { data, error } = await query;
-
-      if (error) throw error;
-
-      if (!data || !data.length) {
-        wrap.innerHTML = "<div class='empty'>No deposits found.</div>";
-        return;
-      }
-
-      wrap.innerHTML = data.map(function (d) {
-        return renderDeposit(d);
-      }).join("");
-
+      var r = await fetch("/api/admin?action=deposits&status=" + activeFilter + "&admin_id=" + adminId);
+      var d = await r.json();
+      if (!d.ok) throw new Error(d.error);
+      var deps = d.deposits || [];
+      if (!deps.length) { wrap.innerHTML = "<div class='empty'>No deposits found.</div>"; return; }
+      wrap.innerHTML = deps.map(renderDep).join("");
     } catch (e) {
       console.error(e);
-      wrap.innerHTML = "<div class='empty' style='color:#ef5350'>Failed to load deposits.</div>";
+      wrap.innerHTML = "<div class='empty' style='color:#ef5350'>Failed to load.</div>";
     }
   };
 
-  function renderDeposit(d) {
-    var name      = d.profiles?.full_name || "Unknown";
-    var email     = d.profiles?.email     || "";
-    var refCode   = d.profiles?.referral_code || "";
-    var amount    = "₦" + Number(d.amount).toLocaleString();
-    var method    = (d.method || d.provider || "—").toUpperCase();
-    var narration = d.narration || "—";
-    var status    = d.status    || "pending";
-    var time      = new Date(d.created_at).toLocaleString("en-NG", { dateStyle:"medium", timeStyle:"short" });
+  function renderDep(d) {
+    var name   = d.profiles?.full_name || "Unknown";
+    var email  = d.profiles?.email     || "";
+    var status = d.status || "pending";
+    var amt    = "₦" + Number(d.amount).toLocaleString();
+    var method = (d.method || d.provider || "—").toUpperCase();
+    var time   = new Date(d.created_at).toLocaleString("en-NG", { dateStyle:"medium", timeStyle:"short" });
+    var sColor = { pending:"#ff9800", completed:"#00c853", rejected:"#ef5350" }[status] || "#888";
 
-    var statusColor = {
-      pending:   "#ff9800",
-      completed: "#00c853",
-      rejected:  "#ef5350",
-      submitted: "#2979ff",
-    }[status] || "#888";
+    var narRow = d.narration ? `
+      <div class="nar-row">
+        <span class="nar-code">${d.narration}</span>
+        <button class="nar-copy" onclick="copyTxt('${d.narration}')">COPY</button>
+      </div>` : "";
 
-    var actionBtns = "";
-    if (status === "pending" || status === "submitted") {
-      actionBtns = `
-        <div class="action-row">
-          <button class="btn-approve" onclick="processDeposit('${d.id}','approve',this)">✅ Approve</button>
-          <button class="btn-reject"  onclick="processDeposit('${d.id}','reject',this)">❌ Reject</button>
-        </div>`;
-    } else {
-      actionBtns = `<div style="font-size:12px;color:${statusColor};font-weight:700;text-transform:uppercase">${status}</div>`;
-    }
+    var actions = (status === "pending" || status === "submitted") ? `
+      <div class="act-row">
+        <button class="btn-ok" onclick="actDeposit('${d.id}','approve',this)">✅ Approve</button>
+        <button class="btn-no" onclick="actDeposit('${d.id}','reject',this)">❌ Reject</button>
+      </div>` : `<div class="dep-status" style="color:${sColor}">${status.toUpperCase()}</div>`;
 
     return `
-      <div class="deposit-item" id="dep-${d.id}">
-        <div class="deposit-header">
+      <div class="dep-item" id="di-${d.id}">
+        <div class="dep-head">
           <div>
-            <div class="deposit-user">${name}</div>
-            <div class="deposit-time">${email} · ${time}</div>
+            <div class="dep-name">${name}</div>
+            <div class="dep-time">${email} · ${time}</div>
           </div>
-          <div class="deposit-amount">${amount}</div>
+          <div class="dep-amount">${amt}</div>
         </div>
-        <div class="deposit-meta">
-          <span class="meta-chip">${method}</span>
-          <span class="meta-chip">Ref: ${(d.reference||"").slice(0,18)}…</span>
-          ${refCode ? '<span class="meta-chip">Code: ' + refCode + '</span>' : ""}
-          <span class="meta-chip" style="color:${statusColor}">${status.toUpperCase()}</span>
+        <div class="dep-chips">
+          <span class="dchip">${method}</span>
+          <span class="dchip" style="color:${sColor}">${status.toUpperCase()}</span>
+          <span class="dchip">Ref: ${(d.reference||"").slice(0,16)}…</span>
         </div>
-        ${narration !== "—" ? `
-          <div class="narration-display">
-            <span>Narration: ${narration}</span>
-            <button class="cpbtn" style="background:rgba(255,152,0,.15);color:#ff9800;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer" onclick="copyText('${narration}')">COPY</button>
-          </div>` : ""}
-        ${actionBtns}
+        ${narRow}
+        ${actions}
       </div>`;
   }
 
-  /* ── Process deposit ── */
-  window.processDeposit = async function (depositId, action, btn) {
-    var row   = btn.closest(".action-row");
-    var allBtns = row.querySelectorAll("button");
-    allBtns.forEach(function (b) { b.disabled = true; });
-    btn.textContent = action === "approve" ? "Approving…" : "Rejecting…";
+  /* ── Approve / Reject ── */
+  window.actDeposit = async function (id, act, btn) {
+    var row  = btn.closest(".act-row");
+    var btns = row.querySelectorAll("button");
+    btns.forEach(function (b) { b.disabled = true; });
+    btn.textContent = act === "approve" ? "Approving…" : "Rejecting…";
 
     try {
-      var res = await fetch("/api/admin/process-manual-deposit", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ deposit_id: depositId, action, admin_id: adminId })
+      var r = await fetch("/api/admin?action=process-deposit", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deposit_id: id, act, admin_id: adminId })
       });
-      var d = await res.json();
-
+      var d = await r.json();
       if (d.ok) {
-        toast(action === "approve" ? "✅ Deposit approved & wallet credited!" : "❌ Deposit rejected.");
-        // Refresh list after short delay
-        setTimeout(loadDeposits, 800);
+        toast(act === "approve" ? "✅ Approved! Wallet credited." : "🚫 Deposit rejected.");
+        setTimeout(function () { loadDeposits(); loadStats(); }, 700);
       } else {
-        toast("Error: " + (d.error || "Unknown error"));
-        allBtns.forEach(function (b) { b.disabled = false; });
-        btn.textContent = action === "approve" ? "✅ Approve" : "❌ Reject";
+        toast("❌ " + (d.error || "Error"));
+        btns.forEach(function (b) { b.disabled = false; });
+        btn.textContent = act === "approve" ? "✅ Approve" : "❌ Reject";
       }
     } catch (e) {
-      console.error(e);
-      toast("Network error. Try again.");
-      allBtns.forEach(function (b) { b.disabled = false; });
+      toast("❌ Network error");
+      btns.forEach(function (b) { b.disabled = false; });
     }
   };
 
   /* ── Copy ── */
-  window.copyText = function (text) {
-    navigator.clipboard.writeText(text).then(function () { toast("Copied!"); });
+  window.copyTxt = function (t) {
+    navigator.clipboard.writeText(t).then(function () { toast("Copied!"); });
   };
 
   /* ── Toast ── */
   function toast(msg) {
     var el = document.getElementById("toast");
-    el.textContent = msg;
-    el.classList.add("show");
+    el.textContent = msg; el.classList.add("show");
     setTimeout(function () { el.classList.remove("show"); }, 2800);
   }
 
 })();
 </script>
-
 </body>
-</html>
+  </html>
+  
